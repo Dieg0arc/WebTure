@@ -1,0 +1,143 @@
+---
+const techs = [
+  'Astro',
+  'GSAP',
+  'TypeScript',
+  'Figma',
+  'Google Analytics',
+  'WhatsApp API',
+  'Cloudflare',
+  'Strapi',
+  'Tailwind CSS',
+];
+---
+
+<div class="techband">
+  <!-- Fades laterales -->
+  <div class="techband-fade techband-fade--left"  aria-hidden="true"></div>
+  <div class="techband-fade techband-fade--right" aria-hidden="true"></div>
+
+  <div class="techband-track" aria-label="Tecnologías que usamos" role="list">
+    <!-- Serie 1 -->
+    {techs.map((tech, i) => (
+      <>
+        <span class="tech-item" role="listitem">
+          <span class="tech-icon" aria-hidden="true">◆</span>
+          {tech}
+        </span>
+        <span class="tech-sep" aria-hidden="true">·</span>
+      </>
+    ))}
+
+    <!-- Serie 2 — duplicado exacto para loop sin salto visible -->
+    {techs.map((tech, i) => (
+      <>
+        <span class="tech-item" role="listitem" aria-hidden="true">
+          <span class="tech-icon" aria-hidden="true">◆</span>
+          {tech}
+        </span>
+        <span class="tech-sep" aria-hidden="true">·</span>
+      </>
+    ))}
+  </div>
+</div>
+
+<style>
+  /* ─── Banda contenedora ──────────────────────────────────────────────────── */
+  .techband {
+    position: relative;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    padding: 18px 0;
+    background: var(--surface);
+  }
+
+  /* ─── Track con animación ────────────────────────────────────────────────── */
+  .techband-track {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    width: max-content;
+    animation: techmarquee 42s linear infinite;
+  }
+
+  .techband:hover .techband-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes techmarquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ─── Items ──────────────────────────────────────────────────────────────── */
+  .tech-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    white-space: nowrap;
+    transition: color 0.2s ease;
+  }
+
+  .techband:hover .tech-item:hover {
+    color: var(--text);
+  }
+
+  .tech-icon {
+    color: var(--accent);
+    font-size: 8px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .tech-sep {
+    color: var(--border-bright);
+    font-size: 16px;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  /* ─── Fades laterales ────────────────────────────────────────────────────── */
+  .techband-fade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 120px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .techband-fade--left {
+    left: 0;
+    background: linear-gradient(90deg, var(--bg), transparent);
+  }
+
+  .techband-fade--right {
+    right: 0;
+    background: linear-gradient(-90deg, var(--bg), transparent);
+  }
+
+  /* ─── Reduced motion ─────────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .techband-track {
+      animation: none;
+      flex-wrap: wrap;
+      width: 100%;
+      justify-content: center;
+      padding: 0 24px;
+      gap: 16px;
+    }
+
+    /* Oculta la serie duplicada cuando no hay animación */
+    .tech-item[aria-hidden="true"],
+    .tech-sep:nth-child(n + 20) {
+      display: none;
+    }
+  }
+</style>

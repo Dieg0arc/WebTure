@@ -1,0 +1,289 @@
+@import "tailwindcss";
+
+/* ─── Tailwind v4 Design Tokens ─────────────────────────────────────────── */
+@theme {
+  /* Colors — generates bg-*, text-*, border-* utilities */
+  --color-bg:           #080808;
+  --color-surface:      #111111;
+  --color-surface-2:    #181818;
+  --color-accent:       #b388ff;
+  --color-accent-dim:   #7e57c2;
+  --color-text:         #f2f2f2;
+  --color-text-muted:   #777777;
+  --color-text-dim:     #4a4a4a;
+  --color-border:       #1e1e1e;
+  --color-border-bright:#2a2a2a;
+
+  /* Fonts — generates font-display, font-body, font-mono utilities */
+  --font-display: 'Syne', system-ui, sans-serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  /* Border radius */
+  --radius-base: 12px;
+  --radius-lg:   20px;
+}
+
+/* ─── CSS Custom Properties (accesibles por GSAP y JS) ──────────────────── */
+:root {
+  --bg:               #080808;
+  --surface:          #111111;
+  --surface-2:        #181818;
+  --accent:           #b388ff;
+  --accent-dim:       #7e57c2;
+  --accent-glow:      rgba(179, 136, 255, 0.15);
+  --accent-glow-soft: rgba(179, 136, 255, 0.06);
+  --text:             #f2f2f2;
+  --text-muted:       #777777;
+  --text-dim:         #4a4a4a;
+  --border:           #1e1e1e;
+  --border-bright:    #2a2a2a;
+  --radius:           12px;
+  --radius-lg:        20px;
+  --font-display:     'Syne', system-ui, sans-serif;
+  --font-body:        'DM Sans', system-ui, sans-serif;
+  --font-mono:        'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ─── Reset ─────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ─── Background: gradientes ambientales ────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 10%, rgba(179, 136, 255, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 85% 85%, rgba(126, 87, 194, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(179, 136, 255, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Background: grain/ruido ───────────────────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: grain 8s steps(10) infinite;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10%       { transform: translate(-2%, -3%); }
+  20%       { transform: translate(3%, 1%); }
+  30%       { transform: translate(-1%, 4%); }
+  40%       { transform: translate(2%, -2%); }
+  50%       { transform: translate(-3%, 3%); }
+  60%       { transform: translate(1%, -1%); }
+  70%       { transform: translate(-2%, 2%); }
+  80%       { transform: translate(3%, -3%); }
+  90%       { transform: translate(-1%, 1%); }
+}
+
+/* Todo el contenido por encima de los pseudo-elementos de fondo */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Wrap ───────────────────────────────────────────────────────────────── */
+.wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+@media (max-width: 768px) {
+  .wrap { padding: 0 24px; }
+}
+
+@media (max-width: 480px) {
+  .wrap { padding: 0 20px; }
+}
+
+/* ─── Tipografía base ────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--text);
+}
+
+p {
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* ─── Scrollbar personalizado ───────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-bright);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-dim);
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+::selection {
+  background: var(--accent);
+  color: #000;
+}
+
+/* ─── Utilidades globales ────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Estado inicial de elementos animados por GSAP */
+.fade-up {
+  opacity: 0;
+  transform: translateY(32px);
+}
+
+/* Label / eyebrow text */
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Botón primario */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: var(--accent);
+  color: #000;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  border-radius: var(--radius);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+.btn-primary:hover {
+  background: #c9a8ff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(179, 136, 255, 0.35);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Botón ghost */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 28px;
+  background: transparent;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius);
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* ─── Reduced Motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body::after {
+    animation: none;
+  }
+
+  .fade-up {
+    opacity: 1;
+    transform: none;
+  }
+}

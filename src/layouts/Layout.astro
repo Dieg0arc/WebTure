@@ -1,0 +1,90 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalURL?: string;
+  ogImage?: string;
+}
+
+const {
+  title       = 'WebTure — Agencia web para negocios locales en Colombia',
+  description = 'Diseñamos y desarrollamos sitios web a la medida para negocios locales en Colombia. Rápidos, optimizados y pensados para convertir.',
+  canonicalURL = 'https://webture.co',
+  ogImage      = 'https://webture.co/og-image.jpg',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="lenis">
+  <head>
+    <!-- Charset & Viewport -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Título y descripción -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Indexación -->
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Theme color (barra del navegador en mobile) -->
+    <meta name="theme-color" content="#080808" />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content={canonicalURL} />
+    <meta property="og:title"       content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image"       content={ogImage} />
+    <meta property="og:locale"      content="es_CO" />
+    <meta property="og:site_name"   content="WebTure" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image"       content={ogImage} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon"          href="/apple-touch-icon.png" />
+
+    <!-- Google Fonts: preconnect doble + request combinado -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <!-- ─── GSAP desde jsDelivr CDN (versión fija) ───────────────────────
+         Se carga en <head> para que window.gsap, window.ScrollTrigger y
+         window.SplitText estén disponibles antes de que corran los módulos.
+    ───────────────────────────────────────────────────────────────────── -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js"></script>
+  </head>
+
+  <body>
+    <slot />
+
+    <!-- ─── Módulos de animación ──────────────────────────────────────────
+         Sin is:inline: Vite bundlea los archivos para producción.
+         Los imports de gsap NO están en esos archivos (usan window.gsap
+         del CDN), así Vite no duplica GSAP en el bundle.
+    ───────────────────────────────────────────────────────────────────── -->
+    <script type="module">
+      import initAll from '../scripts/animations.js';
+      import '../scripts/lenis.js';
+
+      document.addEventListener('DOMContentLoaded', () => {
+        initAll();
+      });
+    </script>
+  </body>
+</html>

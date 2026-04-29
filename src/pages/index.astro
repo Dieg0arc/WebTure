@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import TechBand from '../components/TechBand.astro';
+import ScrollStory from '../components/ScrollStory.astro';
+---
+
+<Layout>
+  <Navbar />
+  <main>
+    <Hero />
+    <TechBand />
+    <ScrollStory />
+    <!-- Resto de componentes se agregarán progresivamente -->
+    <div style="height: 20vh; display: flex; align-items: center; justify-content: center; color: #444; font-family: monospace; font-size: 13px;">
+      → Projects · Services · Metrics · Process · Pricing · Contact (en construcción)
+    </div>
+  </main>
+</Layout>
