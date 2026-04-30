@@ -1,0 +1,413 @@
+---
+// No props — contenido estático
+const services = [
+  {
+    numero:      "01",
+    titulo:      "Páginas personalizadas",
+    descripcion: "Diseño único para tu negocio. Sin plantillas, sin límites. Cada elemento pensado para convertir visitantes en clientes.",
+    icono:       "layout",
+    featured:    false,
+  },
+  {
+    numero:      "02",
+    titulo:      "Posicionamiento Google",
+    descripcion: "SEO técnico y local para que aparezcas primero cuando te buscan en Armenia y toda la región.",
+    icono:       "search",
+    featured:    true,
+  },
+  {
+    numero:      "03",
+    titulo:      "Diseño de conversión",
+    descripcion: "CTAs estratégicos, formularios optimizados y flujos de usuario que guían al visitante a contactarte.",
+    icono:       "target",
+    featured:    false,
+  },
+];
+---
+
+<section class="services" id="servicios" aria-label="Nuestros servicios">
+  <div class="wrap">
+
+    <!-- ── Header ──────────────────────────────────────────────────────────── -->
+    <header class="services-header">
+      <span class="services-label">Servicios</span>
+      <h2 class="services-title split-title">
+        Todo lo que tu negocio<br>
+        necesita para <em class="accent-italic">crecer online.</em>
+      </h2>
+      <p class="services-sub">
+        Soluciones completas de presencia digital para negocios locales
+        en Armenia y el Eje Cafetero.
+      </p>
+    </header>
+
+    <!-- ── Grid de cards ──────────────────────────────────────────────────── -->
+    <div class="services-grid">
+
+      {services.map((svc) => (
+        <article
+          class={`svc-card${svc.featured ? " svc-card--featured" : ""}`}
+          aria-label={`Servicio: ${svc.titulo}`}
+        >
+          <!-- Número decorativo -->
+          <span class="svc-num" aria-hidden="true">{svc.numero}</span>
+
+          <!-- Icono -->
+          <div class="svc-icon" aria-hidden="true">
+            {svc.icono === "layout" && (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.5"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M3 9h18M9 21V9"/>
+              </svg>
+            )}
+            {svc.icono === "search" && (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.5"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21l-4.35-4.35"/>
+                <path d="M11 8v6M8 11h6"/>
+              </svg>
+            )}
+            {svc.icono === "target" && (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="1.5"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="6"/>
+                <circle cx="12" cy="12" r="2"/>
+              </svg>
+            )}
+          </div>
+
+          <!-- Contenido -->
+          <div class="svc-body">
+            <h3 class="svc-title">{svc.titulo}</h3>
+            <p class="svc-desc">{svc.descripcion}</p>
+          </div>
+
+          <!-- Badge solo en featured -->
+          {svc.featured && (
+            <span class="svc-badge" aria-label="Servicio más popular">
+              Más popular
+            </span>
+          )}
+        </article>
+      ))}
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ─── Sección ────────────────────────────────────────────────────────────── */
+  .services {
+    padding: 120px 0;
+    background: var(--bg);
+    position: relative;
+  }
+
+  /* Separador sutil arriba */
+  .services::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(600px, 80%);
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--border-bright),
+      transparent
+    );
+  }
+
+  /* ─── Header ─────────────────────────────────────────────────────────────── */
+  .services-header {
+    text-align: center;
+    margin-bottom: 72px;
+  }
+
+  .services-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  .services-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .services-sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ─── Grid ───────────────────────────────────────────────────────────────── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  /* ─── Card base ──────────────────────────────────────────────────────────── */
+  .svc-card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 36px 32px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .svc-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-bright);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ─── Card featured (#02) ────────────────────────────────────────────────── */
+  .svc-card--featured {
+    background: var(--surface-2);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 0 40px var(--accent-glow);
+  }
+
+  .svc-card--featured:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 20px 60px var(--accent-glow);
+    transform: translateY(-4px);
+  }
+
+  /* Brillo decorativo en la featured */
+  .svc-card--featured::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--accent),
+      transparent
+    );
+    opacity: 0.6;
+  }
+
+  /* ─── Número decorativo ──────────────────────────────────────────────────── */
+  .svc-num {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-family: var(--font-display);
+    font-size: 80px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text);
+    opacity: 0.04;
+    letter-spacing: -0.06em;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .svc-card--featured .svc-num {
+    opacity: 0.06;
+    color: var(--accent);
+  }
+
+  /* ─── Icono ──────────────────────────────────────────────────────────────── */
+  .svc-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--accent-glow-soft);
+    border: 1px solid var(--border-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    flex-shrink: 0;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .svc-card--featured .svc-icon {
+    background: var(--accent-glow);
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  .svc-card:hover .svc-icon {
+    background: var(--accent-glow);
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  /* ─── Cuerpo de texto ────────────────────────────────────────────────────── */
+  .svc-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .svc-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1.25;
+    margin: 0;
+  }
+
+  .svc-desc {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* ─── Badge featured ─────────────────────────────────────────────────────── */
+  .svc-badge {
+    display: inline-flex;
+    align-self: flex-start;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-glow);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: 20px;
+    padding: 5px 12px;
+    margin-top: auto;
+  }
+
+  /* ─── Responsive ─────────────────────────────────────────────────────────── */
+  @media (max-width: 960px) {
+    .services-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Featured ocupa todo el ancho en tablet */
+    .svc-card--featured {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 32px;
+    }
+
+    .svc-card--featured .svc-body {
+      flex: 1;
+    }
+
+    .svc-card--featured .svc-badge {
+      margin-top: 0;
+      align-self: flex-start;
+      flex-shrink: 0;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .services {
+      padding: 80px 0;
+    }
+
+    .services-header {
+      margin-bottom: 48px;
+      text-align: left;
+    }
+
+    .services-sub {
+      margin: 0;
+    }
+
+    .services-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .svc-card--featured {
+      grid-column: auto;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .svc-num {
+      font-size: 60px;
+    }
+
+    .svc-card {
+      padding: 28px 24px 24px;
+    }
+  }
+
+  /* ─── Reduced motion ─────────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .svc-card {
+      transition: none;
+    }
+
+    .svc-icon {
+      transition: none;
+    }
+  }
+</style>
+
+<script type="module">
+  if (typeof window === 'undefined') return;
+
+  function initServices() {
+    const gsap           = window.gsap;
+    const ScrollTrigger  = window.ScrollTrigger;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!gsap || !ScrollTrigger || prefersReduced) return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const header = document.querySelector('.services-header');
+    if (header) {
+      gsap.fromTo(header, { opacity: 0, y: 32 }, {
+        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+        scrollTrigger: { trigger: '.services', start: 'top 80%', once: true },
+      });
+    }
+
+    const cards = document.querySelectorAll('.svc-card');
+    if (cards.length) {
+      gsap.fromTo(cards, { opacity: 0, y: 48 }, {
+        opacity: 1, y: 0, duration: 0.65, ease: 'power3.out', stagger: 0.14,
+        scrollTrigger: { trigger: '.services-grid', start: 'top 85%', once: true },
+      });
+    }
+  }
+
+  if (document.readyState === 'complete') {
+    initServices();
+  } else {
+    window.addEventListener('load', initServices, { once: true });
+  }
+</script>

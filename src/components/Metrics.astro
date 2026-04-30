@@ -1,0 +1,561 @@
+---
+// No props — contenido estático
+const counters = [
+  { valor: 47,  sufijo: "",  label: "Proyectos entregados" },
+  { valor: 4,   sufijo: "",  label: "Días promedio de entrega" },
+  { valor: 98,  sufijo: "%", label: "Clientes satisfechos" },
+  { valor: 230, sufijo: "%", label: "Aumento promedio en consultas" },
+];
+
+const testimonios = [
+  {
+    texto:   "En 4 días teníamos el sitio listo y en la primera semana ya recibimos reservas por WhatsApp. Increíble.",
+    nombre:  "Carlos Mejía",
+    negocio: "El Fogón Armenio",
+    inicial: "C",
+  },
+  {
+    texto:   "Antes nadie nos encontraba en Google. Ahora aparecemos primero para 'dentista Armenia'. Vale cada peso.",
+    nombre:  "Dra. Laura Gómez",
+    negocio: "Clínica Sonría",
+    inicial: "L",
+  },
+  {
+    texto:   "El diseño superó lo que imaginaba. Mis clientas comparten el link solas. Las ventas subieron desde el primer mes.",
+    nombre:  "Valentina Ríos",
+    negocio: "MiModa Store",
+    inicial: "V",
+  },
+];
+---
+
+<section class="metrics" aria-label="Métricas y testimonios">
+  <div class="wrap">
+
+    <!-- ── Contadores ────────────────────────────────────────────────────── -->
+    <!-- initCounters() en animations.js detecta .counter + data-count + data-suffix -->
+    <div class="metrics-grid" role="list" aria-label="Estadísticas del equipo">
+      {counters.map((c) => (
+        <div class="metric-item" role="listitem">
+          <div class="metric-number-wrap">
+            <span
+              class="counter"
+              data-count={String(c.valor)}
+              data-suffix={c.sufijo}
+              aria-label={`${c.valor}${c.sufijo} ${c.label}`}
+            >0{c.sufijo}</span>
+          </div>
+          <span class="metric-label">{c.label}</span>
+        </div>
+      ))}
+    </div>
+
+    <!-- ── Separador ─────────────────────────────────────────────────────── -->
+    <div class="metrics-divider" aria-hidden="true"></div>
+
+    <!-- ── Testimonios ───────────────────────────────────────────────────── -->
+    <div class="testimonials" id="testimonials-wrapper">
+
+      <header class="testimonials-header">
+        <span class="testimonials-label">Lo que dicen nuestros clientes</span>
+        <h2 class="testimonials-title split-title">
+          Resultados reales de<br>
+          <em class="accent-italic">negocios reales.</em>
+        </h2>
+      </header>
+
+      <!-- Track de slides -->
+      <div class="testimonials-track" aria-live="polite" aria-atomic="true">
+        {testimonios.map((t, i) => (
+          <div
+            class={`testimonial-card${i === 0 ? " testimonial-card--active" : ""}`}
+            role="article"
+            aria-label={`Testimonio de ${t.nombre}`}
+            aria-hidden={i !== 0 ? "true" : "false"}
+          >
+            <!-- Comillas decorativas -->
+            <svg
+              class="testimonial-quote"
+              width="40" height="32"
+              viewBox="0 0 40 32"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M0 32V19.2C0 8.533 5.333 2.133 16 0l2.4 3.2C12.267 4.533 9.2 7.733 9.2 12H16V32H0ZM24 32V19.2C24 8.533 29.333 2.133 40 0l2.4 3.2C36.267 4.533 33.2 7.733 33.2 12H40V32H24Z"
+                fill="currentColor"
+              />
+            </svg>
+
+            <p class="testimonial-text">{t.texto}</p>
+
+            <footer class="testimonial-author">
+              <div class="author-avatar" aria-hidden="true">
+                {t.inicial}
+              </div>
+              <div class="author-info">
+                <span class="author-name">{t.nombre}</span>
+                <span class="author-business">{t.negocio}</span>
+              </div>
+            </footer>
+          </div>
+        ))}
+      </div>
+
+      <!-- Dots de paginación -->
+      <div class="testimonials-dots" role="tablist" aria-label="Testimonios">
+        {testimonios.map((t, i) => (
+          <button
+            class={`t-dot${i === 0 ? " t-dot--active" : ""}`}
+            role="tab"
+            aria-label={`Testimonio ${i + 1}: ${t.nombre}`}
+            aria-selected={i === 0 ? "true" : "false"}
+            data-index={String(i)}
+          ></button>
+        ))}
+      </div>
+
+    </div><!-- /testimonials -->
+  </div>
+</section>
+
+<style>
+  /* ─── Sección ────────────────────────────────────────────────────────────── */
+  .metrics {
+    padding: 100px 0 120px;
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Grain de fondo sutil */
+  .metrics::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse 80% 50% at 50% 0%,
+      var(--accent-glow-soft),
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  /* ─── Grid de contadores ─────────────────────────────────────────────────── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 32px 24px;
+    position: relative;
+  }
+
+  /* Separador vertical entre items */
+  .metric-item:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .metric-number-wrap {
+    position: relative;
+    margin-bottom: 10px;
+  }
+
+  /* El span .counter es el número animado */
+  .counter {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 5vw, 72px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    line-height: 1;
+    display: block;
+  }
+
+  .metric-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.45;
+    max-width: 120px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+
+  /* ─── Separador visual entre contadores y testimonios ────────────────────── */
+  .metrics-divider {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--border-bright),
+      transparent
+    );
+    margin: 72px 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── Testimonios: contenedor ────────────────────────────────────────────── */
+  .testimonials {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .testimonials-header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .testimonials-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+
+  .testimonials-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3.5vw, 48px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    margin: 0;
+  }
+
+  /* ─── Track (posición relativa, las cards son absolutas) ─────────────────── */
+  .testimonials-track {
+    position: relative;
+    min-height: 280px;
+  }
+
+  /* ─── Card de testimonio ─────────────────────────────────────────────────── */
+  .testimonial-card {
+    position: absolute;
+    inset: 0;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px 44px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  .testimonial-card--active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Borde superior accent en la card activa */
+  .testimonial-card--active {
+    border-color: color-mix(in srgb, var(--accent) 25%, var(--border));
+  }
+
+  /* ─── Comillas decorativas ───────────────────────────────────────────────── */
+  .testimonial-quote {
+    color: var(--accent);
+    opacity: 0.2;
+    width: 36px;
+    height: auto;
+    flex-shrink: 0;
+  }
+
+  /* ─── Texto del testimonio ───────────────────────────────────────────────── */
+  .testimonial-text {
+    font-size: 17px;
+    color: var(--text);
+    line-height: 1.75;
+    font-style: italic;
+    margin: 0;
+    flex: 1;
+  }
+
+  /* ─── Autor ──────────────────────────────────────────────────────────────── */
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: auto;
+  }
+
+  .author-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--accent-glow);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .author-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    display: block;
+  }
+
+  .author-business {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    display: block;
+  }
+
+  /* ─── Dots ───────────────────────────────────────────────────────────────── */
+  .testimonials-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 28px;
+  }
+
+  .t-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    border: none;
+    background: var(--border-bright);
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.3s ease, width 0.3s ease;
+  }
+
+  .t-dot--active {
+    background: var(--accent);
+    width: 20px;
+    border-radius: 3px;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  .t-dot:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ─── Responsive ─────────────────────────────────────────────────────────── */
+  @media (max-width: 960px) {
+    .metrics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .metric-item:nth-child(2)::after {
+      display: none;
+    }
+
+    /* Fila inferior sin separador derecho en el último */
+    .metric-item:nth-child(4)::after {
+      display: none;
+    }
+
+    /* Separador horizontal entre filas */
+    .metric-item:nth-child(3),
+    .metric-item:nth-child(4) {
+      border-top: 1px solid var(--border);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .metrics {
+      padding: 72px 0 80px;
+    }
+
+    .metrics-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+    }
+
+    .metric-item {
+      padding: 24px 16px;
+    }
+
+    .metrics-divider {
+      margin: 48px 0;
+    }
+
+    .testimonials-header {
+      text-align: left;
+      margin-bottom: 40px;
+    }
+
+    .testimonials-track {
+      min-height: 320px;
+    }
+
+    .testimonial-card {
+      padding: 28px 24px 24px;
+    }
+
+    .testimonial-text {
+      font-size: 15px;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .metrics-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .metric-item:nth-child(odd)::after {
+      display: block;
+    }
+
+    .metric-item:nth-child(even)::after {
+      display: none;
+    }
+  }
+
+  /* ─── Reduced motion ─────────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .testimonial-card {
+      transition: none;
+    }
+
+    .t-dot {
+      transition: none;
+    }
+  }
+</style>
+
+<script type="module">
+  if (typeof window === 'undefined') return;
+
+  /* ── Animaciones de entrada — requieren GSAP, se ejecutan en `load` ──────── */
+  function initMetricsAnimations() {
+    const gsap           = window.gsap;
+    const ScrollTrigger  = window.ScrollTrigger;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!gsap || !ScrollTrigger || prefersReduced) return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const metricItems = document.querySelectorAll('.metric-item');
+    if (metricItems.length) {
+      gsap.fromTo(metricItems, { opacity: 0, y: 32 }, {
+        opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.1,
+        scrollTrigger: { trigger: '.metrics-grid', start: 'top 85%', once: true },
+      });
+    }
+
+    const testiHeader = document.querySelector('.testimonials-header');
+    if (testiHeader) {
+      gsap.fromTo(testiHeader, { opacity: 0, y: 24 }, {
+        opacity: 1, y: 0, duration: 0.65, ease: 'power3.out',
+        scrollTrigger: { trigger: '.testimonials', start: 'top 82%', once: true },
+      });
+    }
+
+    const testiTrack = document.querySelector('.testimonials-track');
+    if (testiTrack) {
+      gsap.fromTo(testiTrack, { opacity: 0, y: 36 }, {
+        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.15,
+        scrollTrigger: { trigger: '.testimonials', start: 'top 82%', once: true },
+      });
+    }
+  }
+
+  if (document.readyState === 'complete') {
+    initMetricsAnimations();
+  } else {
+    window.addEventListener('load', initMetricsAnimations, { once: true });
+  }
+
+  /* ── Auto-rotación de testimonios ───────────────────────────────────────── */
+  const cards   = document.querySelectorAll('.testimonial-card');
+  const dots    = document.querySelectorAll('.t-dot');
+  const wrapper = document.getElementById('testimonials-wrapper');
+
+  if (!cards.length) return;
+
+  let current    = 0;
+  let intervalId = null;
+
+  function goTo(index) {
+    const prev = current;
+    current    = ((index % cards.length) + cards.length) % cards.length;
+    if (prev === current) return;
+
+    // Lee window.gsap dinámicamente para no depender de disponibilidad al inicio
+    const gsap           = window.gsap;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (gsap && !prefersReduced) {
+      gsap.to(cards[prev], {
+        opacity: 0, y: -16, duration: 0.35, ease: 'power2.in',
+        onComplete() {
+          cards[prev].classList.remove('testimonial-card--active');
+          cards[prev].setAttribute('aria-hidden', 'true');
+          cards[prev].style.pointerEvents = 'none';
+          gsap.fromTo(cards[current], { opacity: 0, y: 20 }, {
+            opacity: 1, y: 0, duration: 0.45, ease: 'power2.out',
+            onStart() {
+              cards[current].classList.add('testimonial-card--active');
+              cards[current].setAttribute('aria-hidden', 'false');
+              cards[current].style.pointerEvents = 'auto';
+            },
+          });
+        },
+      });
+    } else {
+      cards[prev].classList.remove('testimonial-card--active');
+      cards[prev].setAttribute('aria-hidden', 'true');
+      cards[current].classList.add('testimonial-card--active');
+      cards[current].setAttribute('aria-hidden', 'false');
+    }
+
+    dots.forEach((d, i) => {
+      const isActive = i === current;
+      d.classList.toggle('t-dot--active', isActive);
+      d.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+  }
+
+  function startAuto() {
+    clearInterval(intervalId);
+    intervalId = setInterval(() => goTo(current + 1), 4000);
+  }
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => { goTo(i); startAuto(); });
+  });
+
+  wrapper?.addEventListener('mouseenter', () => clearInterval(intervalId));
+  wrapper?.addEventListener('mouseleave', startAuto);
+
+  startAuto();
+</script>

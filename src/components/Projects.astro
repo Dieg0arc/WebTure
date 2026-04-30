@@ -1,0 +1,620 @@
+---
+// No props — datos hardcodeados hasta conectar Strapi
+const projects = [
+  {
+    nombre:      "El Fogón Armenio",
+    cliente:     "Restaurante El Fogón",
+    ciudad:      "Armenia, Quindío",
+    descripcion: "Sitio web con menú digital, reservas online y SEO local.",
+    tags:        ["Astro", "SEO", "WhatsApp"],
+    resultado:   "+340% reservas",
+    color1:      "#b388ff",
+    color2:      "#7e57c2",
+    url:         "#",
+  },
+  {
+    nombre:      "Clínica Sonría",
+    cliente:     "Clínica Dental Sonría",
+    ciudad:      "Manizales, Caldas",
+    descripcion: "Landing de alta conversión para clínica dental con agenda online.",
+    tags:        ["Astro", "Calendly", "SEO"],
+    resultado:   "+180% pacientes",
+    color1:      "#7986cb",
+    color2:      "#3f51b5",
+    url:         "#",
+  },
+  {
+    nombre:      "MiModa Store",
+    cliente:     "Tienda MiModa",
+    ciudad:      "Medellín, Antioquia",
+    descripcion: "E-commerce con catálogo de productos y pasarela de pagos PSE.",
+    tags:        ["Astro", "Strapi", "PSE"],
+    resultado:   "$12M primer mes",
+    color1:      "#f48fb1",
+    color2:      "#c2185b",
+    url:         "#",
+  },
+];
+---
+
+<section class="projects" id="proyectos" aria-label="Proyectos realizados">
+  <div class="wrap">
+
+    <!-- ── Encabezado ──────────────────────────────────────────────────────── -->
+    <div class="proj-header">
+      <div class="proj-header-text">
+        <span class="proj-eyebrow">Proyectos</span>
+        <h2 class="proj-title split-title">
+          Resultados que<br>
+          <em class="accent-italic">hablan solos.</em>
+        </h2>
+        <p class="proj-sub">
+          Cada sitio que construimos está diseñado con un solo objetivo:
+          hacer crecer el negocio de nuestro cliente.
+        </p>
+      </div>
+
+      <!-- Controles prev/next -->
+      <div class="proj-controls" aria-label="Controles del carrusel">
+        <button id="projPrev" class="proj-btn" aria-label="Proyecto anterior">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+        <button id="projNext" class="proj-btn" aria-label="Siguiente proyecto">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Carrusel ────────────────────────────────────────────────────────── -->
+    <div class="proj-track-wrap">
+      <div class="proj-track" role="list" aria-label="Lista de proyectos">
+
+        {projects.map((p, i) => (
+          <article
+            class="proj-card"
+            aria-label={`Proyecto: ${p.nombre}`}
+            style={`--c1: ${p.color1}; --c2: ${p.color2};`}
+          >
+            <!-- Mockup browser visual -->
+            <div class="proj-mockup" aria-hidden="true">
+              <div class="mockup-bar">
+                <span class="mockup-dot mockup-dot--red"></span>
+                <span class="mockup-dot mockup-dot--yellow"></span>
+                <span class="mockup-dot mockup-dot--green"></span>
+                <span class="mockup-url">
+                  {p.url === "#"
+                    ? `webture.co/${p.nombre.toLowerCase().replace(/\s+/g, "-")}`
+                    : p.url}
+                </span>
+              </div>
+              <div class="mockup-screen">
+                <div class="mockup-gradient"></div>
+                <div class="mockup-ui">
+                  <div class="mockup-ui-hero">
+                    <div class="mockup-line mockup-line--title"></div>
+                    <div class="mockup-line mockup-line--sub"></div>
+                    <div class="mockup-cta"></div>
+                  </div>
+                  <div class="mockup-ui-cards">
+                    <div class="mockup-mini-card"></div>
+                    <div class="mockup-mini-card"></div>
+                    <div class="mockup-mini-card"></div>
+                  </div>
+                </div>
+                <div class="mockup-badge">
+                  <svg class="mockup-badge-icon" width="13" height="13" viewBox="0 0 24 24"
+                       fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"
+                       aria-hidden="true">
+                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+                    <polyline points="16 7 22 7 22 13"/>
+                  </svg>
+                  <span class="mockup-badge-text">{p.resultado}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Info del proyecto -->
+            <div class="proj-info">
+              <div class="proj-meta">
+                <span class="proj-number">0{i + 1}</span>
+                <div class="proj-location">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  {p.ciudad}
+                </div>
+              </div>
+
+              <h3 class="proj-name">{p.nombre}</h3>
+              <p class="proj-client">{p.cliente}</p>
+              <p class="proj-desc">{p.descripcion}</p>
+
+              <div class="proj-tags" aria-label="Tecnologías usadas">
+                {p.tags.map(tag => (
+                  <span class="proj-tag">{tag}</span>
+                ))}
+              </div>
+
+              <div class="proj-footer">
+                <div class="proj-result">
+                  <span class="proj-result-label">Resultado</span>
+                  <span class="proj-result-value">{p.resultado}</span>
+                </div>
+                <a href={p.url} class="proj-link" aria-label={`Ver proyecto ${p.nombre}`}>
+                  Ver proyecto
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
+        ))}
+
+      </div>
+    </div>
+
+    <!-- ── Dots paginación ────────────────────────────────────────────────── -->
+    <div class="proj-dots" role="tablist" aria-label="Paginación de proyectos">
+      {projects.map((p, i) => (
+        <button
+          class={`proj-dot${i === 0 ? " active" : ""}`}
+          role="tab"
+          aria-label={`Ir al proyecto ${i + 1}: ${p.nombre}`}
+          aria-selected={i === 0 ? "true" : "false"}
+        ></button>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ─── Sección ────────────────────────────────────────────────────────────── */
+  .projects {
+    padding: 120px 0;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  /* ─── Encabezado ─────────────────────────────────────────────────────────── */
+  .proj-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 56px;
+    gap: 24px;
+  }
+
+  .proj-eyebrow {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .proj-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 4.5vw, 64px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .proj-sub {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 440px;
+    margin: 0;
+  }
+
+  /* ─── Botones prev/next ──────────────────────────────────────────────────── */
+  .proj-controls {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .proj-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border-bright);
+    background: var(--surface);
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+  }
+
+  .proj-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-glow-soft);
+  }
+
+  .proj-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ─── Carrusel ───────────────────────────────────────────────────────────── */
+  .proj-track-wrap {
+    margin: 0 -32px;
+    padding: 0 32px;
+  }
+
+  .proj-track {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    cursor: grab;
+    padding-bottom: 8px;
+  }
+
+  .proj-track::-webkit-scrollbar { display: none; }
+
+  /* ─── Card — visible por defecto, GSAP hace la entrada ───────────────────── */
+  .proj-card {
+    flex: 0 0 420px;
+    min-width: 0;
+    scroll-snap-align: start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .proj-card:hover {
+    border-color: color-mix(in srgb, var(--c1) 40%, transparent);
+    box-shadow: 0 0 40px color-mix(in srgb, var(--c1) 8%, transparent);
+  }
+
+  /* ─── Mockup browser ─────────────────────────────────────────────────────── */
+  .proj-mockup {
+    width: 100%;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mockup-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mockup-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .mockup-dot--red    { background: #ff5f57; }
+  .mockup-dot--yellow { background: #ffbd2e; }
+  .mockup-dot--green  { background: #28c840; }
+
+  .mockup-url {
+    flex: 1;
+    margin-left: 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mockup-screen {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+  }
+
+  .mockup-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--c1), var(--c2));
+    opacity: 0.12;
+  }
+
+  .mockup-ui {
+    position: absolute;
+    inset: 0;
+    padding: 20px 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .mockup-ui-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mockup-line {
+    height: 8px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--c1) 30%, var(--border-bright));
+  }
+
+  .mockup-line--title { width: 65%; height: 12px; }
+  .mockup-line--sub   { width: 45%; }
+
+  .mockup-cta {
+    width: 80px;
+    height: 24px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--c1), var(--c2));
+    opacity: 0.7;
+    margin-top: 4px;
+  }
+
+  .mockup-ui-cards {
+    display: flex;
+    gap: 8px;
+  }
+
+  .mockup-mini-card {
+    flex: 1;
+    height: 52px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--c1) 10%, var(--surface-2));
+    border: 1px solid color-mix(in srgb, var(--c1) 20%, var(--border));
+  }
+
+  .mockup-badge {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(8px);
+    border: 1px solid color-mix(in srgb, var(--c1) 35%, transparent);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--c1);
+    white-space: nowrap;
+  }
+
+  .mockup-badge-icon {
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  /* ─── Info del proyecto ──────────────────────────────────────────────────── */
+  .proj-info {
+    padding: 24px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .proj-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+  }
+
+  .proj-number {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+
+  .proj-location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .proj-name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .proj-client {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    margin: 0;
+  }
+
+  .proj-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .proj-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .proj-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    text-transform: uppercase;
+  }
+
+  .proj-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .proj-result {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .proj-result-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .proj-result-value {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--c1);
+    letter-spacing: -0.02em;
+  }
+
+  .proj-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border: 1px solid var(--border-bright);
+    border-radius: 8px;
+    padding: 8px 14px;
+    transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  }
+
+  .proj-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-glow-soft);
+  }
+
+  .proj-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ─── Dots de paginación ─────────────────────────────────────────────────── */
+  .proj-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 36px;
+  }
+
+  .proj-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    border: none;
+    background: var(--border-bright);
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.3s ease, width 0.3s ease;
+  }
+
+  .proj-dot.active {
+    background: var(--accent);
+    width: 20px;
+    border-radius: 3px;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  .proj-dot:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ─── Responsive ─────────────────────────────────────────────────────────── */
+  @media (max-width: 767px) {
+    .projects { padding: 80px 0; }
+
+    .proj-header {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 32px;
+    }
+
+    .proj-controls { align-self: flex-end; }
+
+    .proj-card { flex: 0 0 calc(100vw - 64px); }
+
+    .proj-sub { font-size: 15px; }
+  }
+
+  @media (max-width: 479px) {
+    .proj-card { flex: 0 0 calc(100vw - 48px); }
+
+    .proj-track-wrap {
+      margin: 0 -16px;
+      padding: 0 16px;
+    }
+
+    .mockup-screen { height: 180px; }
+  }
+
+  /* ─── Reduced motion ─────────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .proj-btn,
+    .proj-link,
+    .proj-dot {
+      transition: none;
+    }
+  }
+</style>
+
+<!-- Carrusel, entrada GSAP y dots son manejados por initProjectsCarousel() en animations.js -->

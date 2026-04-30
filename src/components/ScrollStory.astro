@@ -1,73 +1,72 @@
 ---
-// No props — component is self-contained
+// ScrollStory.astro — Horizontal scroll con GSAP pin: true
+// GSAP pin crea un pin-spacer y mueve el track con x en píxeles
+// GSAP desde window.gsap (CDN) — nunca import npm
 ---
 
-<section class="scrollstory" id="scrollstory" aria-label="Por qué necesitas una web profesional">
-
-  <div class="ss-sticky">
-
-    <!-- Indicador lateral de progreso -->
-    <div class="ss-rail" aria-hidden="true">
-      <div class="ss-rail-line"></div>
-      <button class="ss-dot ss-dot--active" data-chapter="0" aria-label="Capítulo 1"></button>
-      <button class="ss-dot"               data-chapter="1" aria-label="Capítulo 2"></button>
-      <button class="ss-dot"               data-chapter="2" aria-label="Capítulo 3"></button>
-    </div>
-
-    <!-- ── CAPÍTULO 0: El problema ─────────────────────────────────────────── -->
-    <div class="ss-chapter ss-chapter--active" data-chapter="0">
+<section
+  class="scrollstory"
+  id="scrollstory"
+  aria-label="Por qué necesitas una web profesional"
+>
+  <!-- Track horizontal — GSAP mueve esto con x -->
+  <div class="ss-track">
+    <!-- ── Capítulo 0: El problema ──────────────────────────────── -->
+    <div class="ss-panel">
       <div class="wrap ss-inner">
-
         <div class="ss-text">
           <span class="ss-label">El problema</span>
           <h2 class="ss-title split-title">
-            El <em class="accent-italic">73%</em> de tus clientes<br>
+            El <em class="accent-italic">73%</em> de tus clientes<br />
             te busca en Google primero.
           </h2>
           <p class="ss-body">
-            Si no apareces, no existes. Cada día sin página web es un cliente que
-            se va a la competencia que sí tiene presencia digital.
+            Si no apareces, no existes. Cada día sin página web es un cliente
+            que se va a la competencia que sí tiene presencia digital.
           </p>
         </div>
-
         <div class="ss-visual ss-visual--0">
-          <div class="bar-chart" role="img" aria-label="Comparación de efectividad web">
+          <div
+            class="bar-chart"
+            role="img"
+            aria-label="Comparación: Sin web 12%, Plantilla gratis 31%, WebTure 92%"
+          >
             <div class="bar-row">
               <span class="bar-label">Sin web</span>
               <div class="bar-wrap">
-                <div class="bar-fill" style="--pct: 12%; --color: #ef4444"></div>
+                <div class="bar-fill bar-fill--low"></div>
               </div>
               <span class="bar-pct">12%</span>
             </div>
             <div class="bar-row">
               <span class="bar-label">Plantilla gratis</span>
               <div class="bar-wrap">
-                <div class="bar-fill" style="--pct: 31%; --color: #f97316"></div>
+                <div class="bar-fill bar-fill--mid"></div>
               </div>
               <span class="bar-pct">31%</span>
             </div>
             <div class="bar-row">
               <span class="bar-label">WebTure</span>
               <div class="bar-wrap">
-                <div class="bar-fill" style="--pct: 92%; --color: var(--accent)"></div>
+                <div class="bar-fill bar-fill--high"></div>
               </div>
               <span class="bar-pct">92%</span>
             </div>
           </div>
-          <p class="chart-caption">Tasa de conversión promedio por tipo de presencia web</p>
+          <p class="chart-caption">
+            Tasa de conversión promedio por tipo de presencia web
+          </p>
         </div>
-
       </div>
     </div>
 
-    <!-- ── CAPÍTULO 1: La solución ─────────────────────────────────────────── -->
-    <div class="ss-chapter" data-chapter="1">
+    <!-- ── Capítulo 1: La solución ──────────────────────────────── -->
+    <div class="ss-panel">
       <div class="wrap ss-inner">
-
         <div class="ss-text">
           <span class="ss-label">La solución</span>
           <h2 class="ss-title split-title">
-            Tres pilares.<br>
+            Tres pilares.<br />
             Un sitio que <em class="accent-italic">rinde.</em>
           </h2>
           <p class="ss-body">
@@ -75,63 +74,78 @@
             trabajan por tu negocio las 24 horas.
           </p>
         </div>
-
         <div class="ss-visual ss-visual--1">
           <div class="pillar-grid">
-
             <div class="pillar-card">
               <div class="pillar-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  aria-hidden="true"
+                  ><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg
+                >
               </div>
               <h3>Velocidad extrema</h3>
               <p>Core Web Vitals en verde. Carga en menos de 1.5&nbsp;s.</p>
             </div>
-
             <div class="pillar-card">
               <div class="pillar-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                </svg>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  aria-hidden="true"
+                  ><path
+                    d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"
+                  ></path></svg
+                >
               </div>
               <h3>Diseño que convierte</h3>
               <p>CTAs estratégicos. Cada elemento tiene un propósito.</p>
             </div>
-
             <div class="pillar-card">
               <div class="pillar-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                  <rect x="5" y="2" width="14" height="20" rx="2"/>
-                  <path d="M12 18h.01"/>
-                </svg>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  aria-hidden="true"
+                  ><rect x="5" y="2" width="14" height="20" rx="2"></rect><path
+                    d="M12 18h.01"></path></svg
+                >
               </div>
               <h3>100% Responsive</h3>
               <p>Perfecto en celular, tablet y escritorio. Siempre.</p>
             </div>
-
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- ── CAPÍTULO 2: El resultado ────────────────────────────────────────── -->
-    <div class="ss-chapter" data-chapter="2">
+    <!-- ── Capítulo 2: El resultado ─────────────────────────────── -->
+    <div class="ss-panel">
       <div class="wrap ss-inner">
-
         <div class="ss-text">
           <span class="ss-label">El resultado</span>
           <h2 class="ss-title split-title">
-            De la idea al sitio<br>
+            De la idea al sitio<br />
             en <em class="accent-italic">4 días.</em>
           </h2>
           <p class="ss-body">
-            Proceso claro, entregas puntuales, sin sorpresas. Tu negocio en línea
-            esta semana.
+            Proceso claro, entregas puntuales, sin sorpresas. Tu negocio en
+            línea esta semana.
           </p>
         </div>
-
         <div class="ss-visual ss-visual--2">
           <div class="timeline-mini">
             <div class="tm-item">
@@ -146,7 +160,7 @@
               <div class="tm-dot"></div>
               <div class="tm-content">
                 <span class="tm-day">Día 02</span>
-                <span class="tm-name">Diseño en Figma</span>
+                <span class="tm-name">Diseño</span>
               </div>
             </div>
             <div class="tm-connector"></div>
@@ -162,52 +176,52 @@
               <div class="tm-dot"></div>
               <div class="tm-content">
                 <span class="tm-day">Día 04</span>
-                <span class="tm-name">Lanzamiento 🚀</span>
+                <span class="tm-name">
+                  Lanzamiento
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"
+                       aria-hidden="true"
+                       style="display:inline-block;vertical-align:-2px;margin-left:4px">
+                    <path d="M7 17L17 7M17 7H7M17 7v10"/>
+                  </svg>
+                </span>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
-
-  </div>
+  </div><!-- /ss-track -->
 </section>
 
 <style>
-  /* ─── Sección: 300vh de scroll space ────────────────────────────────────── */
+  /* ── Sección trigger ─────────────────────────────────────────────────────── */
   .scrollstory {
-    height: 300vh;
-    position: relative;
-  }
-
-  /* ─── Panel pegajoso ─────────────────────────────────────────────────────── */
-  .ss-sticky {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
     background: var(--bg);
+    overflow: hidden; /* Evita que el scroll horizontal rompa el diseño */
   }
 
-  /* ─── Capítulos: apilados en absoluto ────────────────────────────────────── */
-  .ss-chapter {
-    position: absolute;
-    inset: 0;
+  /* ── Track: paneles en fila, GSAP los mueve horizontalmente ────────────── */
+  .ss-track {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap; /* Asegura que todos los paneles queden en una fila */
+    width: max-content; /* Se adapta dinámicamente según la cantidad de paneles */
+    height: 100svh;
+    will-change: transform; /* Optimización GPU: aplicado solo al padre */
+  }
+
+  /* ── Cada panel ocupa 100vw ──────────────────────────────────────────────── */
+  .ss-panel {
+    width: 100vw;
+    height: 100svh;
     display: flex;
     align-items: center;
-    opacity: 0;
-    pointer-events: none;
+    flex-shrink: 0; /* Evita que se encojan en el contenedor flex */
   }
 
-  .ss-chapter--active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  /* ─── Grid interior ──────────────────────────────────────────────────────── */
+  /* ── Grid interior ───────────────────────────────────────────────────────── */
   .ss-inner {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -216,7 +230,7 @@
     width: 100%;
   }
 
-  /* ─── Texto del capítulo ─────────────────────────────────────────────────── */
+  /* ── Texto ────────────────────────────────────────────────────────────────── */
   .ss-label {
     display: block;
     font-family: var(--font-mono);
@@ -229,7 +243,7 @@
 
   .ss-title {
     font-family: var(--font-display);
-    font-size: clamp(36px, 4.5vw, 64px);
+    font-size: clamp(32px, 4.2vw, 60px);
     font-weight: 800;
     line-height: 1.05;
     letter-spacing: -0.04em;
@@ -244,53 +258,7 @@
     max-width: 420px;
   }
 
-  /* ─── Rail lateral ───────────────────────────────────────────────────────── */
-  .ss-rail {
-    position: absolute;
-    left: 24px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-    z-index: 10;
-  }
-
-  .ss-rail-line {
-    position: absolute;
-    width: 1px;
-    height: 64px;
-    background: var(--border);
-    top: 4px;
-  }
-
-  .ss-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--border-bright);
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 1;
-    margin: 8px 0;
-    padding: 0;
-  }
-
-  .ss-dot:hover {
-    background: var(--accent-dim);
-    transform: scale(1.2);
-  }
-
-  .ss-dot--active {
-    background: var(--accent);
-    box-shadow: 0 0 12px var(--accent);
-    transform: scale(1.3);
-  }
-
-  /* ─── Bar chart (capítulo 0) ─────────────────────────────────────────────── */
+  /* ── Bar chart (capítulo 0) ──────────────────────────────────────────────── */
   .bar-chart {
     display: flex;
     flex-direction: column;
@@ -322,12 +290,23 @@
 
   .bar-fill {
     height: 100%;
-    width: var(--pct);
-    background: var(--color);
     border-radius: 6px;
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .bar-fill--low {
+    width: 12%;
+    background: #ef4444;
+  }
+  .bar-fill--mid {
+    width: 31%;
+    background: #f97316;
+  }
+  .bar-fill--high {
+    width: 92%;
+    background: var(--accent);
   }
 
   .bar-pct {
@@ -346,7 +325,7 @@
     line-height: 1.4;
   }
 
-  /* ─── Pillar cards (capítulo 1) ──────────────────────────────────────────── */
+  /* ── Pillar cards (capítulo 1) ───────────────────────────────────────────── */
   .pillar-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -358,7 +337,9 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 20px 16px;
-    transition: border-color 0.3s ease, transform 0.3s ease;
+    transition:
+      border-color 0.3s ease,
+      transform 0.3s ease;
   }
 
   .pillar-card:hover {
@@ -369,7 +350,7 @@
   .pillar-icon {
     width: 44px;
     height: 44px;
-    background: rgba(179, 136, 255, 0.08);
+    background: var(--accent-glow-soft);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -395,7 +376,7 @@
     margin: 0;
   }
 
-  /* ─── Timeline mini (capítulo 2) ─────────────────────────────────────────── */
+  /* ── Timeline mini (capítulo 2) ──────────────────────────────────────────── */
   .timeline-mini {
     display: flex;
     flex-direction: column;
@@ -416,7 +397,10 @@
     border: 2px solid var(--border-bright);
     flex-shrink: 0;
     z-index: 1;
-    transition: all 0.3s ease;
+    transition:
+      background 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
   }
 
   .tm-item--accent .tm-dot {
@@ -452,16 +436,12 @@
     color: var(--text);
   }
 
-  /* ─── Responsive ─────────────────────────────────────────────────────────── */
+  /* ── Responsive ──────────────────────────────────────────────────────────── */
   @media (max-width: 767px) {
     .ss-inner {
       grid-template-columns: 1fr;
-      gap: 40px;
+      gap: 32px;
       padding-top: 60px;
-    }
-
-    .ss-rail {
-      display: none;
     }
 
     .pillar-grid {
@@ -484,149 +464,96 @@
     .bar-row {
       grid-template-columns: 80px 1fr 36px;
     }
-
     .bar-label {
       font-size: 11px;
     }
   }
 
-  /* ─── Reduced motion ─────────────────────────────────────────────────────── */
+  /* ── prefers-reduced-motion ──────────────────────────────────────────────── */
   @media (prefers-reduced-motion: reduce) {
-    .ss-chapter {
-      transition: none;
+    .ss-track {
+      flex-direction: column;
+      width: 100%;
+      will-change: auto;
+    }
+
+    .ss-panel {
+      width: 100%;
+      height: auto;
+      min-height: 100svh;
     }
 
     .bar-fill {
+      transform: scaleX(1);
       transition: none;
     }
 
-    .pillar-card {
+    .pillar-card,
+    .tm-dot {
       transition: none;
     }
   }
 </style>
 
-<script type="module">
-  import lenis from '../scripts/lenis.js';
+<script>
+  if (typeof window !== "undefined") {
+    const initScrollStory = () => {
+      if (!window.gsap || !window.ScrollTrigger) return;
 
-  const gsap          = window.gsap;
-  const ScrollTrigger = window.ScrollTrigger;
+      const gsap = window.gsap;
+      const ScrollTrigger = window.ScrollTrigger;
+      gsap.registerPlugin(ScrollTrigger);
 
-  if (!gsap || !ScrollTrigger) {
-    console.warn('[ScrollStory] GSAP o ScrollTrigger no disponibles.');
-  } else {
-    gsap.registerPlugin(ScrollTrigger);
+      const section = document.querySelector(".scrollstory");
+      const track = document.querySelector(".ss-track");
+      const prefersRed = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const chapters = document.querySelectorAll('.ss-chapter');
-    const dots     = document.querySelectorAll('.ss-dot');
-    const bars     = document.querySelectorAll('.bar-fill');
+      if (!section || !track || prefersRed) return;
 
-    /* ── Activar/desactivar capítulos ──────────────────────────────────── */
-    let current = 0;
+      // Encapsulación con gsap.context()
+      // Todo lo que sea un selector (como ".bar-fill") se buscará SOLAMENTE dentro de 'section'
+      let ctx = gsap.context(() => {
+        // Cálculo de Distancia Real
+        const getScrollAmount = () => -(track.scrollWidth - window.innerWidth);
 
-    function activateBars(show) {
-      bars.forEach((bar) => {
-        if (show) {
-          bar.style.transform = 'scaleX(1)';
-        } else {
-          /* Quitar transición momentáneamente para reset instantáneo */
-          bar.style.transition = 'none';
-          bar.style.transform  = 'scaleX(0)';
-          /* Forzar reflow para que la transición re-aplique en la próxima activación */
-          bar.getBoundingClientRect();
-          bar.style.transition = '';
-        }
-      });
-    }
+        // Optimización GPU: Animamos la caja padre entera (.ss-track), NO los paneles
+        gsap.to(track, {
+          x: getScrollAmount,
+          ease: "none", // Movimiento lineal
+          scrollTrigger: {
+            trigger: section, // Contenedor envolvente
+            start: "top top",
+            // Pin dura exactamente la cantidad que nos movemos (ratio 1:1)
+            end: () => `+=${track.scrollWidth - window.innerWidth}`,
+            pin: true,
+            scrub: 1, // Fluididad total
+            invalidateOnRefresh: true, // Recalcula si el usuario rota o redimensiona pantalla
+          },
+        });
 
-    function activateChapter(index) {
-      if (index === current) return;
+        // Gráfico de barras
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top 80%",
+          once: true,
+          onEnter: () => {
+            gsap.utils.toArray(".bar-fill").forEach((bar) => {
+              // bar ahora es solo .bar-fill dentro de .scrollstory
+              bar.style.transform = "scaleX(1)";
+            });
+          },
+        });
+      }, section);
 
-      /* Resetear barras si salimos del capítulo 0 */
-      if (current === 0 && index !== 0) activateBars(false);
+      // Accesibilidad & Limpieza: Si usaras Astro View Transitions, ctx.revert() previene fugas de memoria
+      document.addEventListener("astro:before-swap", () => ctx.revert(), { once: true });
+    };
 
-      chapters.forEach((ch, i) => {
-        ch.classList.toggle('ss-chapter--active', i === index);
-      });
-
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('ss-dot--active', i === index);
-      });
-
-      /* Animar las barras cuando activamos el capítulo 0 */
-      if (index === 0) activateBars(true);
-
-      current = index;
-    }
-
-    /* ── MutationObserver: GSAP anima las transiciones entre capítulos ── */
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') return;
-
-        const el = mutation.target;
-
-        if (el.classList.contains('ss-chapter--active')) {
-          gsap.fromTo(
-            el,
-            { opacity: 0, y: 30 },
-            { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
-              onStart() { el.style.pointerEvents = 'auto'; } },
-          );
-        } else {
-          gsap.to(el, {
-            opacity: 0, y: -20, duration: 0.4, ease: 'power2.in',
-            onStart() { el.style.pointerEvents = 'none'; },
-          });
-        }
-      });
-    });
-
-    chapters.forEach((ch) => observer.observe(ch, { attributes: true }));
-
-    /* ── ScrollTrigger: controla qué capítulo mostrar ───────────────────── */
-    ScrollTrigger.create({
-      trigger: '.scrollstory',
-      start: 'top top',
-      end: 'bottom bottom',
-      onUpdate(self) {
-        const p = self.progress;
-        if      (p < 0.33) activateChapter(0);
-        else if (p < 0.66) activateChapter(1);
-        else               activateChapter(2);
-      },
-    });
-
-    /* ── Dots: scroll programático con Lenis ─────────────────────────── */
-    dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => {
-        const section       = document.querySelector('.scrollstory');
-        const sectionTop    = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
-        const targetScroll  = sectionTop + (sectionHeight / 3) * i;
-
-        if (lenis) {
-          lenis.scrollTo(targetScroll, { duration: 1.2 });
-        } else {
-          window.scrollTo({ top: targetScroll, behavior: 'smooth' });
-        }
-      });
-    });
-
-    /* ── Animar barras inmediatamente si el capítulo 0 ya está visible ── */
-    const section = document.querySelector('.scrollstory');
-    if (section && section.getBoundingClientRect().top < window.innerHeight) {
-      activateBars(true);
-    }
-
-    /* ── prefers-reduced-motion: saltar animaciones GSAP ─────────────── */
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      observer.disconnect();
-      chapters.forEach((ch, i) => {
-        ch.style.opacity       = i === 0 ? '1' : '0';
-        ch.style.pointerEvents = i === 0 ? 'auto' : 'none';
-      });
-      activateBars(true);
+    // Usamos `load` para garantizar que GSAP (defer) ya está disponible
+    if (document.readyState === 'complete') {
+      initScrollStory();
+    } else {
+      window.addEventListener('load', initScrollStory, { once: true });
     }
   }
 </script>

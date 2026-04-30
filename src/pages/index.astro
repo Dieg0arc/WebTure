@@ -4,17 +4,22 @@ import Navbar from '../components/Navbar.astro';
 import Hero from '../components/Hero.astro';
 import TechBand from '../components/TechBand.astro';
 import ScrollStory from '../components/ScrollStory.astro';
+import Projects from '../components/Projects.astro';
+import Services from '../components/Services.astro';
+import Metrics from '../components/Metrics.astro';
 ---
 
 <Layout>
   <Navbar />
-  <main>
+  <main id="main-content">
     <Hero />
     <TechBand />
     <ScrollStory />
-    <!-- Resto de componentes se agregarán progresivamente -->
-    <div style="height: 20vh; display: flex; align-items: center; justify-content: center; color: #444; font-family: monospace; font-size: 13px;">
-      → Projects · Services · Metrics · Process · Pricing · Contact (en construcción)
-    </div>
+    <Projects />
+    <Services />
+    <Metrics />
+    <section id="proceso" aria-label="Proceso" style="padding: 60px 0; border-top: 1px solid var(--border);"></section>
+    <section id="precios" aria-label="Precios" style="padding: 1px 0;"></section>
+    <section id="contacto" aria-label="Contacto" style="padding: 1px 0;"></section>
   </main>
 </Layout>

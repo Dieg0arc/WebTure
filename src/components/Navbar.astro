@@ -56,7 +56,7 @@ const WA_URL =
   </div>
 
   <!-- Menú mobile -->
-  <div class="nav-mobile" id="navMobile" aria-hidden="true" role="dialog" aria-label="Menú de navegación">
+  <div class="nav-mobile" id="navMobile" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Menú de navegación">
     <ul role="list">
       <li><a href="#inicio"    class="mobile-link">Inicio</a></li>
       <li><a href="#proyectos" class="mobile-link">Proyectos</a></li>
@@ -71,7 +71,13 @@ const WA_URL =
       rel="noopener noreferrer"
       class="btn-primary mobile-cta"
     >
-      Hablemos →
+      Hablemos
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round"
+           aria-hidden="true">
+        <path d="M7 17L17 7M17 7H7M17 7v10"/>
+      </svg>
     </a>
   </div>
 </nav>
@@ -370,6 +376,9 @@ const WA_URL =
       burger.setAttribute('aria-expanded', 'true');
       mobile.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
+      // Mover foco al primer enlace del menú
+      var firstLink = mobile.querySelector('.mobile-link');
+      if (firstLink) { firstLink.focus(); }
     }
 
     function closeMenu() {
@@ -379,6 +388,8 @@ const WA_URL =
       burger.setAttribute('aria-expanded', 'false');
       mobile.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
+      // Restaurar foco al burger
+      burger.focus();
     }
 
     burger.addEventListener('click', function () {
@@ -393,6 +404,22 @@ const WA_URL =
     /* ── ESC cierra el menú ─────────────────────────────────────────── */
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && isOpen) { closeMenu(); }
+    });
+
+    /* ── Focus trap dentro del dialog ──────────────────────────────── */
+    mobile.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab' || !isOpen) { return; }
+      var focusable = Array.prototype.slice.call(
+        mobile.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')
+      );
+      if (!focusable.length) { return; }
+      var first = focusable[0];
+      var last  = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+      }
     });
   })();
 </script>

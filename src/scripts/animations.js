@@ -1,179 +1,13 @@
-// gsap, ScrollTrigger y SplitText vienen del CDN cargado en <head>
-// No importamos desde npm para evitar duplicar el bundle de Vite
-const gsap          = typeof window !== 'undefined' ? window.gsap          : null;
-const ScrollTrigger = typeof window !== 'undefined' ? window.ScrollTrigger : null;
-const SplitText     = typeof window !== 'undefined' ? window.SplitText     : null;
+// gsap, ScrollTrigger y SplitText vienen del CDN — se leen dentro de cada función
+// para garantizar disponibilidad cuando initAll() se llama en el evento `load`
 
-/* ─── 1. Navbar scroll state ─────────────────────────────────────────────── */
-export function initNavbar() {
-  if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
-
-  const nav = document.getElementById('nav');
-  if (!nav) return;
-
-  let scrolled = false;
-
-  ScrollTrigger.create({
-    start: 'top -50px',
-    onEnter: () => {
-      if (scrolled) return;
-      scrolled = true;
-      nav.classList.add('scrolled');
-    },
-    onLeaveBack: () => {
-      scrolled = false;
-      nav.classList.remove('scrolled');
-    },
-  });
-}
-
-/* ─── 2. Hero parallax multicapa ─────────────────────────────────────────── */
-// Reserved - currently called directly from Hero.astro
-export function initHeroParallax() {
-  if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  const eyebrow = document.querySelector('.hero-eyebrow');
-  const h1      = document.querySelector('.hero-h1');
-  const sub     = document.querySelector('.hero-sub');
-  const cta     = document.querySelector('.cta-row');
-
-  if (eyebrow) {
-    gsap.to(eyebrow, {
-      y: -60, opacity: 0, ease: 'none',
-      scrollTrigger: {
-        trigger: '.hero', start: 'top top', end: '30% top', scrub: 1,
-      },
-    });
-  }
-
-  if (h1) {
-    gsap.to(h1, {
-      y: -120, scale: 0.95, ease: 'none',
-      scrollTrigger: {
-        trigger: '.hero', start: 'top top', end: '50% top', scrub: 1.5,
-      },
-    });
-  }
-
-  if (sub) {
-    gsap.to(sub, {
-      y: -80, opacity: 0, ease: 'none',
-      scrollTrigger: {
-        trigger: '.hero', start: 'top top', end: '40% top', scrub: 1.2,
-      },
-    });
-  }
-
-  if (cta) {
-    gsap.to(cta, {
-      y: -40, opacity: 0, ease: 'none',
-      scrollTrigger: {
-        trigger: '.hero', start: 'top top', end: '35% top', scrub: 1,
-      },
-    });
-  }
-}
-
-/* ─── 3. Hero entrance (carga de página) ─────────────────────────────────── */
-// Reserved - currently called directly from Hero.astro
-export function initHeroEntrance() {
-  if (typeof window === 'undefined' || !gsap) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  const eyebrow = document.querySelector('.hero-eyebrow');
-  const h1      = document.querySelector('.hero-h1');
-  const sub     = document.querySelector('.hero-sub');
-  const cta     = document.querySelector('.cta-row');
-
-  if (!h1) return;
-
-  const tl = gsap.timeline({ delay: 0.2 });
-
-  if (eyebrow) {
-    tl.from(eyebrow, { opacity: 0, y: 24, duration: 0.7, ease: 'power3.out' });
-  }
-
-  // H1 carácter por carácter con SplitText
-  let split = null;
-  if (SplitText) {
-    try {
-      split = new SplitText(h1, { type: 'chars,words' });
-      gsap.set(h1, { perspective: 600 });
-      tl.from(
-        split.chars,
-        { opacity: 0, y: 40, rotateX: -30, stagger: 0.022, duration: 0.65, ease: 'back.out(1.7)' },
-        '-=0.3',
-      );
-    } catch {
-      split = null;
-    }
-  }
-
-  if (!split) {
-    tl.from(h1, { opacity: 0, y: 40, duration: 0.8, ease: 'power3.out' }, '-=0.3');
-  }
-
-  if (sub) {
-    tl.from(sub, { opacity: 0, y: 20, duration: 0.65, ease: 'power3.out' }, '-=0.4');
-  }
-
-  if (cta) {
-    tl.from(cta, { opacity: 0, y: 20, duration: 0.6, ease: 'power3.out' }, '-=0.35');
-  }
-}
-
-/* ─── 4. Scroll Story — capítulos ────────────────────────────────────────── */
-// Reserved - currently called directly from ScrollStory.astro
-export function initScrollStory() {
-  if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
-
-  const section  = document.querySelector('.scrollstory');
-  const chapters = document.querySelectorAll('.ss-chapter');
-  const dots     = document.querySelectorAll('.ss-dot');
-
-  if (!section || !chapters.length) return;
-
-  chapters.forEach((ch, i) => {
-    gsap.set(ch, { opacity: i === 0 ? 1 : 0, y: i === 0 ? 0 : 30 });
-  });
-  dots[0]?.classList.add('active');
-
-  let activeIndex = 0;
-
-  function goTo(index) {
-    if (index === activeIndex) return;
-
-    gsap.to(chapters[activeIndex], { opacity: 0, y: -24, duration: 0.45, ease: 'power2.in' });
-    dots[activeIndex]?.classList.remove('active');
-
-    activeIndex = index;
-
-    gsap.fromTo(
-      chapters[activeIndex],
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' },
-    );
-    dots[activeIndex]?.classList.add('active');
-  }
-
-  ScrollTrigger.create({
-    trigger: section,
-    start: 'top top',
-    end: 'bottom bottom',
-    onUpdate(self) {
-      const p = self.progress;
-      let next = 0;
-      if (p >= 0.34 && p < 0.67) next = 1;
-      else if (p >= 0.67) next = 2;
-      goTo(next);
-    },
-  });
-}
-
-/* ─── 5. Split titles ────────────────────────────────────────────────────── */
+/* ─── 1. Split titles ────────────────────────────────────────────────────── */
 export function initSplitTitles() {
-  if (typeof window === 'undefined' || !gsap || !ScrollTrigger || !SplitText) return;
+  if (typeof window === 'undefined') return;
+  const gsap          = window.gsap;
+  const ScrollTrigger = window.ScrollTrigger;
+  const SplitText     = window.SplitText;
+  if (!gsap || !ScrollTrigger || !SplitText) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   document.querySelectorAll('.split-title').forEach((el) => {
@@ -183,7 +17,6 @@ export function initSplitTitles() {
     } catch {
       return;
     }
-
     gsap.set(el, { perspective: 600 });
     gsap.from(split.chars, {
       opacity: 0, y: 32, rotateX: -20,
@@ -193,9 +26,15 @@ export function initSplitTitles() {
   });
 }
 
-/* ─── 6. Contadores animados ─────────────────────────────────────────────── */
+/* ─── 2. Contadores animados ─────────────────────────────────────────────── */
 export function initCounters() {
-  if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
+  if (typeof window === 'undefined') return;
+  const gsap          = window.gsap;
+  const ScrollTrigger = window.ScrollTrigger;
+  if (!gsap || !ScrollTrigger) return;
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  gsap.registerPlugin(ScrollTrigger);
 
   document.querySelectorAll('[data-count]').forEach((el) => {
     const target   = parseFloat(el.getAttribute('data-count') ?? '0');
@@ -209,6 +48,10 @@ export function initCounters() {
       start: 'top 88%',
       once: true,
       onEnter() {
+        if (prefersReduced) {
+          el.textContent = prefix + target.toFixed(decimals) + suffix;
+          return;
+        }
         gsap.to(obj, {
           val: target, duration: 2.2, ease: 'power2.out',
           onUpdate() {
@@ -220,9 +63,12 @@ export function initCounters() {
   });
 }
 
-/* ─── 7. Línea SVG del proceso ───────────────────────────────────────────── */
+/* ─── 3. Línea SVG del proceso ───────────────────────────────────────────── */
 export function initProcessLine() {
-  if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
+  if (typeof window === 'undefined') return;
+  const gsap          = window.gsap;
+  const ScrollTrigger = window.ScrollTrigger;
+  if (!gsap || !ScrollTrigger) return;
 
   const path = document.querySelector('.process-line path');
   if (!path) return;
@@ -239,12 +85,15 @@ export function initProcessLine() {
   });
 }
 
-/* ─── 8. Fade-ups ────────────────────────────────────────────────────────── */
+/* ─── 4. Fade-ups ────────────────────────────────────────────────────────── */
 export function initFadeUps() {
-  if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
+  if (typeof window === 'undefined') return;
+  const gsap          = window.gsap;
+  const ScrollTrigger = window.ScrollTrigger;
+  if (!gsap || !ScrollTrigger) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const els = document.querySelectorAll('.fade-up');
+  const els    = document.querySelectorAll('.fade-up');
   const groups = new Map();
 
   els.forEach((el) => {
@@ -261,16 +110,35 @@ export function initFadeUps() {
   });
 }
 
-/* ─── 9. Carrusel de proyectos ───────────────────────────────────────────── */
+/* ─── 5. Carrusel de proyectos ───────────────────────────────────────────── */
 export function initProjectsCarousel() {
   if (typeof window === 'undefined') return;
 
   const track = document.querySelector('.proj-track');
   if (!track) return;
 
-  let isDragging    = false;
-  let startX        = 0;
-  let scrollLeftPos = 0;
+  const gsap           = window.gsap;
+  const ScrollTrigger  = window.ScrollTrigger;
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Entrada staggered de cards ─────────────────────────────────────────── */
+  if (gsap && ScrollTrigger && !prefersReduced) {
+    gsap.registerPlugin(ScrollTrigger);
+    const cards = document.querySelectorAll('.proj-card');
+    if (cards.length) {
+      gsap.fromTo(
+        cards,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.12,
+          scrollTrigger: { trigger: '.projects', start: 'top 80%', once: true },
+        },
+      );
+    }
+  }
+
+  /* ── Drag (mouse) ─────────────────────────────────────────────────────────── */
+  let isDragging = false, startX = 0, scrollLeftPos = 0;
 
   track.addEventListener('mousedown', (e) => {
     isDragging    = true;
@@ -285,7 +153,6 @@ export function initProjectsCarousel() {
     track.style.cursor     = 'grab';
     track.style.userSelect = '';
   };
-
   track.addEventListener('mouseleave', endDrag);
   track.addEventListener('mouseup',    endDrag);
 
@@ -297,9 +164,8 @@ export function initProjectsCarousel() {
     track.scrollLeft = scrollLeftPos - walk;
   });
 
-  // Touch
-  let touchStartX = 0;
-  let touchScrollLeft = 0;
+  /* ── Touch ────────────────────────────────────────────────────────────────── */
+  let touchStartX = 0, touchScrollLeft = 0;
 
   track.addEventListener('touchstart', (e) => {
     touchStartX     = e.touches[0].pageX;
@@ -310,77 +176,43 @@ export function initProjectsCarousel() {
     track.scrollLeft = touchScrollLeft + (touchStartX - e.touches[0].pageX);
   }, { passive: true });
 
-  // Botones prev / next
+  /* ── Botones prev / next ──────────────────────────────────────────────────── */
   const cardWidth = () => {
     const card = track.querySelector('.proj-card');
-    return card ? card.offsetWidth + 24 : 440;
+    return card ? card.offsetWidth + 24 : 444;
   };
 
   document.getElementById('projPrev')?.addEventListener('click', () =>
     track.scrollBy({ left: -cardWidth(), behavior: 'smooth' }));
-
   document.getElementById('projNext')?.addEventListener('click', () =>
     track.scrollBy({ left: cardWidth(), behavior: 'smooth' }));
 
-  // Dots
+  /* ── Dots sincronizados con scroll ───────────────────────────────────────── */
   const dots = document.querySelectorAll('.proj-dot');
   if (dots.length) {
     track.addEventListener('scroll', () => {
       const index = Math.round(track.scrollLeft / cardWidth());
-      dots.forEach((d, i) => d.classList.toggle('active', i === index));
+      dots.forEach((d, i) => {
+        const active = i === index;
+        d.classList.toggle('active', active);
+        d.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
     }, { passive: true });
   }
 }
 
-/* ─── 10. Carrusel de testimonios ────────────────────────────────────────── */
-export function initTestimonials() {
-  if (typeof window === 'undefined') return;
-
-  const slides = document.querySelectorAll('.testi-slide');
-  const dots   = document.querySelectorAll('.testi-dot');
-
-  if (!slides.length) return;
-
-  let current  = 0;
-  let interval = null;
-
-  function goTo(index) {
-    slides[current].classList.remove('active');
-    dots[current]?.classList.remove('active');
-    current = ((index % slides.length) + slides.length) % slides.length;
-    slides[current].classList.add('active');
-    dots[current]?.classList.add('active');
-  }
-
-  function startAuto() {
-    clearInterval(interval);
-    interval = setInterval(() => goTo(current + 1), 4000);
-  }
-
-  dots.forEach((dot, i) => dot.addEventListener('click', () => { goTo(i); startAuto(); }));
-
-  const wrapper = document.querySelector('.testi-wrapper');
-  wrapper?.addEventListener('mouseenter', () => clearInterval(interval));
-  wrapper?.addEventListener('mouseleave', startAuto);
-
-  goTo(0);
-  startAuto();
-}
-
-/* ─── 11. initAll — punto de entrada ─────────────────────────────────────── */
+/* ─── 6. initAll — punto de entrada ─────────────────────────────────────── */
+// Navbar:     IIFE self-contained en Navbar.astro
+// Hero:       self-contained en Hero.astro
+// ScrollStory: self-contained en ScrollStory.astro
+// Testimonials: self-contained en Metrics.astro
 export function initAll() {
   if (typeof window === 'undefined') return;
-
-  initNavbar();
-  // Hero animations are self-contained in Hero.astro
-  // ScrollStory animations are self-contained in ScrollStory.astro
-  // to avoid conflicts with ScrollTrigger context
   initSplitTitles();
   initCounters();
   initProcessLine();
   initFadeUps();
   initProjectsCarousel();
-  initTestimonials();
 }
 
 export default initAll;

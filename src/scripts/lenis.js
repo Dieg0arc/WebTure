@@ -1,13 +1,14 @@
 import Lenis from 'lenis';
 
-// gsap y ScrollTrigger vienen del CDN cargado en <head>
-// No importamos desde npm para evitar duplicar el bundle
-const gsap          = typeof window !== 'undefined' ? window.gsap : null;
-const ScrollTrigger = typeof window !== 'undefined' ? window.ScrollTrigger : null;
-
+// gsap y ScrollTrigger son defer'd — se leen en el evento `load`, nunca a nivel de módulo
 let lenis = null;
 
-if (typeof window !== 'undefined' && gsap && ScrollTrigger) {
+function initLenis() {
+  if (typeof window === 'undefined') return;
+  const gsap          = window.gsap;
+  const ScrollTrigger = window.ScrollTrigger;
+  if (!gsap || !ScrollTrigger) return;
+
   gsap.registerPlugin(ScrollTrigger);
 
   lenis = new Lenis({
@@ -24,6 +25,14 @@ if (typeof window !== 'undefined' && gsap && ScrollTrigger) {
   });
 
   gsap.ticker.lagSmoothing(0);
+
+  window.__lenis = lenis;
+}
+
+if (document.readyState === 'complete') {
+  initLenis();
+} else {
+  window.addEventListener('load', initLenis, { once: true });
 }
 
 export default lenis;

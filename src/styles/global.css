@@ -45,6 +45,20 @@
   --font-mono:        'JetBrains Mono', ui-monospace, monospace;
 }
 
+/* ─── Lenis smooth scroll ────────────────────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 /* ─── Reset ─────────────────────────────────────────────────────────────── */
 *,
 *::before,
@@ -55,7 +69,6 @@
 }
 
 html {
-  scroll-behavior: smooth;
   font-size: 16px;
 }
 
@@ -261,6 +274,31 @@ button {
   border-color: var(--accent);
   color: var(--accent);
   transform: translateY(-2px);
+}
+
+/* ─── Anchor scroll offset — compensa el nav fijo ──────────────────────── */
+section[id] {
+  scroll-margin-top: 80px;
+}
+
+/* ─── Skip link ──────────────────────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 200;
+  padding: 10px 20px;
+  background: var(--accent);
+  color: #000;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 0 0 var(--radius) var(--radius);
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
 }
 
 /* ─── Reduced Motion ─────────────────────────────────────────────────────── */
