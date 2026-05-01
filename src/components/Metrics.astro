@@ -462,7 +462,6 @@ const testimonios = [
     const ScrollTrigger  = window.ScrollTrigger;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!gsap || !ScrollTrigger || prefersReduced) return;
-    gsap.registerPlugin(ScrollTrigger);
 
     const metricItems = document.querySelectorAll('.metric-item');
     if (metricItems.length) {
@@ -502,17 +501,16 @@ const testimonios = [
 
   if (!cards.length) return;
 
-  let current    = 0;
-  let intervalId = null;
+  let current      = 0;
+  let intervalId   = null;
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function goTo(index) {
     const prev = current;
     current    = ((index % cards.length) + cards.length) % cards.length;
     if (prev === current) return;
 
-    // Lee window.gsap dinámicamente para no depender de disponibilidad al inicio
-    const gsap           = window.gsap;
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const gsap = window.gsap;
 
     if (gsap && !prefersReduced) {
       gsap.to(cards[prev], {
@@ -556,6 +554,10 @@ const testimonios = [
 
   wrapper?.addEventListener('mouseenter', () => clearInterval(intervalId));
   wrapper?.addEventListener('mouseleave', startAuto);
+
+  document.addEventListener('visibilitychange', () => {
+    document.hidden ? clearInterval(intervalId) : startAuto();
+  });
 
   startAuto();
 </script>

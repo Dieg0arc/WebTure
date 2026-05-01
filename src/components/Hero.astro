@@ -635,11 +635,7 @@ const WA_URL =
   function initHero() {
     const gsap = window.gsap;
     const ScrollTrigger = window.ScrollTrigger;
-
-    if (!gsap || !ScrollTrigger) {
-      requestAnimationFrame(initHero);
-      return;
-    }
+    if (!gsap || !ScrollTrigger) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
@@ -679,5 +675,9 @@ const WA_URL =
     }
   }
 
-  initHero();
+  if (document.readyState === 'complete') {
+    initHero();
+  } else {
+    window.addEventListener('load', initHero, { once: true });
+  }
 </script>

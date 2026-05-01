@@ -21,7 +21,7 @@ function initLenis() {
   lenis.on('scroll', ScrollTrigger.update);
 
   gsap.ticker.add((time) => {
-    lenis.raf(time * 1000);
+    if (lenis) lenis.raf(time * 1000);
   });
 
   gsap.ticker.lagSmoothing(0);
@@ -35,4 +35,5 @@ if (document.readyState === 'complete') {
   window.addEventListener('load', initLenis, { once: true });
 }
 
-export default lenis;
+// Use window.__lenis to access the live instance after load
+export const getLenis = () => window.__lenis ?? null;

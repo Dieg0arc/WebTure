@@ -34,7 +34,6 @@ export function initCounters() {
   if (!gsap || !ScrollTrigger) return;
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  gsap.registerPlugin(ScrollTrigger);
 
   document.querySelectorAll('[data-count]').forEach((el) => {
     const target   = parseFloat(el.getAttribute('data-count') ?? '0');
@@ -123,7 +122,6 @@ export function initProjectsCarousel() {
 
   /* ── Entrada staggered de cards ─────────────────────────────────────────── */
   if (gsap && ScrollTrigger && !prefersReduced) {
-    gsap.registerPlugin(ScrollTrigger);
     const cards = document.querySelectorAll('.proj-card');
     if (cards.length) {
       gsap.fromTo(
@@ -138,11 +136,12 @@ export function initProjectsCarousel() {
   }
 
   /* ── Drag (mouse) ─────────────────────────────────────────────────────────── */
-  let isDragging = false, startX = 0, scrollLeftPos = 0;
+  let isDragging = false, startX = 0, scrollLeftPos = 0, trackLeft = 0;
 
   track.addEventListener('mousedown', (e) => {
     isDragging    = true;
-    startX        = e.pageX - track.getBoundingClientRect().left;
+    trackLeft     = track.getBoundingClientRect().left;
+    startX        = e.pageX - trackLeft;
     scrollLeftPos = track.scrollLeft;
     track.style.cursor     = 'grabbing';
     track.style.userSelect = 'none';
@@ -159,7 +158,7 @@ export function initProjectsCarousel() {
   track.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
     e.preventDefault();
-    const x    = e.pageX - track.getBoundingClientRect().left;
+    const x    = e.pageX - trackLeft;
     const walk = (x - startX) * 1.8;
     track.scrollLeft = scrollLeftPos - walk;
   });
@@ -177,25 +176,35 @@ export function initProjectsCarousel() {
   }, { passive: true });
 
   /* ── Botones prev / next ──────────────────────────────────────────────────── */
-  const cardWidth = () => {
+  const getCardWidth = () => {
     const card = track.querySelector('.proj-card');
     return card ? card.offsetWidth + 24 : 444;
   };
+  let cachedCardWidth = getCardWidth();
+  window.addEventListener('resize', () => { cachedCardWidth = getCardWidth(); }, { passive: true });
 
   document.getElementById('projPrev')?.addEventListener('click', () =>
-    track.scrollBy({ left: -cardWidth(), behavior: 'smooth' }));
+    track.scrollBy({ left: -cachedCardWidth, behavior: 'smooth' }));
   document.getElementById('projNext')?.addEventListener('click', () =>
-    track.scrollBy({ left: cardWidth(), behavior: 'smooth' }));
+    track.scrollBy({ left: cachedCardWidth, behavior: 'smooth' }));
 
-  /* ── Dots sincronizados con scroll ───────────────────────────────────────── */
+  /* ── Dots sincronizados con scroll (throttled con rAF) ───────────────────── */
   const dots = document.querySelectorAll('.proj-dot');
   if (dots.length) {
+    let lastDotIndex = -1;
+    let scrollRafId  = null;
     track.addEventListener('scroll', () => {
-      const index = Math.round(track.scrollLeft / cardWidth());
-      dots.forEach((d, i) => {
-        const active = i === index;
-        d.classList.toggle('active', active);
-        d.setAttribute('aria-selected', active ? 'true' : 'false');
+      if (scrollRafId) return;
+      scrollRafId = requestAnimationFrame(() => {
+        scrollRafId = null;
+        const index = Math.round(track.scrollLeft / cachedCardWidth);
+        if (index === lastDotIndex) return;
+        lastDotIndex = index;
+        dots.forEach((d, i) => {
+          const active = i === index;
+          d.classList.toggle('active', active);
+          d.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
       });
     }, { passive: true });
   }

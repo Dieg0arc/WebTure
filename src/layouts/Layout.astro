@@ -56,6 +56,8 @@ const {
     <!-- Google Fonts: non-blocking (preload + print trick) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Preconnect to GSAP CDN to reduce latency on first script download -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="preload" as="style"
       href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap"
     />
@@ -71,13 +73,14 @@ const {
       />
     </noscript>
 
-    <!-- ─── GSAP desde jsDelivr CDN — defer mantiene orden y no bloquea parsing.
-         Cada componente lee window.gsap dentro de sus funciones de init,
-         nunca a nivel de módulo. Hero hace polling con rAF como fallback.
+    <!-- ─── GSAP desde jsDelivr CDN — is:inline evita que Astro envuelva los
+         scripts en módulos intermedios (elimina el waterfall wrapper→CDN).
+         defer garantiza orden y no bloquea parsing del HTML.
+         Cada componente lee window.gsap en el evento `load`.
     ───────────────────────────────────────────────────────────────────── -->
-    <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js"></script>
+    <script is:inline defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script is:inline defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+    <script is:inline defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js"></script>
   </head>
 
   <body>
