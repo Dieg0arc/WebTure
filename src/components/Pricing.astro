@@ -1,0 +1,515 @@
+---
+const plans = [
+  {
+    id:       "basico",
+    name:     "Básico",
+    desc:     "Landing Page",
+    unico:    "$350.000",
+    mant:     "$280.000",
+    featured: false,
+    features: [
+      "1 página optimizada",
+      "Diseño 100% a medida",
+      "SEO básico incluido",
+      "Botón WhatsApp integrado",
+      "Entrega en 4 días",
+    ],
+    waMsg: "Hola%2C%20me%20interesa%20el%20plan%20Básico%20de%20WebTure",
+  },
+  {
+    id:       "profesional",
+    name:     "Profesional",
+    desc:     "Sitio Completo",
+    unico:    "$650.000",
+    mant:     "$520.000",
+    featured: true,
+    features: [
+      "Hasta 5 páginas",
+      "Blog o galería incluidos",
+      "SEO avanzado + Google Maps",
+      "Formulario de contacto",
+      "Velocidad 95+ en Lighthouse",
+    ],
+    waMsg: "Hola%2C%20me%20interesa%20el%20plan%20Profesional%20de%20WebTure",
+  },
+  {
+    id:       "premium",
+    name:     "Premium",
+    desc:     "E-commerce / App",
+    unico:    "$1.100.000",
+    mant:     "$880.000",
+    featured: false,
+    features: [
+      "Tienda online completa",
+      "Pasarela de pagos PSE",
+      "Panel de administración",
+      "Integraciones a medida",
+      "Entrega en 4–7 días",
+    ],
+    waMsg: "Hola%2C%20me%20interesa%20el%20plan%20Premium%20de%20WebTure",
+  },
+];
+---
+
+<section id="precios" class="pricing" aria-label="Planes y precios">
+  <div class="wrap">
+
+    <header class="pricing-header">
+      <h2 class="pricing-title split-title">
+        Precios claros, <em class="accent-italic">sin sorpresas.</em>
+      </h2>
+      <p class="pricing-sub">
+        Inversión única. Sin contratos eternos. Sin letras pequeñas.
+      </p>
+    </header>
+
+    <!-- Toggle -->
+    <div class="pricing-toggle" role="group" aria-label="Modo de pago">
+      <button class="toggle-btn toggle-btn--active" id="btn-unico" aria-pressed="true">
+        Pago único
+      </button>
+      <button class="toggle-btn" id="btn-mant" aria-pressed="false">
+        Con mantenimiento
+      </button>
+    </div>
+
+    <!-- Cards -->
+    <div class="pricing-grid">
+      {plans.map((plan) => (
+        <article
+          class={`plan-card${plan.featured ? " plan-card--featured" : ""}`}
+          aria-label={`Plan ${plan.name}`}
+        >
+          {plan.featured && (
+            <span class="plan-best" aria-label="Plan más elegido">Más elegido</span>
+          )}
+
+          <div class="plan-head">
+            <span class="plan-name">{plan.name}</span>
+            <div class="plan-price">
+              <span
+                class="price-amount"
+                data-unico={plan.unico}
+                data-mant={plan.mant}
+              >{plan.unico}</span>
+              <span class="price-cop">COP</span>
+            </div>
+            <span class="plan-desc">{plan.desc}</span>
+            <span class="price-suffix" aria-live="polite"></span>
+          </div>
+
+          <ul class="plan-features" aria-label={`Características del plan ${plan.name}`}>
+            {plan.features.map((f) => (
+              <li>
+                <svg class="check-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M2.5 7l3 3 6-6" stroke="#b388ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {f}
+              </li>
+            ))}
+          </ul>
+
+          <a
+            href={`https://wa.me/573046565684?text=${plan.waMsg}`}
+            class={plan.featured ? "btn-primary plan-cta" : "btn-ghost plan-cta"}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Contratar plan ${plan.name} por WhatsApp`}
+          >
+            Comenzar con {plan.name}
+          </a>
+        </article>
+      ))}
+    </div>
+
+    <!-- Garantía -->
+    <div class="guarantee" aria-label="Garantía de devolución">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M8 1l1.9 4.9H15l-4.1 3.1 1.6 4.9L8 11.3 3.5 13.9l1.6-4.9L1 5.9h5.1L8 1z" fill="#b388ff" opacity="0.9"/>
+      </svg>
+      Garantía 7 días · Devolución sin preguntas
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ─── Sección ────────────────────────────────────────────────────────────── */
+  .pricing {
+    padding: 120px 0 80px;
+    position: relative;
+  }
+
+  .pricing::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(600px, 80%);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+  }
+
+  /* ─── Header ─────────────────────────────────────────────────────────────── */
+  .pricing-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .pricing-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  .pricing-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .pricing-sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  /* ─── Toggle ─────────────────────────────────────────────────────────────── */
+  .pricing-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 4px;
+    width: fit-content;
+    margin: 0 auto 56px;
+  }
+
+  .toggle-btn {
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .toggle-btn--active {
+    background: var(--accent);
+    color: #000;
+  }
+
+  /* ─── Grid de cards ──────────────────────────────────────────────────────── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+
+  /* ─── Card base ──────────────────────────────────────────────────────────── */
+  .plan-card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .plan-card:hover {
+    border-color: var(--border-bright);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+  }
+
+  /* ─── Card featured ──────────────────────────────────────────────────────── */
+  .plan-card--featured {
+    background: var(--surface-2);
+    border-color: var(--accent);
+    transform: scale(1.03);
+    box-shadow: 0 0 0 1px var(--accent), 0 0 40px var(--accent-glow);
+    z-index: 1;
+  }
+
+  .plan-card--featured:hover {
+    border-color: var(--accent);
+    transform: scale(1.03) translateY(-4px);
+    box-shadow: 0 0 0 1px var(--accent), 0 20px 60px var(--accent-glow);
+  }
+
+  .plan-card--featured::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.6;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  /* Badge "Más elegido" */
+  .plan-best {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: #000;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  /* ─── Cabecera de la card ────────────────────────────────────────────────── */
+  .plan-head {
+    margin-bottom: 28px;
+  }
+
+  .plan-name {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+
+  .plan-price {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .price-amount {
+    font-family: var(--font-mono);
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.03em;
+    transition: opacity 0.2s ease;
+  }
+
+  .price-cop {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .plan-desc {
+    display: block;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .price-suffix {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 4px;
+    min-height: 18px;
+  }
+
+  /* ─── Features ───────────────────────────────────────────────────────────── */
+  .plan-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex: 1;
+  }
+
+  .plan-features li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .check-icon { flex-shrink: 0; }
+
+  /* ─── CTA ────────────────────────────────────────────────────────────────── */
+  .plan-cta {
+    width: 100%;
+    justify-content: center;
+    margin-top: auto;
+  }
+
+  /* ─── Garantía ───────────────────────────────────────────────────────────── */
+  .guarantee {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 48px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── Responsive ─────────────────────────────────────────────────────────── */
+  @media (max-width: 959px) {
+    .pricing-grid {
+      grid-template-columns: 1fr;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .plan-card--featured {
+      transform: scale(1);
+      order: -1;
+    }
+
+    .plan-card--featured:hover {
+      transform: translateY(-4px);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .pricing {
+      padding: 80px 0 60px;
+    }
+
+    .pricing-header {
+      text-align: left;
+      margin-bottom: 32px;
+    }
+
+    .pricing-sub {
+      margin: 0;
+    }
+
+    .pricing-grid {
+      max-width: 100%;
+    }
+
+    .plan-card {
+      padding: 28px 24px;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .pricing-toggle {
+      flex-direction: column;
+      border-radius: var(--radius);
+      width: 100%;
+    }
+
+    .toggle-btn {
+      width: 100%;
+      border-radius: 8px;
+      text-align: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plan-card,
+    .price-amount {
+      transition: none;
+    }
+  }
+</style>
+
+<!-- Toggle: JS mínimo IIFE — sin GSAP, sin módulo -->
+<script>
+  (function () {
+    if (typeof document === 'undefined') return;
+
+    var btnUnico = document.getElementById('btn-unico');
+    var btnMant  = document.getElementById('btn-mant');
+    if (!btnUnico || !btnMant) return;
+
+    var amounts  = document.querySelectorAll('#precios .price-amount');
+    var suffixes = document.querySelectorAll('#precios .price-suffix');
+
+    function activate(mode) {
+      var isUnico = mode === 'unico';
+
+      btnUnico.classList.toggle('toggle-btn--active', isUnico);
+      btnMant.classList.toggle('toggle-btn--active', !isUnico);
+      btnUnico.setAttribute('aria-pressed', String(isUnico));
+      btnMant.setAttribute('aria-pressed', String(!isUnico));
+
+      amounts.forEach(function (el) {
+        el.textContent = isUnico ? el.dataset.unico : el.dataset.mant;
+      });
+      suffixes.forEach(function (el) {
+        el.textContent = isUnico ? '' : '+ $80.000/mes mantenimiento';
+      });
+    }
+
+    btnUnico.addEventListener('click', function () { activate('unico'); });
+    btnMant.addEventListener('click',  function () { activate('mant'); });
+  })();
+</script>
+
+<!-- Animaciones GSAP -->
+<script type="module">
+  if (typeof window === 'undefined') return;
+
+  function initPricing() {
+    const gsap          = window.gsap;
+    const ScrollTrigger = window.ScrollTrigger;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!gsap || !ScrollTrigger || prefersReduced) return;
+
+    gsap.fromTo('.pricing-header', { opacity: 0, y: 32 }, {
+      opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+      scrollTrigger: { trigger: '.pricing', start: 'top 80%', once: true },
+    });
+
+    gsap.fromTo('.pricing-toggle', { opacity: 0, y: 16 }, {
+      opacity: 1, y: 0, duration: 0.5, ease: 'power2.out',
+      scrollTrigger: { trigger: '.pricing-toggle', start: 'top 88%', once: true },
+    });
+
+    gsap.fromTo('.plan-card', { opacity: 0, y: 48 }, {
+      opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.14,
+      scrollTrigger: { trigger: '.pricing-grid', start: 'top 85%', once: true },
+    });
+
+    gsap.fromTo('.guarantee', { opacity: 0 }, {
+      opacity: 1, duration: 0.6, ease: 'power2.out', delay: 0.2,
+      scrollTrigger: { trigger: '.guarantee', start: 'top 92%', once: true },
+    });
+  }
+
+  if (document.readyState === 'complete') {
+    initPricing();
+  } else {
+    window.addEventListener('load', initPricing, { once: true });
+  }
+</script>
