@@ -102,17 +102,35 @@ const testimonios = [
         ))}
       </div>
 
-      <!-- Dots de paginación -->
-      <div class="testimonials-dots" role="tablist" aria-label="Testimonios">
-        {testimonios.map((t, i) => (
-          <button
-            class={`t-dot${i === 0 ? " t-dot--active" : ""}`}
-            role="tab"
-            aria-label={`Testimonio ${i + 1}: ${t.nombre}`}
-            aria-selected={i === 0 ? "true" : "false"}
-            data-index={String(i)}
-          ></button>
-        ))}
+      <!-- Controles: dots + pausa -->
+      <div class="testimonials-controls">
+        <div class="testimonials-dots" role="tablist" aria-label="Testimonios">
+          {testimonios.map((t, i) => (
+            <button
+              class={`t-dot${i === 0 ? " t-dot--active" : ""}`}
+              role="tab"
+              aria-label={`Testimonio ${i + 1}: ${t.nombre}`}
+              aria-selected={i === 0 ? "true" : "false"}
+              data-index={String(i)}
+            ></button>
+          ))}
+        </div>
+
+        <button
+          class="t-pause"
+          aria-label="Pausar rotación automática"
+          aria-pressed="false"
+        >
+          <svg class="icon-pause" width="10" height="12" viewBox="0 0 10 12"
+               fill="currentColor" aria-hidden="true">
+            <rect x="0" y="0" width="3.5" height="12" rx="1"/>
+            <rect x="6.5" y="0" width="3.5" height="12" rx="1"/>
+          </svg>
+          <svg class="icon-play" width="11" height="12" viewBox="0 0 11 12"
+               fill="currentColor" aria-hidden="true" hidden>
+            <path d="M0 0.5L11 6 0 11.5V0.5z"/>
+          </svg>
+        </button>
       </div>
 
     </div><!-- /testimonials -->
@@ -338,12 +356,52 @@ const testimonios = [
     display: block;
   }
 
-  /* ─── Dots ───────────────────────────────────────────────────────────────── */
+  /* ─── Controles: dots + pausa ───────────────────────────────────────────── */
+  .testimonials-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
   .testimonials-dots {
     display: flex;
-    justify-content: center;
+    align-items: center;
     gap: 8px;
-    margin-top: 28px;
+  }
+
+  /* ─── Botón pausa ────────────────────────────────────────────────────────── */
+  .t-pause {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    padding: 12px;
+    box-sizing: content-box;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .t-pause:hover {
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .t-pause:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    color: var(--text-muted);
+  }
+
+  .t-pause[aria-pressed="true"] {
+    color: var(--accent);
   }
 
   .t-dot {
@@ -353,7 +411,8 @@ const testimonios = [
     border: none;
     background: var(--border-bright);
     cursor: pointer;
-    padding: 0;
+    padding: 11px 8px;
+    box-sizing: content-box;
     transition: background 0.3s ease, width 0.3s ease;
   }
 
@@ -370,7 +429,7 @@ const testimonios = [
   }
 
   /* ─── Responsive ─────────────────────────────────────────────────────────── */
-  @media (max-width: 960px) {
+  @media (max-width: 959px) {
     .metrics-grid {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -391,7 +450,7 @@ const testimonios = [
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .metrics {
       padding: 72px 0 80px;
     }
@@ -495,15 +554,30 @@ const testimonios = [
   }
 
   /* ── Auto-rotación de testimonios ───────────────────────────────────────── */
-  const cards   = document.querySelectorAll('.testimonial-card');
-  const dots    = document.querySelectorAll('.t-dot');
-  const wrapper = document.getElementById('testimonials-wrapper');
+  const cards    = document.querySelectorAll('.testimonial-card');
+  const dots     = document.querySelectorAll('.t-dot');
+  const wrapper  = document.getElementById('testimonials-wrapper');
+  const pauseBtn = document.querySelector('.t-pause');
 
   if (!cards.length) return;
 
   let current      = 0;
   let intervalId   = null;
+  let isPaused     = false;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function updatePauseUI() {
+    if (!pauseBtn) return;
+    pauseBtn.setAttribute('aria-pressed', isPaused ? 'true' : 'false');
+    pauseBtn.setAttribute(
+      'aria-label',
+      isPaused ? 'Reanudar rotación automática' : 'Pausar rotación automática'
+    );
+    const iconPause = pauseBtn.querySelector('.icon-pause');
+    const iconPlay  = pauseBtn.querySelector('.icon-play');
+    if (iconPause) iconPause.hidden = isPaused;
+    if (iconPlay)  iconPlay.hidden  = !isPaused;
+  }
 
   function goTo(index) {
     const prev = current;
@@ -544,9 +618,20 @@ const testimonios = [
   }
 
   function startAuto() {
+    if (isPaused) return;
     clearInterval(intervalId);
     intervalId = setInterval(() => goTo(current + 1), 4000);
   }
+
+  pauseBtn?.addEventListener('click', () => {
+    isPaused = !isPaused;
+    if (isPaused) {
+      clearInterval(intervalId);
+    } else {
+      startAuto();
+    }
+    updatePauseUI();
+  });
 
   dots.forEach((dot, i) => {
     dot.addEventListener('click', () => { goTo(i); startAuto(); });

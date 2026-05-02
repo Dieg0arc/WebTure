@@ -126,6 +126,18 @@ body::after {
   90%       { transform: translate(-1%, 1%); }
 }
 
+/* ─── Mobile: grain estático — sin animación ni capa GPU persistente ─────── */
+@media (max-width: 767px) {
+  body::after {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    animation: none;
+    will-change: auto;
+    opacity: 0.15;
+  }
+}
+
 /* Todo el contenido por encima de los pseudo-elementos de fondo */
 body > * {
   position: relative;
@@ -139,11 +151,11 @@ body > * {
   padding: 0 32px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .wrap { padding: 0 24px; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 479px) {
   .wrap { padding: 0 20px; }
 }
 
@@ -275,6 +287,13 @@ button {
   border-color: var(--accent);
   color: var(--accent);
   transform: translateY(-2px);
+}
+
+/* ─── Accent italic — shared across all section headlines ──────────────── */
+.accent-italic {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 800;
 }
 
 /* ─── Anchor scroll offset — compensa el nav fijo ──────────────────────── */

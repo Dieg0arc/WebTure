@@ -469,6 +469,32 @@
     }
   }
 
+  /* ── Mobile: vertical stack (replaces horizontal GSAP scroll) ────────────── */
+  @media (max-width: 767px) {
+    .scrollstory {
+      overflow: visible;
+    }
+
+    .ss-track {
+      flex-direction: column;
+      width: 100%;
+      will-change: auto;
+      height: auto;
+      transform: none !important;
+    }
+
+    .ss-panel {
+      width: 100%;
+      height: auto;
+      padding: 64px 0 56px;
+      flex-shrink: 1;
+    }
+
+    .ss-panel:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+  }
+
   /* ── prefers-reduced-motion ──────────────────────────────────────────────── */
   @media (prefers-reduced-motion: reduce) {
     .ss-track {
@@ -507,10 +533,32 @@
       const track = document.querySelector(".ss-track");
       const prefersRed = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      if (!section || !track || prefersRed) return;
+      if (!section || !track) return;
 
-      // Encapsulación con gsap.context()
-      // Todo lo que sea un selector (como ".bar-fill") se buscará SOLAMENTE dentro de 'section'
+      // Mobile: vertical layout — animate bar fills on scroll, skip horizontal scroll
+      if (window.innerWidth <= 767) {
+        const barChart = section.querySelector('.bar-chart');
+        if (!prefersRed && barChart) {
+          ScrollTrigger.create({
+            trigger: barChart,
+            start: 'top 85%',
+            once: true,
+            onEnter: () => {
+              gsap.utils.toArray('.bar-fill', section).forEach(bar => {
+                bar.style.transform = 'scaleX(1)';
+              });
+            }
+          });
+        } else {
+          gsap.utils.toArray('.bar-fill', section).forEach(bar => {
+            bar.style.transform = 'scaleX(1)';
+          });
+        }
+        return;
+      }
+
+      if (prefersRed) return;
+
       let ctx = gsap.context(() => {
         // Cálculo de Distancia Real
         const getScrollAmount = () => -(track.scrollWidth - window.innerWidth);

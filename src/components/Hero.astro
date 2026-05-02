@@ -187,7 +187,7 @@ const WA_URL =
   .mesh-orb--2 {
     width: 400px;
     height: 400px;
-    background: #7e57c2;
+    background: var(--accent-dim);
     bottom: -100px;
     right: 10%;
     animation: orbFloat2 15s ease-in-out infinite reverse;
@@ -314,12 +314,6 @@ const WA_URL =
     letter-spacing: -0.045em;
     color: var(--text);
     margin-bottom: 24px;
-  }
-
-  .accent-italic {
-    color: var(--accent);
-    font-style: italic;
-    font-weight: 800;
   }
 
   /* ─── Subtítulo ──────────────────────────────────────────────────────────── */
@@ -552,12 +546,11 @@ const WA_URL =
 
   /* ─── Responsive ─────────────────────────────────────────────────────────── */
   @media (max-width: 959px) {
-    .hero-visual {
-      display: none;
-    }
-
     .hero-inner {
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
+      gap: 0;
     }
 
     .hero-content {
@@ -578,6 +571,13 @@ const WA_URL =
     .cta-row {
       justify-content: center;
     }
+
+    /* Tablet: card visible, compacta y centrada debajo del texto */
+    .hero-visual {
+      width: 340px;
+      margin-top: 48px;
+      flex-shrink: 0;
+    }
   }
 
   @media (max-width: 767px) {
@@ -587,6 +587,24 @@ const WA_URL =
 
     .hero-h1 {
       letter-spacing: -0.03em;
+    }
+
+    .hero-visual {
+      display: none;
+    }
+
+    /* Performance: un solo orbe estático, blur reducido — sin capas GPU activas */
+    .mesh-orb--2,
+    .mesh-orb--3 {
+      display: none;
+    }
+
+    .mesh-orb--1 {
+      width: 300px;
+      height: 300px;
+      filter: blur(60px);
+      animation: none;
+      opacity: 0.1;
     }
   }
 
@@ -619,12 +637,16 @@ const WA_URL =
     }
 
     .marquee-track {
-      /* Muestra el contenido estático cuando no hay animación */
       overflow: hidden;
       width: 100%;
       justify-content: center;
       flex-wrap: wrap;
       gap: 16px;
+    }
+
+    /* Hide the duplicate set used for the loop — only show first 13 children */
+    .marquee-track span:nth-child(n+14) {
+      display: none;
     }
   }
 </style>
@@ -636,8 +658,6 @@ const WA_URL =
     const gsap = window.gsap;
     const ScrollTrigger = window.ScrollTrigger;
     if (!gsap || !ScrollTrigger) return;
-
-    gsap.registerPlugin(ScrollTrigger);
 
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",

@@ -307,7 +307,7 @@ const services = [
   }
 
   /* ─── Responsive ─────────────────────────────────────────────────────────── */
-  @media (max-width: 960px) {
+  @media (max-width: 959px) {
     .services-grid {
       grid-template-columns: 1fr 1fr;
     }
@@ -331,7 +331,7 @@ const services = [
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .services {
       padding: 80px 0;
     }
@@ -386,7 +386,6 @@ const services = [
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (!gsap || !ScrollTrigger || prefersReduced) return;
-    gsap.registerPlugin(ScrollTrigger);
 
     const header = document.querySelector('.services-header');
     if (header) {
