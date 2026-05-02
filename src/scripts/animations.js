@@ -62,29 +62,7 @@ export function initCounters() {
   });
 }
 
-/* ─── 3. Línea SVG del proceso ───────────────────────────────────────────── */
-export function initProcessLine() {
-  if (typeof window === 'undefined') return;
-  const gsap          = window.gsap;
-  const ScrollTrigger = window.ScrollTrigger;
-  if (!gsap || !ScrollTrigger) return;
-
-  const path = document.querySelector('.process-line path');
-  if (!path) return;
-
-  let length;
-  try { length = path.getTotalLength(); } catch { return; }
-
-  gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
-  gsap.to(path, {
-    strokeDashoffset: 0, ease: 'none',
-    scrollTrigger: {
-      trigger: '.process', start: 'top 70%', end: 'bottom 55%', scrub: 1.2,
-    },
-  });
-}
-
-/* ─── 4. Fade-ups ────────────────────────────────────────────────────────── */
+/* ─── 3. Fade-ups ────────────────────────────────────────────────────────── */
 export function initFadeUps() {
   if (typeof window === 'undefined') return;
   const gsap          = window.gsap;
@@ -188,9 +166,51 @@ export function initProjectsCarousel() {
   document.getElementById('projNext')?.addEventListener('click', () =>
     track.scrollBy({ left: cachedCardWidth, behavior: 'smooth' }));
 
-  /* ── Dots sincronizados con scroll (throttled con rAF) ───────────────────── */
-  const dots = document.querySelectorAll('.proj-dot');
-  if (dots.length) {
+  /* ── Autoplay y controles ─────────────────────────────────────────────────── */
+  const DURATION = 5000;
+  let autoplayTimer = null;
+  let isHovered = false;
+
+  const resetAutoplay = () => {
+    if (autoplayTimer !== null) clearInterval(autoplayTimer);
+    if (isHovered || prefersReduced) return;
+    
+    autoplayTimer = setInterval(() => {
+      const maxScroll = track.scrollWidth - track.clientWidth;
+      // Si estamos al final del carrusel, volver al inicio
+      if (track.scrollLeft >= maxScroll - 10) {
+        track.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        track.scrollBy({ left: cachedCardWidth, behavior: 'smooth' });
+      }
+    }, DURATION);
+  };
+
+  const pauseAutoplay = () => {
+    if (autoplayTimer !== null) clearInterval(autoplayTimer);
+    const activeIndicator = document.querySelector('.proj-indicator.active');
+    if (activeIndicator) activeIndicator.classList.add('paused');
+  };
+
+  const resumeAutoplay = () => {
+    if (isHovered || prefersReduced) return;
+    const activeIndicator = document.querySelector('.proj-indicator.active');
+    if (activeIndicator) activeIndicator.classList.remove('paused');
+    resetAutoplay();
+  };
+
+  // Pausar al hacer hover o tocar el carrusel
+  const wrapper = document.querySelector('.proj-track-wrap');
+  if (wrapper) {
+    wrapper.addEventListener('mouseenter', () => { isHovered = true; pauseAutoplay(); });
+    wrapper.addEventListener('mouseleave', () => { isHovered = false; resumeAutoplay(); });
+    wrapper.addEventListener('touchstart', () => { isHovered = true; pauseAutoplay(); }, { passive: true });
+    wrapper.addEventListener('touchend', () => { isHovered = false; resumeAutoplay(); });
+  }
+
+  /* ── Barras sincronizadas con scroll (throttled con rAF) ───────────────────── */
+  const indicators = document.querySelectorAll('.proj-indicator');
+  if (indicators.length) {
     let lastDotIndex = -1;
     let scrollRafId  = null;
     track.addEventListener('scroll', () => {
@@ -200,14 +220,38 @@ export function initProjectsCarousel() {
         const index = Math.round(track.scrollLeft / cachedCardWidth);
         if (index === lastDotIndex) return;
         lastDotIndex = index;
-        dots.forEach((d, i) => {
+        
+        indicators.forEach((ind, i) => {
           const active = i === index;
-          d.classList.toggle('active', active);
-          d.setAttribute('aria-selected', active ? 'true' : 'false');
+          if (active) {
+            ind.classList.remove('active', 'paused');
+            void ind.offsetWidth; // trigger reflow para reiniciar la animación CSS
+            ind.classList.add('active');
+            ind.setAttribute('aria-selected', 'true');
+          } else {
+            ind.classList.remove('active', 'paused');
+            ind.setAttribute('aria-selected', 'false');
+          }
         });
+        
+        resetAutoplay();
       });
     }, { passive: true });
+
+    // Interacción manual clickeando las barras
+    indicators.forEach((ind, i) => {
+      ind.addEventListener('click', () => {
+        track.scrollTo({ left: i * cachedCardWidth, behavior: 'smooth' });
+      });
+    });
   }
+
+  // Inicializar autoplay la primera vez
+  resetAutoplay();
+
+  document.addEventListener('visibilitychange', () => {
+    document.hidden ? pauseAutoplay() : resumeAutoplay();
+  });
 }
 
 /* ─── 6. initAll — punto de entrada ─────────────────────────────────────── */
@@ -219,7 +263,6 @@ export function initAll() {
   if (typeof window === 'undefined') return;
   initSplitTitles();
   initCounters();
-  initProcessLine();
   initFadeUps();
   initProjectsCarousel();
 }

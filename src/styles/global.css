@@ -20,8 +20,8 @@
   --font-mono:    'JetBrains Mono', ui-monospace, monospace;
 
   /* Border radius */
-  --radius-base: 12px;
-  --radius-lg:   20px;
+  --radius:    12px;
+  --radius-lg: 20px;
 }
 
 /* ─── CSS Custom Properties (accesibles por GSAP y JS) ──────────────────── */
@@ -40,6 +40,7 @@
   --border-bright:    #2a2a2a;
   --radius:           12px;
   --radius-lg:        20px;
+  --color-success:    #4ade80;
   --font-display:     'Syne', system-ui, sans-serif;
   --font-body:        'DM Sans', system-ui, sans-serif;
   --font-mono:        'JetBrains Mono', ui-monospace, monospace;
@@ -79,7 +80,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  min-height: 100vh;
+  min-height: 100svh;
   line-height: 1.6;
 }
 

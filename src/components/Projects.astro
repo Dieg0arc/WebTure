@@ -166,15 +166,18 @@ const projects = [
       </div>
     </div>
 
-    <!-- ── Dots paginación ────────────────────────────────────────────────── -->
-    <div class="proj-dots" role="tablist" aria-label="Paginación de proyectos">
+    <!-- ── Barras de paginación ────────────────────────────────────────────────── -->
+    <div class="proj-indicators" role="tablist" aria-label="Paginación de proyectos">
       {projects.map((p, i) => (
         <button
-          class={`proj-dot${i === 0 ? " active" : ""}`}
+          class={`proj-indicator${i === 0 ? " active" : ""}`}
           role="tab"
           aria-label={`Ir al proyecto ${i + 1}: ${p.nombre}`}
           aria-selected={i === 0 ? "true" : "false"}
-        ></button>
+          data-index={i}
+        >
+          <span class="proj-indicator-progress"></span>
+        </button>
       ))}
     </div>
 
@@ -318,7 +321,7 @@ const projects = [
   }
 
   .mockup-dot--red    { background: #ff5f57; }
-  .mockup-dot--yellow { background: #ffbd2e; }
+  .mockup-dot--yellow { background: #febc2e; }
   .mockup-dot--green  { background: #28c840; }
 
   .mockup-url {
@@ -548,36 +551,57 @@ const projects = [
     outline-offset: 3px;
   }
 
-  /* ─── Dots de paginación ─────────────────────────────────────────────────── */
-  .proj-dots {
+  /* ─── Barras de paginación ───────────────────────────────────────────────── */
+  .proj-indicators {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 12px;
     margin-top: 36px;
   }
 
-  .proj-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
+  .proj-indicator {
+    width: 48px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--surface-2);
     border: none;
-    background: var(--border-bright);
+    padding: 0;
     cursor: pointer;
-    padding: 11px 8px;
-    box-sizing: content-box;
-    transition: background 0.3s ease, width 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
   }
 
-  .proj-dot.active {
+  .proj-indicator::after {
+    content: "";
+    position: absolute;
+    inset: -10px;
+  }
+
+  .proj-indicator-progress {
+    position: absolute;
+    inset: 0;
     background: var(--accent);
-    width: 20px;
-    border-radius: 3px;
-    box-shadow: 0 0 8px var(--accent);
+    transform-origin: left;
+    transform: scaleX(0);
   }
 
-  .proj-dot:focus-visible {
+  .proj-indicator.active .proj-indicator-progress {
+    animation: projProgressFill 5s linear forwards;
+  }
+
+  .proj-indicator.paused .proj-indicator-progress {
+    animation-play-state: paused;
+  }
+
+  @keyframes projProgressFill {
+    0% { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
+  }
+
+  .proj-indicator:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 3px;
+    outline-offset: 4px;
   }
 
   /* ─── Responsive ─────────────────────────────────────────────────────────── */
@@ -611,9 +635,12 @@ const projects = [
   /* ─── Reduced motion ─────────────────────────────────────────────────────── */
   @media (prefers-reduced-motion: reduce) {
     .proj-btn,
-    .proj-link,
-    .proj-dot {
+    .proj-link {
       transition: none;
+    }
+    .proj-indicator.active .proj-indicator-progress {
+      animation: none;
+      transform: scaleX(1);
     }
   }
 </style>

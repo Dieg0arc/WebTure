@@ -102,35 +102,21 @@ const testimonios = [
         ))}
       </div>
 
-      <!-- Controles: dots + pausa -->
+      <!-- Controles: barras de progreso -->
       <div class="testimonials-controls">
-        <div class="testimonials-dots" role="tablist" aria-label="Testimonios">
+        <div class="testimonials-indicators" role="tablist" aria-label="Testimonios">
           {testimonios.map((t, i) => (
             <button
-              class={`t-dot${i === 0 ? " t-dot--active" : ""}`}
+              class={`t-indicator${i === 0 ? " t-indicator--active" : ""}`}
               role="tab"
               aria-label={`Testimonio ${i + 1}: ${t.nombre}`}
               aria-selected={i === 0 ? "true" : "false"}
               data-index={String(i)}
-            ></button>
+            >
+              <span class="t-indicator-progress"></span>
+            </button>
           ))}
         </div>
-
-        <button
-          class="t-pause"
-          aria-label="Pausar rotación automática"
-          aria-pressed="false"
-        >
-          <svg class="icon-pause" width="10" height="12" viewBox="0 0 10 12"
-               fill="currentColor" aria-hidden="true">
-            <rect x="0" y="0" width="3.5" height="12" rx="1"/>
-            <rect x="6.5" y="0" width="3.5" height="12" rx="1"/>
-          </svg>
-          <svg class="icon-play" width="11" height="12" viewBox="0 0 11 12"
-               fill="currentColor" aria-hidden="true" hidden>
-            <path d="M0 0.5L11 6 0 11.5V0.5z"/>
-          </svg>
-        </button>
       </div>
 
     </div><!-- /testimonials -->
@@ -356,76 +342,64 @@ const testimonios = [
     display: block;
   }
 
-  /* ─── Controles: dots + pausa ───────────────────────────────────────────── */
+  /* ─── Controles: barras de progreso ─────────────────────────────────────── */
   .testimonials-controls {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 32px;
+  }
+
+  .testimonials-indicators {
+    display: flex;
+    align-items: center;
     gap: 12px;
-    margin-top: 28px;
   }
 
-  .testimonials-dots {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  /* ─── Botón pausa ────────────────────────────────────────────────────────── */
-  .t-pause {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    padding: 12px;
-    box-sizing: content-box;
-    border-radius: 50%;
+  .t-indicator {
+    width: 48px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--surface-2);
     border: none;
-    background: transparent;
-    color: var(--text-dim);
+    padding: 0;
     cursor: pointer;
-    transition: color 0.2s ease, background 0.2s ease;
-    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
   }
 
-  .t-pause:hover {
-    color: var(--text-muted);
-    background: rgba(255, 255, 255, 0.05);
+  /* Expandir el área clickeable para accesibilidad */
+  .t-indicator::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    bottom: -10px;
+    left: -10px;
+    right: -10px;
   }
 
-  .t-pause:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
-    color: var(--text-muted);
-  }
-
-  .t-pause[aria-pressed="true"] {
-    color: var(--accent);
-  }
-
-  .t-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    border: none;
-    background: var(--border-bright);
-    cursor: pointer;
-    padding: 11px 8px;
-    box-sizing: content-box;
-    transition: background 0.3s ease, width 0.3s ease;
-  }
-
-  .t-dot--active {
+  .t-indicator-progress {
+    position: absolute;
+    inset: 0;
     background: var(--accent);
-    width: 20px;
-    border-radius: 3px;
-    box-shadow: 0 0 8px var(--accent);
+    transform-origin: left;
+    transform: scaleX(0);
   }
 
-  .t-dot:focus-visible {
+  /* Animación CSS para la barra activa */
+  .t-indicator--active .t-indicator-progress {
+    animation: progressFill 5s linear forwards;
+  }
+
+  @keyframes progressFill {
+    0% { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
+  }
+
+  .t-indicator:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 3px;
+    outline-offset: 4px;
   }
 
   /* ─── Responsive ─────────────────────────────────────────────────────────── */
@@ -506,143 +480,140 @@ const testimonios = [
       transition: none;
     }
 
-    .t-dot {
-      transition: none;
+    .t-indicator--active .t-indicator-progress {
+      animation: none;
+      transform: scaleX(1);
     }
   }
 </style>
 
-<script type="module">
-  if (typeof window === 'undefined') return;
-
-  /* ── Animaciones de entrada — requieren GSAP, se ejecutan en `load` ──────── */
-  function initMetricsAnimations() {
-    const gsap           = window.gsap;
-    const ScrollTrigger  = window.ScrollTrigger;
+<script>
+  /* ── Animaciones de entrada y Testimonios ──────── */
+  function initMetrics() {
+    if (typeof window === 'undefined') return; // guard SSR
+    
+    const w = window as any;
+    const gsap           = w.gsap;
+    const ScrollTrigger  = w.ScrollTrigger;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!gsap || !ScrollTrigger || prefersReduced) return;
+    
+    if (!gsap || !ScrollTrigger) return;
 
-    const metricItems = document.querySelectorAll('.metric-item');
-    if (metricItems.length) {
-      gsap.fromTo(metricItems, { opacity: 0, y: 32 }, {
-        opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.1,
-        scrollTrigger: { trigger: '.metrics-grid', start: 'top 85%', once: true },
+    /* ── 1. Animaciones de entrada (Metrics & Headers) ── */
+    if (!prefersReduced) {
+      const metricItems = document.querySelectorAll<HTMLElement>('.metric-item');
+      if (metricItems.length) {
+        gsap.fromTo(metricItems, { opacity: 0, y: 32 }, {
+          opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.1,
+          scrollTrigger: { trigger: '.metrics-grid', start: 'top 85%', once: true },
+        });
+      }
+
+      const testiHeader = document.querySelector<HTMLElement>('.testimonials-header');
+      if (testiHeader) {
+        gsap.fromTo(testiHeader, { opacity: 0, y: 24 }, {
+          opacity: 1, y: 0, duration: 0.65, ease: 'power3.out',
+          scrollTrigger: { trigger: '.testimonials', start: 'top 82%', once: true },
+        });
+      }
+
+      const testiTrack = document.querySelector<HTMLElement>('.testimonials-track');
+      if (testiTrack) {
+        gsap.fromTo(testiTrack, { opacity: 0, y: 36 }, {
+          opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.15,
+          scrollTrigger: { trigger: '.testimonials', start: 'top 82%', once: true },
+        });
+      }
+    }
+
+    /* ── 2. Auto-rotación de testimonios ── */
+    const cards      = document.querySelectorAll<HTMLElement>('.testimonial-card');
+    const indicators = document.querySelectorAll<HTMLElement>('.t-indicator');
+
+    if (!cards.length) return;
+
+    let current      = 0;
+    let intervalId: number | null = null;
+    const DURATION   = 5000;
+
+    function goTo(index: number) {
+      const prev = current;
+      current    = ((index % cards.length) + cards.length) % cards.length;
+      if (prev === current) return;
+
+      if (!prefersReduced) {
+        gsap.to(cards[prev], {
+          opacity: 0, y: -16, duration: 0.35, ease: 'power2.in',
+          onComplete() {
+            cards[prev].classList.remove('testimonial-card--active');
+            cards[prev].setAttribute('aria-hidden', 'true');
+            cards[prev].style.pointerEvents = 'none';
+            gsap.fromTo(cards[current], { opacity: 0, y: 20 }, {
+              opacity: 1, y: 0, duration: 0.45, ease: 'power2.out',
+              onStart() {
+                cards[current].classList.add('testimonial-card--active');
+                cards[current].setAttribute('aria-hidden', 'false');
+                cards[current].style.pointerEvents = 'auto';
+              },
+            });
+          },
+        });
+      } else {
+        cards[prev].classList.remove('testimonial-card--active');
+        cards[prev].setAttribute('aria-hidden', 'true');
+        cards[current].classList.add('testimonial-card--active');
+        cards[current].setAttribute('aria-hidden', 'false');
+      }
+
+      indicators.forEach((ind, i) => {
+        const isActive = i === current;
+        if (isActive) {
+          ind.classList.add('t-indicator--active');
+          ind.setAttribute('aria-selected', 'true');
+        } else {
+          ind.classList.remove('t-indicator--active');
+          ind.setAttribute('aria-selected', 'false');
+        }
       });
     }
 
-    const testiHeader = document.querySelector('.testimonials-header');
-    if (testiHeader) {
-      gsap.fromTo(testiHeader, { opacity: 0, y: 24 }, {
-        opacity: 1, y: 0, duration: 0.65, ease: 'power3.out',
-        scrollTrigger: { trigger: '.testimonials', start: 'top 82%', once: true },
-      });
+    function startAuto() {
+      if (intervalId !== null) window.clearInterval(intervalId);
+      
+      // Reiniciar animación CSS de la barra activa actual
+      const activeIndicator = indicators[current];
+      if (activeIndicator && !prefersReduced) {
+        activeIndicator.classList.remove('t-indicator--active');
+        void activeIndicator.offsetWidth; // trigger reflow
+        activeIndicator.classList.add('t-indicator--active');
+      }
+
+      intervalId = window.setInterval(() => goTo(current + 1), DURATION);
     }
 
-    const testiTrack = document.querySelector('.testimonials-track');
-    if (testiTrack) {
-      gsap.fromTo(testiTrack, { opacity: 0, y: 36 }, {
-        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.15,
-        scrollTrigger: { trigger: '.testimonials', start: 'top 82%', once: true },
+    indicators.forEach((ind, i) => {
+      ind.addEventListener('click', () => { 
+        goTo(i); 
+        startAuto(); 
       });
-    }
+    });
+
+    // Autónomo: Se eliminan listeners de hover o pausa para que cambie cada 5s garantizado,
+    // excepto si la pestaña está oculta, para ahorrar recursos.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && intervalId !== null) {
+        window.clearInterval(intervalId);
+      } else if (!document.hidden) {
+        startAuto();
+      }
+    });
+
+    startAuto();
   }
 
   if (document.readyState === 'complete') {
-    initMetricsAnimations();
+    initMetrics();
   } else {
-    window.addEventListener('load', initMetricsAnimations, { once: true });
+    window.addEventListener('load', initMetrics, { once: true });
   }
-
-  /* ── Auto-rotación de testimonios ───────────────────────────────────────── */
-  const cards    = document.querySelectorAll('.testimonial-card');
-  const dots     = document.querySelectorAll('.t-dot');
-  const wrapper  = document.getElementById('testimonials-wrapper');
-  const pauseBtn = document.querySelector('.t-pause');
-
-  if (!cards.length) return;
-
-  let current      = 0;
-  let intervalId   = null;
-  let isPaused     = false;
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function updatePauseUI() {
-    if (!pauseBtn) return;
-    pauseBtn.setAttribute('aria-pressed', isPaused ? 'true' : 'false');
-    pauseBtn.setAttribute(
-      'aria-label',
-      isPaused ? 'Reanudar rotación automática' : 'Pausar rotación automática'
-    );
-    const iconPause = pauseBtn.querySelector('.icon-pause');
-    const iconPlay  = pauseBtn.querySelector('.icon-play');
-    if (iconPause) iconPause.hidden = isPaused;
-    if (iconPlay)  iconPlay.hidden  = !isPaused;
-  }
-
-  function goTo(index) {
-    const prev = current;
-    current    = ((index % cards.length) + cards.length) % cards.length;
-    if (prev === current) return;
-
-    const gsap = window.gsap;
-
-    if (gsap && !prefersReduced) {
-      gsap.to(cards[prev], {
-        opacity: 0, y: -16, duration: 0.35, ease: 'power2.in',
-        onComplete() {
-          cards[prev].classList.remove('testimonial-card--active');
-          cards[prev].setAttribute('aria-hidden', 'true');
-          cards[prev].style.pointerEvents = 'none';
-          gsap.fromTo(cards[current], { opacity: 0, y: 20 }, {
-            opacity: 1, y: 0, duration: 0.45, ease: 'power2.out',
-            onStart() {
-              cards[current].classList.add('testimonial-card--active');
-              cards[current].setAttribute('aria-hidden', 'false');
-              cards[current].style.pointerEvents = 'auto';
-            },
-          });
-        },
-      });
-    } else {
-      cards[prev].classList.remove('testimonial-card--active');
-      cards[prev].setAttribute('aria-hidden', 'true');
-      cards[current].classList.add('testimonial-card--active');
-      cards[current].setAttribute('aria-hidden', 'false');
-    }
-
-    dots.forEach((d, i) => {
-      const isActive = i === current;
-      d.classList.toggle('t-dot--active', isActive);
-      d.setAttribute('aria-selected', isActive ? 'true' : 'false');
-    });
-  }
-
-  function startAuto() {
-    if (isPaused) return;
-    clearInterval(intervalId);
-    intervalId = setInterval(() => goTo(current + 1), 4000);
-  }
-
-  pauseBtn?.addEventListener('click', () => {
-    isPaused = !isPaused;
-    if (isPaused) {
-      clearInterval(intervalId);
-    } else {
-      startAuto();
-    }
-    updatePauseUI();
-  });
-
-  dots.forEach((dot, i) => {
-    dot.addEventListener('click', () => { goTo(i); startAuto(); });
-  });
-
-  wrapper?.addEventListener('mouseenter', () => clearInterval(intervalId));
-  wrapper?.addEventListener('mouseleave', startAuto);
-
-  document.addEventListener('visibilitychange', () => {
-    document.hidden ? clearInterval(intervalId) : startAuto();
-  });
-
-  startAuto();
 </script>
