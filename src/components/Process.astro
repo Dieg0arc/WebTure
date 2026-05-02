@@ -1,0 +1,375 @@
+---
+const steps = [
+  {
+    num:   "01",
+    badge: "Día 1",
+    title: "Consulta",
+    desc:  "Me cuentas de tu negocio, tus clientes y lo que necesitas. En 30 minutos tenemos todo claro.",
+    featured: false,
+  },
+  {
+    num:   "02",
+    badge: "Día 2",
+    title: "Diseño",
+    desc:  "Creo el diseño visual a la medida de tu marca. Ves la propuesta antes de escribir una sola línea de código.",
+    featured: false,
+  },
+  {
+    num:   "03",
+    badge: "Día 3",
+    title: "Desarrollo",
+    desc:  "Construyo el sitio con código limpio y optimizado. Rápido, accesible y listo para Google.",
+    featured: false,
+  },
+  {
+    num:   "04",
+    badge: "Día 4",
+    title: "Entrega",
+    desc:  "Tu sitio live, en tu dominio, con todas las instrucciones para manejarlo. Listo para recibir clientes.",
+    featured: true,
+  },
+];
+---
+
+<section id="proceso" class="process" aria-label="El proceso de trabajo">
+  <div class="wrap">
+
+    <header class="process-header">
+      <h2 class="process-title split-title">
+        De idea a sitio <em class="accent-italic">en 4 días.</em>
+      </h2>
+      <p class="process-sub">
+        Sin reuniones interminables. Sin sorpresas.<br>
+        Un proceso claro de principio a fin.
+      </p>
+    </header>
+
+    <div class="process-grid">
+      {steps.map((step, i) => (
+        <article
+          class={`step-card${step.featured ? " step-card--highlight" : ""}`}
+          aria-label={`Paso ${i + 1}: ${step.title}`}
+        >
+          <span class="step-bg-num" aria-hidden="true">{step.num}</span>
+
+          <div class="step-icon" aria-hidden="true">
+            {i === 0 && (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+              </svg>
+            )}
+            {i === 1 && (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M3 9h18M9 21V9"/>
+              </svg>
+            )}
+            {i === 2 && (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"/>
+                <polyline points="8 6 2 12 8 18"/>
+              </svg>
+            )}
+            {i === 3 && (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            )}
+          </div>
+
+          <span class={`step-badge${step.featured ? " step-badge--accent" : ""}`}>
+            {step.badge}
+          </span>
+
+          <h3 class="step-title">{step.title}</h3>
+          <p class="step-desc">{step.desc}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="process-cta">
+      <p class="process-cta-text">¿Listo para tener tu sitio en 4 días?</p>
+      <a
+        href="https://wa.me/573046565684?text=Hola%2C%20me%20interesa%20saber%20más%20sobre%20el%20proceso%20de%20WebTure"
+        class="btn-primary"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Comenzar ahora por WhatsApp"
+      >
+        Comenzar ahora
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ─── Sección ────────────────────────────────────────────────────────────── */
+  .process {
+    padding: 120px 0 80px;
+    position: relative;
+  }
+
+  .process::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(600px, 80%);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+  }
+
+  /* ─── Header ─────────────────────────────────────────────────────────────── */
+  .process-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .process-label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  .process-title {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .process-sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  /* ─── Grid ───────────────────────────────────────────────────────────────── */
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  /* ─── Card ───────────────────────────────────────────────────────────────── */
+  .step-card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px 28px 36px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .step-card:hover {
+    border-color: var(--border-bright);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+  }
+
+  .step-card--highlight {
+    border-color: rgba(179,136,255,0.3);
+  }
+
+  .step-card--highlight:hover {
+    border-color: var(--accent);
+    box-shadow: 0 16px 48px rgba(179,136,255,0.12);
+  }
+
+  /* Número decorativo gigante */
+  .step-bg-num {
+    position: absolute;
+    top: -8px;
+    right: -2px;
+    font-family: var(--font-display);
+    font-size: 120px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text);
+    opacity: 0.04;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.05em;
+  }
+
+  .step-card--highlight .step-bg-num {
+    color: var(--accent);
+    opacity: 0.06;
+  }
+
+  /* ─── Icono ──────────────────────────────────────────────────────────────── */
+  .step-icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-glow-soft);
+    border: 1px solid var(--border-bright);
+    border-radius: 14px;
+    color: var(--accent);
+    margin-bottom: 20px;
+    flex-shrink: 0;
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+
+  .step-card:hover .step-icon {
+    background: var(--accent-glow);
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  /* ─── Badge de día ───────────────────────────────────────────────────────── */
+  .step-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border-bright);
+    border-radius: 20px;
+    padding: 4px 12px;
+    margin-bottom: 16px;
+    width: fit-content;
+  }
+
+  .step-badge--accent {
+    color: #000;
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* ─── Texto ──────────────────────────────────────────────────────────────── */
+  .step-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+
+  /* ─── CTA inferior ───────────────────────────────────────────────────────── */
+  .process-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 56px;
+    flex-wrap: wrap;
+  }
+
+  .process-cta-text {
+    font-size: 16px;
+    color: var(--text-muted);
+  }
+
+  /* ─── Responsive ─────────────────────────────────────────────────────────── */
+  @media (max-width: 959px) {
+    .process-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .process {
+      padding: 80px 0 60px;
+    }
+
+    .process-header {
+      text-align: left;
+      margin-bottom: 40px;
+    }
+
+    .process-sub {
+      margin: 0;
+    }
+
+    .process-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .step-card {
+      padding: 28px 24px;
+    }
+
+    .step-bg-num {
+      font-size: 80px;
+    }
+
+    .process-cta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      margin-top: 40px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .step-card,
+    .step-icon {
+      transition: none;
+    }
+  }
+</style>
+
+<script type="module">
+  if (typeof window === 'undefined') return;
+
+  function initProcess() {
+    const gsap          = window.gsap;
+    const ScrollTrigger = window.ScrollTrigger;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!gsap || !ScrollTrigger || prefersReduced) return;
+
+    gsap.fromTo('.process-header', { opacity: 0, y: 32 }, {
+      opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+      scrollTrigger: { trigger: '.process', start: 'top 80%', once: true },
+    });
+
+    gsap.fromTo('.step-card', { opacity: 0, y: 48 }, {
+      opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.12,
+      scrollTrigger: { trigger: '.process-grid', start: 'top 85%', once: true },
+    });
+
+    gsap.fromTo('.process-cta', { opacity: 0, y: 24 }, {
+      opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
+      scrollTrigger: { trigger: '.process-cta', start: 'top 90%', once: true },
+    });
+  }
+
+  if (document.readyState === 'complete') {
+    initProcess();
+  } else {
+    window.addEventListener('load', initProcess, { once: true });
+  }
+</script>
