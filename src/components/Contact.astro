@@ -106,16 +106,6 @@ const stats = [
   }
 
   /* ─── Texto ──────────────────────────────────────────────────────────────── */
-  .contact-label {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 24px;
-  }
-
   .contact-title {
     font-family: var(--font-display);
     font-size: clamp(36px, 5.5vw, 68px);
@@ -184,7 +174,7 @@ const stats = [
   }
 
   .btn-wa:hover {
-    background: #20bc58;
+    background: color-mix(in srgb, #25D366 80%, #000);
     transform: translateY(-2px);
     box-shadow: 0 12px 40px rgba(37,211,102,0.3);
   }
@@ -312,13 +302,9 @@ const stats = [
       scrollTrigger: { trigger: '.contact', start: 'top 75%', once: true },
     });
 
-    tl.fromTo('.contact-label', { opacity: 0, y: 16 }, {
-      opacity: 1, y: 0, duration: 0.5, ease: 'power3.out',
-    });
-
     tl.fromTo('.contact-title', { opacity: 0, y: 32 }, {
       opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
-    }, '-=0.3');
+    });
 
     tl.fromTo('.contact-sub', { opacity: 0, y: 20 }, {
       opacity: 1, y: 0, duration: 0.5, ease: 'power2.out',

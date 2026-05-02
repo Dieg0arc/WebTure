@@ -357,6 +357,7 @@ const WA_URL =
 
 <script is:inline>
   (function () {
+    if (typeof window === 'undefined') return;
     var nav      = document.getElementById('nav');
     var burger   = nav.querySelector('.nav-burger');
     var mobile   = document.getElementById('navMobile');

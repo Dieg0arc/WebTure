@@ -116,7 +116,7 @@ const WA_URL =
               height="20"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#4ade80"
+              stroke="currentColor"
               stroke-width="2.5"
             >
               <path d="M20 6L9 17l-5-5"></path>
@@ -287,9 +287,9 @@ const WA_URL =
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #4ade80;
+    background: var(--color-success);
     flex-shrink: 0;
-    box-shadow: 0 0 8px #4ade80;
+    box-shadow: 0 0 8px var(--color-success);
     animation: pulse 2s ease-in-out infinite;
   }
 
@@ -483,10 +483,11 @@ const WA_URL =
     justify-content: center;
     width: 36px;
     height: 36px;
-    background: rgba(74, 222, 128, 0.1);
-    border: 1px solid rgba(74, 222, 128, 0.2);
+    background: color-mix(in srgb, var(--color-success) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-success) 20%, transparent);
     border-radius: 50%;
     flex-shrink: 0;
+    color: var(--color-success);
   }
 
   /* ─── Marquee ────────────────────────────────────────────────────────────── */
