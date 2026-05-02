@@ -21,7 +21,7 @@ const {
   <head>
     <!-- Charset & Viewport -->
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
     <!-- Título y descripción -->
     <title>{title}</title>
@@ -85,7 +85,9 @@ const {
 
   <body>
     <a href="#main-content" class="skip-link">Saltar al contenido</a>
-    <slot />
+    <main id="main-content">
+      <slot />
+    </main>
 
     <script>
       import '../scripts/lenis.js';
