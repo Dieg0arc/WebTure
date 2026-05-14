@@ -1,0 +1,643 @@
+---
+// BuildWidget.astro — Sección "Desarrollo en tiempo real"
+// Muestra un mini sitio web siendo construido en vivo dentro de un browser chrome.
+// Animado con IntersectionObserver, loop automático cada ~6.5s.
+---
+
+<section class="build-section" id="desarrollo">
+  <div class="wrap">
+    <div class="build-inner">
+      <div class="build-copy">
+        <span class="build-label">Desarrollo en tiempo real</span>
+        <h2 class="build-title">
+          Tu sitio web, listo<br />
+          más rápido de lo que crees
+        </h2>
+        <p class="build-sub">
+          Desde el primer diseño hasta el lanzamiento, cada etapa es rápida y
+          transparente. Tecnología moderna, resultados profesionales, sin
+          sorpresas.
+        </p>
+        <ul class="build-points">
+          <li><span class="bp-dot"></span> Construcción modular, componente a componente</li>
+          <li><span class="bp-dot"></span> Performance, SEO y SSL desde el día uno</li>
+          <li><span class="bp-dot"></span> Sin sorpresas: ves los avances en vivo</li>
+        </ul>
+      </div>
+
+      <div class="build-widget-wrap" id="buildWidget">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="browser-dots"><span></span><span></span><span></span></div>
+            <div class="browser-url">
+              <div class="live-dot" id="liveDot"></div>
+              webture.co/tu-sitio
+            </div>
+          </div>
+
+          <div class="bv">
+            <div class="mini-site">
+
+              <div class="ms" id="msNav">
+                <div class="mst-nav">
+                  <div class="mst-logo">Web<em>ture</em></div>
+                  <div class="mst-nl">
+                    <a>Servicios</a><a>Proyectos</a><a>Contacto</a>
+                  </div>
+                  <div class="mst-ncta">Hablemos →</div>
+                </div>
+              </div>
+
+              <div class="ms" id="msHero">
+                <div class="mst-hero">
+                  <div class="mst-eyebrow">Agencia de diseño web</div>
+                  <div class="mst-h1">
+                    Tu negocio merece una <em>web</em> que <em>vende</em>
+                  </div>
+                  <div class="mst-hsub">Páginas web modernas para negocios locales</div>
+                  <div class="mst-hbtns">
+                    <div class="mst-hbp">Cotiza por WhatsApp →</div>
+                    <div class="mst-hbg">Ver proyectos</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ms" id="msCards">
+                <div class="mst-cards">
+                  <div class="mst-card">
+                    <div class="mst-thumb" style="background: linear-gradient(135deg, #1a1025, #0d0d14)"></div>
+                    <div class="mst-cb">
+                      <div class="mst-ct">Restaurante El Rincón</div>
+                      <div class="mst-cs">Landing page · 2024</div>
+                    </div>
+                  </div>
+                  <div class="mst-card">
+                    <div class="mst-thumb" style="background: linear-gradient(135deg, #0d1a1a, #081212)"></div>
+                    <div class="mst-cb">
+                      <div class="mst-ct">Clínica DentalPlus</div>
+                      <div class="mst-cs">Sitio corporativo · 2024</div>
+                    </div>
+                  </div>
+                  <div class="mst-card">
+                    <div class="mst-thumb" style="background: linear-gradient(135deg, #1a1510, #120e08)"></div>
+                    <div class="mst-cb">
+                      <div class="mst-ct">Moda Esencia</div>
+                      <div class="mst-cs">E-commerce · 2024</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ms" id="msForm">
+                <div class="mst-form">
+                  <div class="mst-ft">¿Listo para empezar?</div>
+                  <div class="mst-frow">
+                    <div class="mst-fi">Tu nombre</div>
+                    <div class="mst-fi">Tu email</div>
+                  </div>
+                  <div class="mst-fwa">Enviar por WhatsApp</div>
+                </div>
+              </div>
+
+              <div class="ms" id="msFooter">
+                <div class="mst-footer">
+                  <div class="mst-fl">Web<em>ture</em></div>
+                  <div class="mst-fc">© 2024 WebTure. Todos los derechos reservados.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="bprog">
+            <div class="pbar"><div class="pfill" id="pfill"></div></div>
+            <div class="plabels">
+              <span class="plabel" data-s="0">Nav</span>
+              <span class="plabel" data-s="1">Hero</span>
+              <span class="plabel" data-s="2">Carrusel</span>
+              <span class="plabel" data-s="3">Contacto</span>
+              <span class="plabel" data-s="4">Footer</span>
+            </div>
+          </div>
+
+          <div class="bchips">
+            <span class="bchip">Build OK</span>
+            <span class="bchip">SSL</span>
+            <span class="bchip">Performance</span>
+            <span class="bchip">En vivo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .build-section {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 120px 0;
+    position: relative;
+  }
+
+  .build-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .build-copy { max-width: 480px; }
+
+  .build-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .build-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  .build-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(32px, 4.5vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  .build-sub {
+    font-size: clamp(15px, 1.4vw, 17px);
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  .build-points {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .build-points li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .bp-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(179, 136, 255, 0.5);
+    flex-shrink: 0;
+  }
+
+  /* Browser */
+  .browser {
+    background: #0c0c18;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #1e1e30;
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+  }
+  .browser-bar {
+    background: #090914;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #14142a;
+  }
+  .browser-dots { display: flex; gap: 5px; flex-shrink: 0; }
+  .browser-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #1e1e2e;
+  }
+  .browser-url {
+    flex: 1;
+    background: #11111d;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 10px;
+    color: #3a3a5a;
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 6px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #1e1e2e;
+    flex-shrink: 0;
+    transition: background 0.5s;
+  }
+  .live-dot.on {
+    background: #4ade80;
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    animation: bw-pdot 1.4s ease-in-out infinite;
+  }
+  @keyframes bw-pdot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Mini site viewport */
+  .bv { height: 268px; overflow: hidden; position: relative; }
+  .mini-site { background: #080808; }
+  .ms {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .ms.show { opacity: 1; transform: translateY(0); }
+
+  /* Mini Nav */
+  .mst-nav {
+    height: 40px;
+    padding: 0 16px;
+    background: rgba(8, 8, 8, 0.99);
+    border-bottom: 1px solid #181818;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .mst-logo {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 14px;
+    color: #f2f2f2;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+  }
+  .mst-logo em { color: var(--accent); font-style: normal; }
+  .mst-nl { display: flex; gap: 14px; flex: 1; }
+  .mst-nl a {
+    font-size: 10px;
+    color: #444;
+    text-decoration: none;
+    font-family: var(--font-body);
+  }
+  .mst-ncta {
+    padding: 5px 11px;
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 9px;
+    border-radius: 6px;
+    font-family: var(--font-body);
+    white-space: nowrap;
+  }
+
+  /* Mini Hero */
+  .mst-hero {
+    padding: 26px 20px 22px;
+    background: #080808;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .mst-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse 70% 70% at 50% 50%,
+      rgba(179, 136, 255, 0.09) 0%,
+      transparent 70%
+    );
+  }
+  .mst-eyebrow {
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    font-family: var(--font-body);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .mst-eyebrow::before,
+  .mst-eyebrow::after {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 1px;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .mst-h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 19px;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    color: #f2f2f2;
+    margin-bottom: 7px;
+    position: relative;
+  }
+  .mst-h1 em { color: var(--accent); font-style: normal; }
+  .mst-hsub {
+    font-size: 10px;
+    color: #555;
+    margin-bottom: 12px;
+    position: relative;
+    font-family: var(--font-body);
+  }
+  .mst-hbtns {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    position: relative;
+  }
+  .mst-hbp {
+    padding: 6px 13px;
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 10px;
+    border-radius: 7px;
+    font-family: var(--font-body);
+  }
+  .mst-hbg {
+    padding: 6px 13px;
+    background: transparent;
+    border: 1px solid #2a2a2a;
+    color: #f2f2f2;
+    font-size: 10px;
+    border-radius: 7px;
+    font-family: var(--font-body);
+  }
+
+  /* Mini Cards */
+  .mst-cards {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px;
+    background: #111;
+    border-top: 1px solid #181818;
+  }
+  .mst-card {
+    flex: 1;
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 7px;
+    overflow: hidden;
+  }
+  .mst-thumb { height: 42px; }
+  .mst-cb { padding: 7px 9px; }
+  .mst-ct {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 9px;
+    color: #f2f2f2;
+    margin-bottom: 2px;
+  }
+  .mst-cs { font-size: 8px; color: #3a3a3a; font-family: var(--font-body); }
+
+  /* Mini Form */
+  .mst-form {
+    padding: 13px 16px;
+    background: #111;
+    border-top: 1px solid #181818;
+  }
+  .mst-ft {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    color: #f2f2f2;
+    margin-bottom: 9px;
+    letter-spacing: -0.015em;
+  }
+  .mst-frow {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 7px;
+  }
+  .mst-fi {
+    flex: 1;
+    padding: 6px 8px;
+    background: #181818;
+    border: 1px solid #242424;
+    border-radius: 5px;
+    font-size: 9px;
+    color: #333;
+    font-family: var(--font-body);
+  }
+  .mst-fwa {
+    padding: 6px 13px;
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 10px;
+    border-radius: 6px;
+    display: inline-block;
+    font-family: var(--font-body);
+  }
+
+  /* Mini Footer */
+  .mst-footer {
+    padding: 10px 16px;
+    background: #040408;
+    border-top: 1px solid #181818;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .mst-fl {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 12px;
+    color: #f2f2f2;
+  }
+  .mst-fl em { color: var(--accent); font-style: normal; }
+  .mst-fc { font-size: 9px; color: #222; font-family: var(--font-body); }
+
+  /* Progress */
+  .bprog { padding: 12px 14px 0; }
+  .pbar {
+    height: 3px;
+    background: #11111d;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .pfill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+    border-radius: 2px;
+    transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .plabels { display: flex; justify-content: space-between; }
+  .plabel {
+    font-size: 9px;
+    color: #222;
+    font-family: var(--font-body);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    transition: color 0.3s;
+  }
+  .plabel.on { color: var(--accent); }
+
+  /* Chips */
+  .bchips {
+    display: flex;
+    gap: 6px;
+    padding: 10px 14px 14px;
+    flex-wrap: wrap;
+    min-height: 44px;
+    align-items: center;
+  }
+  .bchip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    background: rgba(74, 222, 128, 0.07);
+    border: 1px solid rgba(74, 222, 128, 0.18);
+    color: #4ade80;
+    opacity: 0;
+    transform: scale(0.75) translateY(5px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .bchip::before { content: '✓'; font-size: 8px; }
+  .bchip.show {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  /* Responsive */
+  @media (max-width: 959px) {
+    .build-section { padding: 80px 0; }
+    .build-inner {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .build-copy { max-width: 100%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ms { opacity: 1; transform: none; }
+    .bchip { opacity: 1; transform: scale(1); }
+    .live-dot { background: #4ade80; }
+    .pfill { width: 100%; }
+    .live-dot.on { animation: none; }
+  }
+</style>
+
+<script type="module">
+  if (typeof window !== 'undefined') {
+    function initBuildWidget() {
+      const widget = document.getElementById('buildWidget');
+      if (!widget) return;
+
+      const STEPS = [
+        { id: 'msNav', pct: 20, delay: 500 },
+        { id: 'msHero', pct: 40, delay: 1200 },
+        { id: 'msCards', pct: 60, delay: 1950 },
+        { id: 'msForm', pct: 80, delay: 2700 },
+        { id: 'msFooter', pct: 100, delay: 3450 },
+      ];
+      const labels = widget.querySelectorAll('.plabel');
+      const fill = document.getElementById('pfill');
+      const chips = widget.querySelectorAll('.bchip');
+      const liveDot = document.getElementById('liveDot');
+      let timers = [];
+      let running = false;
+
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+
+      function reset() {
+        timers.forEach(clearTimeout);
+        timers = [];
+        STEPS.forEach((s) => {
+          const el = document.getElementById(s.id);
+          if (el) el.classList.remove('show');
+        });
+        labels.forEach((l) => l.classList.remove('on'));
+        chips.forEach((c) => c.classList.remove('show'));
+        fill.style.width = '0%';
+        liveDot.classList.remove('on');
+        running = false;
+      }
+
+      function run() {
+        if (running) return;
+        running = true;
+
+        STEPS.forEach((s, i) => {
+          timers.push(setTimeout(() => {
+            const el = document.getElementById(s.id);
+            if (el) el.classList.add('show');
+            fill.style.width = s.pct + '%';
+            labels.forEach((l, li) => l.classList.toggle('on', li === i));
+          }, s.delay));
+        });
+
+        chips.forEach((c, i) => {
+          timers.push(setTimeout(() => c.classList.add('show'), 4100 + i * 130));
+        });
+
+        timers.push(setTimeout(() => liveDot.classList.add('on'), 4000));
+
+        timers.push(setTimeout(() => {
+          reset();
+          setTimeout(run, 500);
+        }, 6400));
+      }
+
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting && !running) run();
+            else if (!e.isIntersecting) reset();
+          });
+        },
+        { threshold: 0.35 }
+      );
+
+      obs.observe(widget);
+    }
+
+    if (document.readyState === 'complete') {
+      initBuildWidget();
+    } else {
+      window.addEventListener('load', initBuildWidget, { once: true });
+    }
+  }
+</script>
