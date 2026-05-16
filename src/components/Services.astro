@@ -106,7 +106,13 @@ const services = [
   .services {
     padding: 120px 0;
     background: var(--bg);
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 6;
+  }
+
+  @media (max-width: 767px) {
+    .services { position: relative; }
   }
 
   /* Separador sutil arriba */
@@ -378,7 +384,6 @@ const services = [
 </style>
 
 <script type="module">
-  if (typeof window === 'undefined') return;
 
   function initServices() {
     const gsap           = window.gsap;

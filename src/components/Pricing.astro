@@ -443,8 +443,7 @@ const plans = [
 <!-- Toggle: JS mínimo IIFE — sin GSAP, sin módulo -->
 <script>
   (function () {
-    if (typeof window === 'undefined') return;
-
+  
     var btnUnico = document.getElementById('btn-unico');
     var btnMant  = document.getElementById('btn-mant');
     if (!btnUnico || !btnMant) return;
@@ -475,7 +474,6 @@ const plans = [
 
 <!-- Animaciones GSAP -->
 <script type="module">
-  if (typeof window === 'undefined') return;
 
   function initPricing() {
     const gsap          = window.gsap;

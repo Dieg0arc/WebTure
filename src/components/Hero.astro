@@ -128,23 +128,34 @@ const WA_URL =
   </div>
 
   <!-- Marquee inferior -->
+  <!-- Marquee superior -->
   <div class="hero-marquee" aria-hidden="true">
     <div class="marquee-track">
       <span>WEBTURE</span><span class="sep">·</span>
-      <span>DISEÑO</span><span class="sep">·</span>
+      <span>DISEÑO WEB</span><span class="sep">·</span>
       <span>CONVERSIÓN</span><span class="sep">·</span>
       <span>COLOMBIA</span><span class="sep">·</span>
       <span>SEO</span><span class="sep">·</span>
       <span>VELOCIDAD</span><span class="sep">·</span>
       <span>RESULTADOS</span><span class="sep">·</span>
+      <span>VENTAS</span><span class="sep">·</span>
+      <span>BRANDING</span><span class="sep">·</span>
+      <span>POSICIONAMIENTO</span><span class="sep">·</span>
+      <span>CLIENTES</span><span class="sep">·</span>
+      <span>CRECIMIENTO</span><span class="sep">·</span>
       <!-- Duplicado exacto para loop sin salto -->
       <span>WEBTURE</span><span class="sep">·</span>
-      <span>DISEÑO</span><span class="sep">·</span>
+      <span>DISEÑO WEB</span><span class="sep">·</span>
       <span>CONVERSIÓN</span><span class="sep">·</span>
       <span>COLOMBIA</span><span class="sep">·</span>
       <span>SEO</span><span class="sep">·</span>
       <span>VELOCIDAD</span><span class="sep">·</span>
       <span>RESULTADOS</span><span class="sep">·</span>
+      <span>VENTAS</span><span class="sep">·</span>
+      <span>BRANDING</span><span class="sep">·</span>
+      <span>POSICIONAMIENTO</span><span class="sep">·</span>
+      <span>CLIENTES</span><span class="sep">·</span>
+      <span>CRECIMIENTO</span><span class="sep">·</span>
     </div>
   </div>
 </section>
@@ -646,15 +657,13 @@ const WA_URL =
     }
 
     /* Hide the duplicate set used for the loop — only show first 13 children */
-    .marquee-track span:nth-child(n+14) {
+    .marquee-track span:nth-child(n + 14) {
       display: none;
     }
   }
 </style>
 
 <script type="module">
-  if (typeof window === "undefined") return;
-
   function initHero() {
     const gsap = window.gsap;
     const ScrollTrigger = window.ScrollTrigger;
@@ -696,9 +705,9 @@ const WA_URL =
     }
   }
 
-  if (document.readyState === 'complete') {
+  if (document.readyState === "complete") {
     initHero();
   } else {
-    window.addEventListener('load', initHero, { once: true });
+    window.addEventListener("load", initHero, { once: true });
   }
 </script>
