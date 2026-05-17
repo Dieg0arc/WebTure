@@ -26,6 +26,10 @@ function initLenis() {
 
   gsap.ticker.lagSmoothing(0);
 
+  // Recalculate Lenis scroll limits whenever GSAP adds/updates pin spacers
+  ScrollTrigger.addEventListener('refresh', () => lenis.resize());
+  ScrollTrigger.refresh();
+
   window.__lenis = lenis;
 }
 
