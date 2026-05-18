@@ -66,7 +66,12 @@ const stats = [
   /* ─── Sección ────────────────────────────────────────────────────────────── */
   .contact {
     padding: 140px 0 160px;
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -28px 72px rgba(0, 0, 0, 0.55);
   }
 
   .contact::before {
@@ -87,7 +92,7 @@ const stats = [
     bottom: -100px;
     left: 50%;
     transform: translateX(-50%);
-    width: 600px;
+    width: min(600px, 100%); /* Capped to parent — 600px fijo desbordaría en mobile */
     height: 400px;
     background: radial-gradient(ellipse, rgba(179,136,255,0.06) 0%, transparent 70%);
     pointer-events: none;
@@ -242,6 +247,10 @@ const stats = [
   @media (max-width: 767px) {
     .contact {
       padding: 100px 0 120px;
+      position: relative;
+      border-radius: 0;
+      box-shadow: none;
+      overflow-x: clip; /* Clip decorative pseudo-elements that extend beyond 390px */
     }
 
     .contact-inner {
@@ -289,7 +298,6 @@ const stats = [
 </style>
 
 <script type="module">
-  if (typeof window === 'undefined') return;
 
   function initContact() {
     const gsap          = window.gsap;

@@ -415,7 +415,7 @@ export function initCustomCursor() {
   }
   loop();
 
-  const hovSel = 'a, button, .btn-primary, .btn-ghost, .btn-nav, .proj-card, .service-card, .proj-btn, .wa-btn, input, textarea, .logo, .footer-logo, .mst-ncta, .mst-hbp';
+  const hovSel = 'a, button, .btn-primary, .btn-ghost, .btn-nav, .proj-card, .svc-card, .btn-cta, .wa-btn, input, textarea, .logo, .footer-logo, .mst-ncta, .mst-hbp';
   function bindHover(root = document) {
     root.querySelectorAll(hovSel).forEach((el) => {
       if (el.__curBound) return;
@@ -466,15 +466,15 @@ export function initTiltCards() {
     const style = document.createElement('style');
     style.id = 'tilt-style';
     style.textContent = `
-      .service-card{transform-style:preserve-3d;will-change:transform;position:relative;overflow:hidden}
-      .service-card::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(179,136,255,.12) 0%,transparent 60%);transform:translate(-50%,-50%);left:var(--mx,50%);top:var(--my,50%);opacity:0;transition:opacity .35s;pointer-events:none;z-index:0}
-      .service-card:hover::before{opacity:1}
-      .service-card > *{position:relative;z-index:1}
+      .svc-card{transform-style:preserve-3d;will-change:transform}
+      .svc-card::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(179,136,255,.12) 0%,transparent 60%);transform:translate(-50%,-50%);left:var(--mx,50%);top:var(--my,50%);opacity:0;transition:opacity .35s;pointer-events:none;z-index:0}
+      .svc-card:hover::before{opacity:1}
+      .svc-card > *:not(.svc-num){position:relative;z-index:1}
     `;
     document.head.appendChild(style);
   }
 
-  document.querySelectorAll('.service-card').forEach((card) => {
+  document.querySelectorAll('.svc-card').forEach((card) => {
     if (card.__tiltBound) return;
     card.__tiltBound = true;
 
@@ -577,6 +577,7 @@ export function initMaskReveal() {
 export function initMarqueeSpeed() {
   if (typeof window === 'undefined') return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(pointer: coarse)').matches) return; // CSS animation is smoother on touch
 
   const track = document.querySelector('.marquee-track');
   if (!track) return;
@@ -596,11 +597,63 @@ export function initMarqueeSpeed() {
   tick();
 }
 
+/* ─── 18. Clip-path block reveal — estilo editorial (Vettvangur) ─────────── */
+// Uso: agrega data-clip="bottom|top|left|right" a cualquier elemento.
+// El elemento se "destapa" con una máscara al entrar en viewport.
+// Hermanos con el mismo data-clip dentro de un mismo padre se revelan en stagger.
+export function initClipReveal() {
+  if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const CLIP_START = {
+    bottom: 'inset(0% 0% 100% 0%)',
+    top:    'inset(100% 0% 0% 0%)',
+    left:   'inset(0% 100% 0% 0%)',
+    right:  'inset(0% 0% 0% 100%)',
+  };
+
+  const els = document.querySelectorAll('[data-clip]');
+  if (!els.length) return;
+
+  // Pone todos en estado inicial de inmediato (evita flash antes del load)
+  els.forEach((el) => {
+    const dir = el.getAttribute('data-clip') || 'bottom';
+    gsap.set(el, { clipPath: CLIP_START[dir] || CLIP_START.bottom });
+  });
+
+  // Agrupa hermanos del mismo padre para stagger automático
+  const groups = new Map();
+  els.forEach((el) => {
+    const key = el.parentElement;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(el);
+  });
+
+  groups.forEach((children, parent) => {
+    const dir   = children[0].getAttribute('data-clip') || 'bottom';
+    const start = CLIP_START[dir] || CLIP_START.bottom;
+    const hasStagger = children.length > 1;
+
+    gsap.to(children, {
+      clipPath: 'inset(0% 0% 0% 0%)',
+      duration: 1.1,
+      ease: 'expo.out',
+      stagger: hasStagger ? 0.1 : 0,
+      scrollTrigger: {
+        trigger: parent,
+        start: 'top 88%',
+        once: true,
+      },
+    });
+  });
+}
+
 /* ─── 17. initAll — punto de entrada ─────────────────────────────────────── */
 export function initAll() {
   if (typeof window === 'undefined') return;
 
-  initNavbar();
+  // initNavbar() removed — Navbar.astro inline script owns the scroll state
+  // and is already resilient to CDN failure
   // Hero animations are self-contained in Hero.astro
   // ScrollStory animations are self-contained in ScrollStory.astro
   // to avoid conflicts with ScrollTrigger context
@@ -618,6 +671,7 @@ export function initAll() {
   initWordReveal();
   initMaskReveal();
   initMarqueeSpeed();
+  initClipReveal();
 }
 
 export default initAll;

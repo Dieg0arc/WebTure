@@ -68,8 +68,9 @@ const testimonios = [
       <div class="testimonials-track" aria-live="polite" aria-atomic="true">
         {testimonios.map((t, i) => (
           <div
+            id={`panel-${i}`}
             class={`testimonial-card${i === 0 ? " testimonial-card--active" : ""}`}
-            role="article"
+            role="tabpanel"
             aria-label={`Testimonio de ${t.nombre}`}
             aria-hidden={i !== 0 ? "true" : "false"}
           >
@@ -111,6 +112,7 @@ const testimonios = [
               role="tab"
               aria-label={`Testimonio ${i + 1}: ${t.nombre}`}
               aria-selected={i === 0 ? "true" : "false"}
+              aria-controls={`panel-${i}`}
               data-index={String(i)}
             >
               <span class="t-indicator-progress"></span>
@@ -128,8 +130,20 @@ const testimonios = [
   .metrics {
     padding: 100px 0 120px;
     background: var(--surface);
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 7;
     overflow: hidden;
+    border-radius: 24px 24px 0 0;   /* esquinas superiores redondeadas — efecto tarjeta */
+    box-shadow: 0 -28px 72px rgba(0, 0, 0, 0.55); /* sombra hacia arriba para dar profundidad */
+  }
+
+  @media (max-width: 767px) {
+    .metrics {
+      position: relative;
+      border-radius: 0;
+      box-shadow: none;
+    }
   }
 
   /* Grain de fondo sutil */
@@ -177,6 +191,8 @@ const testimonios = [
   .metric-number-wrap {
     position: relative;
     margin-bottom: 10px;
+    overflow: hidden;        /* necesario para el slide-up del número */
+    padding-bottom: 0.08em; /* evita que el descender de la fuente se corte */
   }
 
   /* El span .counter es el número animado */
@@ -188,6 +204,12 @@ const testimonios = [
     color: var(--text);
     line-height: 1;
     display: block;
+    transform: translateY(110%); /* estado inicial: oculto debajo del overflow */
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .counter { transform: none !important; }
   }
 
   .metric-label {
@@ -501,12 +523,36 @@ const testimonios = [
 
     /* ── 1. Animaciones de entrada (Metrics & Headers) ── */
     if (!prefersReduced) {
-      const metricItems = document.querySelectorAll<HTMLElement>('.metric-item');
-      if (metricItems.length) {
-        gsap.fromTo(metricItems, { opacity: 0, y: 32 }, {
-          opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.1,
-          scrollTrigger: { trigger: '.metrics-grid', start: 'top 85%', once: true },
-        });
+      // Números: slide-up desde abajo del contenedor (efecto Vettvangur / PowerPoint)
+      // El overflow:hidden en .metric-number-wrap actúa como máscara
+      const counters = document.querySelectorAll<HTMLElement>('.counter');
+      if (counters.length) {
+        gsap.fromTo(counters,
+          { y: '110%' },
+          {
+            y: '0%',
+            duration: 0.9,
+            ease: 'expo.out',
+            stagger: 0.18,          // cada número entra 0.18s después del anterior
+            scrollTrigger: { trigger: '.metrics-grid', start: 'top 75%', once: true },
+          }
+        );
+      }
+
+      // Labels: se deslizan también, con un pequeño retraso
+      const labels = document.querySelectorAll<HTMLElement>('.metric-label');
+      if (labels.length) {
+        gsap.fromTo(labels,
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1, y: 0,
+            duration: 0.6,
+            ease: 'power3.out',
+            stagger: 0.18,
+            delay: 0.25,            // llegan después de los números
+            scrollTrigger: { trigger: '.metrics-grid', start: 'top 75%', once: true },
+          }
+        );
       }
 
       const testiHeader = document.querySelector<HTMLElement>('.testimonials-header');

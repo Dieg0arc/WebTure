@@ -137,7 +137,12 @@ const plans = [
   /* ─── Sección ────────────────────────────────────────────────────────────── */
   .pricing {
     padding: 120px 0 80px;
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 9;
+    background: var(--bg);
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -28px 72px rgba(0, 0, 0, 0.55);
   }
 
   .pricing::before {
@@ -398,6 +403,9 @@ const plans = [
   @media (max-width: 767px) {
     .pricing {
       padding: 80px 0 60px;
+      position: relative;
+      border-radius: 0;
+      box-shadow: none;
     }
 
     .pricing-header {
@@ -443,8 +451,7 @@ const plans = [
 <!-- Toggle: JS mínimo IIFE — sin GSAP, sin módulo -->
 <script>
   (function () {
-    if (typeof window === 'undefined') return;
-
+  
     var btnUnico = document.getElementById('btn-unico');
     var btnMant  = document.getElementById('btn-mant');
     if (!btnUnico || !btnMant) return;
@@ -475,7 +482,6 @@ const plans = [
 
 <!-- Animaciones GSAP -->
 <script type="module">
-  if (typeof window === 'undefined') return;
 
   function initPricing() {
     const gsap          = window.gsap;

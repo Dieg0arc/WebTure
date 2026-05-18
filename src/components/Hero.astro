@@ -128,23 +128,34 @@ const WA_URL =
   </div>
 
   <!-- Marquee inferior -->
+  <!-- Marquee superior -->
   <div class="hero-marquee" aria-hidden="true">
     <div class="marquee-track">
       <span>WEBTURE</span><span class="sep">·</span>
-      <span>DISEÑO</span><span class="sep">·</span>
+      <span>DISEÑO WEB</span><span class="sep">·</span>
       <span>CONVERSIÓN</span><span class="sep">·</span>
       <span>COLOMBIA</span><span class="sep">·</span>
       <span>SEO</span><span class="sep">·</span>
       <span>VELOCIDAD</span><span class="sep">·</span>
       <span>RESULTADOS</span><span class="sep">·</span>
+      <span>VENTAS</span><span class="sep">·</span>
+      <span>BRANDING</span><span class="sep">·</span>
+      <span>POSICIONAMIENTO</span><span class="sep">·</span>
+      <span>CLIENTES</span><span class="sep">·</span>
+      <span>CRECIMIENTO</span><span class="sep">·</span>
       <!-- Duplicado exacto para loop sin salto -->
       <span>WEBTURE</span><span class="sep">·</span>
-      <span>DISEÑO</span><span class="sep">·</span>
+      <span>DISEÑO WEB</span><span class="sep">·</span>
       <span>CONVERSIÓN</span><span class="sep">·</span>
       <span>COLOMBIA</span><span class="sep">·</span>
       <span>SEO</span><span class="sep">·</span>
       <span>VELOCIDAD</span><span class="sep">·</span>
       <span>RESULTADOS</span><span class="sep">·</span>
+      <span>VENTAS</span><span class="sep">·</span>
+      <span>BRANDING</span><span class="sep">·</span>
+      <span>POSICIONAMIENTO</span><span class="sep">·</span>
+      <span>CLIENTES</span><span class="sep">·</span>
+      <span>CRECIMIENTO</span><span class="sep">·</span>
     </div>
   </div>
 </section>
@@ -590,6 +601,12 @@ const WA_URL =
       letter-spacing: -0.03em;
     }
 
+    /* Eyebrow puede desbordarse con nowrap en móvil — dejar que wrappee */
+    .hero-eyebrow {
+      white-space: normal;
+      text-align: center;
+    }
+
     .hero-visual {
       display: none;
     }
@@ -646,15 +663,13 @@ const WA_URL =
     }
 
     /* Hide the duplicate set used for the loop — only show first 13 children */
-    .marquee-track span:nth-child(n+14) {
+    .marquee-track span:nth-child(n + 14) {
       display: none;
     }
   }
 </style>
 
 <script type="module">
-  if (typeof window === "undefined") return;
-
   function initHero() {
     const gsap = window.gsap;
     const ScrollTrigger = window.ScrollTrigger;
@@ -675,30 +690,32 @@ const WA_URL =
         .from(".hero-visual", { x: 40, opacity: 0, duration: 0.9 }, "-=0.6")
         .from(".hero-marquee", { opacity: 0, duration: 0.5 }, "-=0.3");
 
-      /* ── Parallax multicapa al scroll ────────────────────────────────── */
-      const heroTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "top top",
-          end: "80% top",
-          scrub: 1.5,
-        },
-      });
+      /* ── Parallax multicapa al scroll — solo en dispositivos no-touch ── */
+      if (!window.matchMedia('(pointer: coarse)').matches) {
+        const heroTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".hero",
+            start: "top top",
+            end: "80% top",
+            scrub: 1.5,
+          },
+        });
 
-      heroTl
-        .to(".hero-eyebrow", { y: -50, opacity: 0, duration: 1 }, 0)
-        .to(".hero-h1", { y: -100, scale: 0.97, duration: 1 }, 0)
-        .to(".hero-sub", { y: -70, opacity: 0, duration: 1 }, 0)
-        .to(".cta-row", { y: -40, opacity: 0, duration: 1 }, 0)
-        .to(".hero-visual", { y: -40, opacity: 0, duration: 1 }, 0)
-        .to(".mesh-orb--1", { y: -80, duration: 1 }, 0)
-        .to(".mesh-orb--2", { y: 60, duration: 1 }, 0);
+        heroTl
+          .to(".hero-eyebrow", { y: -50, opacity: 0, duration: 1 }, 0)
+          .to(".hero-h1", { y: -100, scale: 0.97, duration: 1 }, 0)
+          .to(".hero-sub", { y: -70, opacity: 0, duration: 1 }, 0)
+          .to(".cta-row", { y: -40, opacity: 0, duration: 1 }, 0)
+          .to(".hero-visual", { y: -40, opacity: 0, duration: 1 }, 0)
+          .to(".mesh-orb--1", { y: -80, duration: 1 }, 0)
+          .to(".mesh-orb--2", { y: 60, duration: 1 }, 0);
+      }
     }
   }
 
-  if (document.readyState === 'complete') {
+  if (document.readyState === "complete") {
     initHero();
   } else {
-    window.addEventListener('load', initHero, { once: true });
+    window.addEventListener("load", initHero, { once: true });
   }
 </script>

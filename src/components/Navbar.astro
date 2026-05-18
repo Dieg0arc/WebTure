@@ -11,14 +11,14 @@ const WA_URL =
       WebTure<span class="logo-dot">.</span>
     </a>
 
-    <!-- Links desktop -->
+    <!-- Links desktop — split-text hover -->
     <ul class="nav-links" role="list">
-      <li><a href="#inicio">Inicio</a></li>
-      <li><a href="#proyectos">Proyectos</a></li>
-      <li><a href="#servicios">Servicios</a></li>
-      <li><a href="#proceso">Proceso</a></li>
-      <li><a href="#precios">Precios</a></li>
-      <li><a href="#contacto">Contacto</a></li>
+      <li><a href="#inicio"    class="nav-link-split"><span class="ns-a">Inicio</span><span class="ns-b" aria-hidden="true">Inicio</span></a></li>
+      <li><a href="#proyectos" class="nav-link-split"><span class="ns-a">Proyectos</span><span class="ns-b" aria-hidden="true">Proyectos</span></a></li>
+      <li><a href="#servicios" class="nav-link-split"><span class="ns-a">Servicios</span><span class="ns-b" aria-hidden="true">Servicios</span></a></li>
+      <li><a href="#proceso"   class="nav-link-split"><span class="ns-a">Proceso</span><span class="ns-b" aria-hidden="true">Proceso</span></a></li>
+      <li><a href="#precios"   class="nav-link-split"><span class="ns-a">Precios</span><span class="ns-b" aria-hidden="true">Precios</span></a></li>
+      <li><a href="#contacto"  class="nav-link-split"><span class="ns-a">Contacto</span><span class="ns-b" aria-hidden="true">Contacto</span></a></li>
     </ul>
 
     <!-- Acciones -->
@@ -151,12 +151,47 @@ const WA_URL =
     font-size: 14px;
     font-weight: 500;
     text-decoration: none;
-    transition: color 0.2s ease;
     white-space: nowrap;
   }
 
-  .nav-links a:hover {
+  /* ─── Split-text hover (efecto Vettvangur) ──────────────────────────────── */
+  .nav-link-split {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: flex-start;
+    height: 1.2em;
+  }
+
+  .ns-a,
+  .ns-b {
+    display: block;
+    line-height: 1.2;
+    transition: transform 0.42s cubic-bezier(0.76, 0, 0.24, 1);
+    will-change: transform;
+    white-space: nowrap;
+  }
+
+  /* El segundo span empieza debajo, fuera del overflow */
+  .ns-b {
+    position: absolute;
+    top: 0;
+    left: 0;
     color: var(--text);
+    transform: translateY(110%);
+  }
+
+  /* Al hover: ns-a sube y sale, ns-b sube a su posición */
+  .nav-link-split:hover .ns-a {
+    transform: translateY(-110%);
+  }
+
+  .nav-link-split:hover .ns-b {
+    transform: translateY(0%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ns-a, .ns-b { transition: none; }
   }
 
   /* ─── Acciones (CTA + burger) ───────────────────────────────────────────── */
@@ -357,8 +392,7 @@ const WA_URL =
 
 <script is:inline>
   (function () {
-    if (typeof window === 'undefined') return;
-    var nav      = document.getElementById('nav');
+      var nav      = document.getElementById('nav');
     var burger   = nav.querySelector('.nav-burger');
     var mobile   = document.getElementById('navMobile');
     var links    = mobile.querySelectorAll('.mobile-link, .mobile-cta');

@@ -72,7 +72,7 @@ html.lenis body {
 html {
   font-size: 16px;
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip no crea scroll container — evita romper position:sticky */
 }
 
 body {
@@ -81,7 +81,7 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip en lugar de hidden para preservar sticky */
   min-height: 100svh;
   line-height: 1.6;
   width: 100%;
@@ -235,6 +235,7 @@ button {
   opacity: 0;
   transform: translateY(32px);
 }
+
 
 /* Label / eyebrow text */
 .label {
