@@ -178,10 +178,12 @@ const stats = [
     white-space: nowrap;
   }
 
-  .btn-wa:hover {
-    background: color-mix(in srgb, #25D366 80%, #000);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(37,211,102,0.3);
+  @media (hover: hover) {
+    .btn-wa:hover {
+      background: color-mix(in srgb, #25D366 80%, #000);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(37,211,102,0.3);
+    }
   }
 
   .btn-wa:active {
@@ -192,14 +194,18 @@ const stats = [
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    padding: 10px 16px;
+    min-height: 44px;
     font-family: var(--font-mono);
     font-size: 15px;
     color: var(--text-muted);
     transition: color 0.2s ease;
   }
 
-  .contact-email:hover {
-    color: var(--accent);
+  @media (hover: hover) {
+    .contact-email:hover {
+      color: var(--accent);
+    }
   }
 
   /* ─── Trust bar ──────────────────────────────────────────────────────────── */

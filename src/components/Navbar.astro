@@ -221,10 +221,12 @@ const WA_URL =
       box-shadow  0.2s ease;
   }
 
-  .btn-cta:hover {
-    background: var(--accent-dim);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 20px rgba(179, 136, 255, 0.3);
+  @media (hover: hover) {
+    .btn-cta:hover {
+      background: var(--accent-dim);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(179, 136, 255, 0.3);
+    }
   }
 
   .btn-cta:active {
@@ -335,9 +337,11 @@ const WA_URL =
     letter-spacing: -0.02em;
   }
 
-  .mobile-link:hover {
-    color: var(--text);
-    padding-left: 8px;
+  @media (hover: hover) {
+    .mobile-link:hover {
+      color: var(--text);
+      padding-left: 8px;
+    }
   }
 
   .mobile-cta {
