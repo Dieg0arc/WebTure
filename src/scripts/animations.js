@@ -577,6 +577,7 @@ export function initMaskReveal() {
 export function initMarqueeSpeed() {
   if (typeof window === 'undefined') return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(pointer: coarse)').matches) return; // CSS animation is smoother on touch
 
   const track = document.querySelector('.marquee-track');
   if (!track) return;

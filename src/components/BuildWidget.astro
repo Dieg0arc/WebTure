@@ -547,7 +547,17 @@
       grid-template-columns: 1fr;
       gap: 48px;
     }
-    .build-copy { max-width: 100%; }
+    /* min-width:0 forces grid items to respect 1fr — without it the browser
+       widget's fixed-pixel content inflates the column beyond the viewport */
+    .build-copy,
+    .build-widget-wrap {
+      max-width: 100%;
+      min-width: 0;
+    }
+    /* Clip the browser mock so its fixed-px inner content can't cause overflow */
+    .build-widget-wrap {
+      overflow: hidden;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

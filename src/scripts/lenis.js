@@ -11,6 +11,15 @@ function initLenis() {
 
   gsap.registerPlugin(ScrollTrigger);
 
+  // On touch devices, native scroll is smoother than Lenis and avoids
+  // rubber-band / momentum conflicts on iOS. ScrollTrigger works fine with
+  // native scroll — no RAF bridge needed.
+  if (window.matchMedia('(pointer: coarse)').matches) {
+    ScrollTrigger.refresh();
+    window.__lenis = null;
+    return;
+  }
+
   lenis = new Lenis({
     duration: 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
