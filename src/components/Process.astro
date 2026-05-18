@@ -530,8 +530,7 @@ const steps = [
     position: relative;
     border-radius: 0;
     box-shadow: none;
-    padding: 72px 0 60px;
-    min-height: auto; /* sin pin en mobile — altura determinada por contenido */
+    padding: 60px 0;
   }
 
   /* Stack arriba del texto en mobile */
@@ -666,58 +665,42 @@ const steps = [
 
     gsap.set(cards, { opacity: 0 });
 
-    const isMobile = window.innerWidth <= 767;
+    /* ── Pin en mobile y desktop: scroll avanza pasos, botones también ── */
+    let entered = false;
 
-    if (isMobile) {
-      /* ── Mobile: sin pin — tap en los botones para avanzar pasos ── */
-      ScrollTrigger.create({
-        trigger: '.process',
-        start:   'top 80%',
-        once:    true,
-        onEnter() { runEntrance(); },
-      });
+    ScrollTrigger.create({
+      id:      'processTrigger',
+      trigger: '.process',
+      pin:     true,
+      start:   'top top',
+      end:     `+=${(STEPS - 1) * window.innerHeight}`,
+      onEnter() {
+        if (entered) return;
+        entered = true;
+        runEntrance();
+      },
+      onEnterBack() {
+        if (!entered) { entered = true; runEntrance(); }
+      },
+      onUpdate(self) {
+        if (!entered) return;
+        const step = Math.min(STEPS - 1, Math.round(self.progress * (STEPS - 1)));
+        applyStep(step);
+      },
+    });
 
-      indicators.forEach((ind, i) => {
-        ind.addEventListener('click', () => applyStep(i, true));
+    /* Click en indicador → scroll al paso correspondiente */
+    indicators.forEach((ind, i) => {
+      ind.addEventListener('click', () => {
+        const trigger = ScrollTrigger.getById('processTrigger');
+        if (!trigger) { applyStep(i); return; }
+        const progress = i / (STEPS - 1);
+        const target   = trigger.start + (trigger.end - trigger.start) * progress;
+        const lenis    = window.__lenis;
+        if (lenis) lenis.scrollTo(target, { duration: 0.6 });
+        else window.scrollTo({ top: target, behavior: 'smooth' });
       });
-    } else {
-      /* ── Desktop: pin clásico — scroll avanza pasos ── */
-      let entered = false;
-
-      ScrollTrigger.create({
-        id:      'processTrigger',
-        trigger: '.process',
-        pin:     true,
-        start:   'top top',
-        end:     `+=${(STEPS - 1) * window.innerHeight}`,
-        onEnter() {
-          if (entered) return;
-          entered = true;
-          runEntrance();
-        },
-        onEnterBack() {
-          if (!entered) { entered = true; runEntrance(); }
-        },
-        onUpdate(self) {
-          if (!entered) return;
-          const step = Math.min(STEPS - 1, Math.round(self.progress * (STEPS - 1)));
-          applyStep(step);
-        },
-      });
-
-      /* Click en indicador → scroll al paso correspondiente */
-      indicators.forEach((ind, i) => {
-        ind.addEventListener('click', () => {
-          const trigger = ScrollTrigger.getById('processTrigger');
-          if (!trigger) { applyStep(i); return; }
-          const progress = i / (STEPS - 1);
-          const target   = trigger.start + (trigger.end - trigger.start) * progress;
-          const lenis    = window.__lenis;
-          if (lenis) lenis.scrollTo(target, { duration: 0.6 });
-          else window.scrollTo({ top: target, behavior: 'smooth' });
-        });
-      });
-    }
+    });
 
     /* ── Animaciones de entrada del texto ── */
     gsap.fromTo('.process-header', { opacity: 0, y: 24 }, {

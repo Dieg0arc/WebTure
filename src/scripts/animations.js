@@ -689,6 +689,97 @@ export function initClipReveal() {
   });
 }
 
+/* ─── 19. Snap on idle — ajusta la sección más visible al tope del viewport
+   cuando el usuario hace pausa en el scroll. No interrumpe el scroll activo;
+   solo actúa cuando el scroll lleva ≥ IDLE_DELAY ms sin moverse.             */
+export function initSectionSnap() {
+  if (typeof window === 'undefined') return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const IDLE_DELAY  = 750;  // ms sin scroll antes de activar el snap
+  const MIN_OFFSET  = 60;   // px — no snap si ya estamos dentro de este rango
+  const MIN_VISIBLE = 0.4;  // fracción mínima del vh que debe ocupar la sección
+
+  let snapEls    = [];
+  let idleTimer  = null;
+  let isSnapping = false;
+
+  function loadSections() {
+    // Excluye #proceso (lo gestiona el pin de GSAP) y .scrollstory
+    // (contenido progresivo — hacer snap hacia atrás rompería la narrativa).
+    snapEls = Array.from(
+      document.querySelectorAll('section:not(#proceso):not(.scrollstory)')
+    );
+  }
+
+  function snapToNearest() {
+    if (isSnapping || !snapEls.length) return;
+
+    const scrollY = window.scrollY;
+    const vh      = window.innerHeight;
+
+    // Suprimir snap mientras #proceso sea visible en el viewport:
+    // entrando, durante el pin o saliendo. GSAP pin gestiona esa zona.
+    // Cuando process.bottom <= 0 (totalmente fuera) el snap se reactiva.
+    const processEl = document.querySelector('section#proceso');
+    if (processEl) {
+      const r = processEl.getBoundingClientRect();
+      if (r.top < vh && r.bottom > 0) return;
+    }
+
+    // Sección con mayor área visible; ignora las que apenas asoman
+    let bestEl   = null;
+    let bestArea = -1;
+
+    for (const el of snapEls) {
+      const rect = el.getBoundingClientRect();
+      if (rect.bottom <= 0 || rect.top >= vh) continue;
+
+      const overlap = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
+      if (overlap < vh * MIN_VISIBLE) continue; // demasiado poco visible
+
+      if (overlap > bestArea) {
+        bestArea = overlap;
+        bestEl   = el;
+      }
+    }
+
+    if (!bestEl) return;
+
+    // Alinear el borde superior de la sección con el tope del viewport (scrollY=0).
+    // El nav es position:fixed y queda superpuesto; el padding de la sección
+    // crea la separación visual suficiente por debajo del nav.
+    const rect    = bestEl.getBoundingClientRect();
+    const targetY = Math.max(0, scrollY + rect.top);
+    const dist    = Math.abs(scrollY - targetY);
+
+    if (dist < MIN_OFFSET) return; // ya está alineada, no hacer nada
+
+    isSnapping = true;
+    const lenis  = window.__lenis;
+    const onDone = () => { isSnapping = false; };
+
+    if (lenis) {
+      lenis.scrollTo(targetY, { duration: 0.55, onComplete: onDone });
+    } else {
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+      setTimeout(onDone, 700);
+    }
+  }
+
+  window.addEventListener('scroll', () => {
+    if (isSnapping) return;
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(snapToNearest, IDLE_DELAY);
+  }, { passive: true });
+
+  if (document.readyState === 'complete') {
+    loadSections();
+  } else {
+    window.addEventListener('load', loadSections, { once: true });
+  }
+}
+
 /* ─── 17. initAll — punto de entrada ─────────────────────────────────────── */
 export function initAll() {
   if (typeof window === 'undefined') return;
@@ -713,6 +804,7 @@ export function initAll() {
   initMaskReveal();
   initMarqueeSpeed();
   initClipReveal();
+  initSectionSnap();
 }
 
 export default initAll;
