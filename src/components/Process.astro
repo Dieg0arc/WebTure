@@ -243,6 +243,7 @@ const steps = [
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
+  min-height: 44px;
   border-radius: 10px;
   border: 1px solid transparent;
   background: transparent;
@@ -253,9 +254,15 @@ const steps = [
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.proc-step:hover {
-  background: rgba(179,136,255,0.05);
-  border-color: var(--border);
+@media (hover: hover) {
+  .proc-step:hover {
+    background: rgba(179,136,255,0.05);
+    border-color: var(--border);
+  }
+}
+
+.proc-step:active {
+  background: rgba(179,136,255,0.1);
 }
 
 .proc-step--active {
@@ -524,7 +531,7 @@ const steps = [
     border-radius: 0;
     box-shadow: none;
     padding: 72px 0 60px;
-    min-height: auto;
+    min-height: auto; /* sin pin en mobile — altura determinada por contenido */
   }
 
   /* Stack arriba del texto en mobile */
@@ -592,8 +599,7 @@ const steps = [
     const indicators = Array.from(document.querySelectorAll('.proc-step'));
     if (!cards.length) return;
 
-    const STEPS    = cards.length;
-    const isMobile = window.innerWidth <= 767;
+    const STEPS     = cards.length;
     let currentStep = -1;
 
     /* ── Posición GSAP de una card según el paso activo ── */
@@ -660,36 +666,22 @@ const steps = [
 
     gsap.set(cards, { opacity: 0 });
 
-    /* ────────────────────────────────────────────────────────────────── */
+    const isMobile = window.innerWidth <= 767;
+
     if (isMobile) {
-
-      /* MOBILE: entrada al hacer scroll + auto-ciclo ─────────────────── */
-      let timerId = null;
-
+      /* ── Mobile: sin pin — tap en los botones para avanzar pasos ── */
       ScrollTrigger.create({
         trigger: '.process',
-        start: 'top 80%',
-        once: true,
-        onEnter() {
-          runEntrance();
-          if (!prefersReduced) {
-            timerId = window.setInterval(() => applyStep((currentStep + 1) % STEPS), 4500);
-          }
-        },
+        start:   'top 80%',
+        once:    true,
+        onEnter() { runEntrance(); },
       });
 
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          if (timerId) { clearInterval(timerId); timerId = null; }
-        } else if (!timerId && currentStep >= 0 && !prefersReduced) {
-          timerId = window.setInterval(() => applyStep((currentStep + 1) % STEPS), 4500);
-        }
+      indicators.forEach((ind, i) => {
+        ind.addEventListener('click', () => applyStep(i, true));
       });
-
     } else {
-
-      /* DESKTOP: GSAP pin bloquea la sección mientras el usuario hace scroll
-         por los 4 pasos. Sin snap — Lenis suaviza el scroll naturalmente.   */
+      /* ── Desktop: pin clásico — scroll avanza pasos ── */
       let entered = false;
 
       ScrollTrigger.create({
@@ -713,7 +705,7 @@ const steps = [
         },
       });
 
-      /* Click en indicador → scroll suave al paso correspondiente */
+      /* Click en indicador → scroll al paso correspondiente */
       indicators.forEach((ind, i) => {
         ind.addEventListener('click', () => {
           const trigger = ScrollTrigger.getById('processTrigger');

@@ -188,10 +188,12 @@ const services = [
     transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .svc-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--border-bright);
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  @media (hover: hover) {
+    .svc-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-bright);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+    }
   }
 
   /* ─── Card featured (#02) ────────────────────────────────────────────────── */
@@ -201,10 +203,12 @@ const services = [
     box-shadow: 0 0 0 1px var(--accent), 0 0 40px var(--accent-glow);
   }
 
-  .svc-card--featured:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent), 0 20px 60px var(--accent-glow);
-    transform: translateY(-4px);
+  @media (hover: hover) {
+    .svc-card--featured:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 20px 60px var(--accent-glow);
+      transform: translateY(-4px);
+    }
   }
 
   /* Brillo decorativo en la featured */
@@ -265,9 +269,11 @@ const services = [
     border-color: color-mix(in srgb, var(--accent) 30%, transparent);
   }
 
-  .svc-card:hover .svc-icon {
-    background: var(--accent-glow);
-    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  @media (hover: hover) {
+    .svc-card:hover .svc-icon {
+      background: var(--accent-glow);
+      border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+    }
   }
 
   /* ─── Cuerpo de texto ────────────────────────────────────────────────────── */

@@ -276,6 +276,7 @@ const projects = [
     scrollbar-width: none;
     cursor: grab;
     padding-bottom: 8px;
+    overscroll-behavior-x: contain;
   }
 
   .proj-track::-webkit-scrollbar { display: none; }
@@ -285,6 +286,7 @@ const projects = [
     flex: 0 0 420px;
     min-width: 0;
     scroll-snap-align: start;
+    scroll-snap-stop: always;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
@@ -292,9 +294,11 @@ const projects = [
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .proj-card:hover {
-    border-color: color-mix(in srgb, var(--c1) 40%, transparent);
-    box-shadow: 0 0 40px color-mix(in srgb, var(--c1) 8%, transparent);
+  @media (hover: hover) {
+    .proj-card:hover {
+      border-color: color-mix(in srgb, var(--c1) 40%, transparent);
+      box-shadow: 0 0 40px color-mix(in srgb, var(--c1) 8%, transparent);
+    }
   }
 
   /* ─── Mockup browser ─────────────────────────────────────────────────────── */
@@ -575,7 +579,10 @@ const projects = [
   .proj-indicator::after {
     content: "";
     position: absolute;
-    inset: -10px;
+    top: -20px;
+    bottom: -20px;
+    left: -10px;
+    right: -10px;
   }
 
   .proj-indicator-progress {

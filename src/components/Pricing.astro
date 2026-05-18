@@ -196,6 +196,7 @@ const plans = [
 
   .toggle-btn {
     padding: 10px 24px;
+    min-height: 44px;
     border-radius: 50px;
     font-family: var(--font-body);
     font-size: 14px;
@@ -230,10 +231,12 @@ const plans = [
     transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
   }
 
-  .plan-card:hover {
-    border-color: var(--border-bright);
-    transform: translateY(-4px);
-    box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+  @media (hover: hover) {
+    .plan-card:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+    }
   }
 
   /* ─── Card featured ──────────────────────────────────────────────────────── */
@@ -245,10 +248,12 @@ const plans = [
     z-index: 1;
   }
 
-  .plan-card--featured:hover {
-    border-color: var(--accent);
-    transform: scale(1.03) translateY(-4px);
-    box-shadow: 0 0 0 1px var(--accent), 0 20px 60px var(--accent-glow);
+  @media (hover: hover) {
+    .plan-card--featured:hover {
+      border-color: var(--accent);
+      transform: scale(1.03) translateY(-4px);
+      box-shadow: 0 0 0 1px var(--accent), 0 20px 60px var(--accent-glow);
+    }
   }
 
   .plan-card--featured::after {

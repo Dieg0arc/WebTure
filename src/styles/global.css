@@ -69,6 +69,15 @@ html.lenis body {
   padding: 0;
 }
 
+/* Touch optimization — elimina 300ms delay en Android y el flash gris en iOS */
+button,
+a,
+[role="button"],
+[tabindex="0"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 html {
   font-size: 16px;
   width: 100%;
@@ -255,6 +264,7 @@ button {
   align-items: center;
   gap: 10px;
   padding: 14px 28px;
+  min-height: 44px;
   background: var(--accent);
   color: #000;
   font-weight: 700;
@@ -264,13 +274,15 @@ button {
   transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   white-space: nowrap;
 }
-.btn-primary:hover {
-  background: #c9a8ff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(179, 136, 255, 0.35);
-}
 .btn-primary:active {
   transform: translateY(0);
+}
+@media (hover: hover) {
+  .btn-primary:hover {
+    background: #c9a8ff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(179, 136, 255, 0.35);
+  }
 }
 
 /* Botón ghost */
@@ -279,6 +291,7 @@ button {
   align-items: center;
   gap: 10px;
   padding: 13px 28px;
+  min-height: 44px;
   background: transparent;
   color: var(--text);
   font-weight: 600;
@@ -288,10 +301,12 @@ button {
   transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
   white-space: nowrap;
 }
-.btn-ghost:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .btn-ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
 }
 
 /* ─── Accent italic — shared across all section headlines ──────────────── */

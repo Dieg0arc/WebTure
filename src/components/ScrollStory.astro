@@ -342,9 +342,11 @@
       transform 0.3s ease;
   }
 
-  .pillar-card:hover {
-    border-color: var(--accent-dim);
-    transform: translateY(-2px);
+  @media (hover: hover) {
+    .pillar-card:hover {
+      border-color: var(--accent-dim);
+      transform: translateY(-2px);
+    }
   }
 
   .pillar-icon {
@@ -441,7 +443,7 @@
     .ss-inner {
       grid-template-columns: 1fr;
       gap: 32px;
-      padding-top: 60px;
+      padding-top: 0; /* el padding top viene del ss-panel (64px) — no duplicar */
     }
 
     .pillar-grid {

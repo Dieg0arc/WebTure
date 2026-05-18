@@ -268,6 +268,55 @@ export function initProjectsCarousel() {
   const track = document.querySelector('.proj-track');
   if (!track) return;
 
+  const cards      = Array.from(track.querySelectorAll('.proj-card'));
+  const indicators = Array.from(document.querySelectorAll('.proj-indicator'));
+  const TOTAL      = cards.length;
+  if (!TOTAL) return;
+
+  let currentIndex  = 0;
+  let autoTimer     = null;
+
+  function getCardWidth() {
+    const card = cards[0];
+    return card ? card.offsetWidth + 24 : 444; // gap: 24px
+  }
+
+  function goToCard(index) {
+    track.scrollTo({ left: index * getCardWidth(), behavior: 'smooth' });
+  }
+
+  function activateIndicator(index) {
+    const prev = indicators[currentIndex];
+    if (prev) {
+      prev.classList.remove('active');
+      prev.setAttribute('aria-selected', 'false');
+    }
+    currentIndex = index;
+    const next = indicators[index];
+    if (next) {
+      void next.offsetWidth; // force CSS animation restart
+      next.classList.add('active');
+      next.setAttribute('aria-selected', 'true');
+    }
+  }
+
+  function scheduleAuto() {
+    clearTimeout(autoTimer);
+    autoTimer = setTimeout(() => goToCard((currentIndex + 1) % TOTAL), 5000);
+  }
+
+  // Update indicator when scroll settles (CSS snap handles the physics)
+  let scrollSettleTimer;
+  track.addEventListener('scroll', () => {
+    clearTimeout(scrollSettleTimer);
+    scrollSettleTimer = setTimeout(() => {
+      const index = Math.max(0, Math.min(TOTAL - 1, Math.round(track.scrollLeft / getCardWidth())));
+      if (index !== currentIndex) activateIndicator(index);
+      scheduleAuto();
+    }, 80);
+  }, { passive: true });
+
+  // Desktop drag only — touch scrolling is handled natively by CSS scroll-snap
   let isDragging    = false;
   let startX        = 0;
   let scrollLeftPos = 0;
@@ -278,6 +327,7 @@ export function initProjectsCarousel() {
     scrollLeftPos = track.scrollLeft;
     track.style.cursor     = 'grabbing';
     track.style.userSelect = 'none';
+    clearTimeout(autoTimer);
   });
 
   const endDrag = () => {
@@ -288,7 +338,6 @@ export function initProjectsCarousel() {
 
   track.addEventListener('mouseleave', endDrag);
   track.addEventListener('mouseup',    endDrag);
-
   track.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
     e.preventDefault();
@@ -297,39 +346,31 @@ export function initProjectsCarousel() {
     track.scrollLeft = scrollLeftPos - walk;
   });
 
-  // Touch
-  let touchStartX = 0;
-  let touchScrollLeft = 0;
+  // Prev / next buttons
+  document.getElementById('projPrev')?.addEventListener('click', () => {
+    clearTimeout(autoTimer);
+    track.scrollBy({ left: -getCardWidth(), behavior: 'smooth' });
+    setTimeout(scheduleAuto, 8000);
+  });
 
-  track.addEventListener('touchstart', (e) => {
-    touchStartX     = e.touches[0].pageX;
-    touchScrollLeft = track.scrollLeft;
-  }, { passive: true });
+  document.getElementById('projNext')?.addEventListener('click', () => {
+    clearTimeout(autoTimer);
+    track.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
+    setTimeout(scheduleAuto, 8000);
+  });
 
-  track.addEventListener('touchmove', (e) => {
-    track.scrollLeft = touchScrollLeft + (touchStartX - e.touches[0].pageX);
-  }, { passive: true });
+  // Indicator dots
+  indicators.forEach((ind, i) => {
+    ind.addEventListener('click', () => {
+      clearTimeout(autoTimer);
+      goToCard(i);
+      setTimeout(scheduleAuto, 8000);
+    });
+  });
 
-  // Botones prev / next
-  const cardWidth = () => {
-    const card = track.querySelector('.proj-card');
-    return card ? card.offsetWidth + 24 : 440;
-  };
-
-  document.getElementById('projPrev')?.addEventListener('click', () =>
-    track.scrollBy({ left: -cardWidth(), behavior: 'smooth' }));
-
-  document.getElementById('projNext')?.addEventListener('click', () =>
-    track.scrollBy({ left: cardWidth(), behavior: 'smooth' }));
-
-  // Dots
-  const dots = document.querySelectorAll('.proj-dot');
-  if (dots.length) {
-    track.addEventListener('scroll', () => {
-      const index = Math.round(track.scrollLeft / cardWidth());
-      dots.forEach((d, i) => d.classList.toggle('active', i === index));
-    }, { passive: true });
-  }
+  // Initialize first indicator and start auto-advance
+  activateIndicator(0);
+  scheduleAuto();
 }
 
 /* ─── 10. Carrusel de testimonios ────────────────────────────────────────── */
