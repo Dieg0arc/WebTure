@@ -276,6 +276,7 @@ const projects = [
     scrollbar-width: none;
     cursor: grab;
     padding-bottom: 8px;
+    overscroll-behavior-x: contain;
   }
 
   .proj-track::-webkit-scrollbar { display: none; }
@@ -285,6 +286,7 @@ const projects = [
     flex: 0 0 420px;
     min-width: 0;
     scroll-snap-align: start;
+    scroll-snap-stop: always;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);

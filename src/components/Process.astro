@@ -524,7 +524,7 @@ const steps = [
     border-radius: 0;
     box-shadow: none;
     padding: 72px 0 60px;
-    min-height: auto;
+    min-height: 100svh;
   }
 
   /* Stack arriba del texto en mobile */
@@ -592,8 +592,7 @@ const steps = [
     const indicators = Array.from(document.querySelectorAll('.proc-step'));
     if (!cards.length) return;
 
-    const STEPS    = cards.length;
-    const isMobile = window.innerWidth <= 767;
+    const STEPS     = cards.length;
     let currentStep = -1;
 
     /* ── Posición GSAP de una card según el paso activo ── */
@@ -661,35 +660,9 @@ const steps = [
     gsap.set(cards, { opacity: 0 });
 
     /* ────────────────────────────────────────────────────────────────── */
-    if (isMobile) {
-
-      /* MOBILE: entrada al hacer scroll + auto-ciclo ─────────────────── */
-      let timerId = null;
-
-      ScrollTrigger.create({
-        trigger: '.process',
-        start: 'top 80%',
-        once: true,
-        onEnter() {
-          runEntrance();
-          if (!prefersReduced) {
-            timerId = window.setInterval(() => applyStep((currentStep + 1) % STEPS), 4500);
-          }
-        },
-      });
-
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          if (timerId) { clearInterval(timerId); timerId = null; }
-        } else if (!timerId && currentStep >= 0 && !prefersReduced) {
-          timerId = window.setInterval(() => applyStep((currentStep + 1) % STEPS), 4500);
-        }
-      });
-
-    } else {
-
-      /* DESKTOP: GSAP pin bloquea la sección mientras el usuario hace scroll
-         por los 4 pasos. Sin snap — Lenis suaviza el scroll naturalmente.   */
+    /* MOBILE + DESKTOP: misma experiencia — GSAP pin bloquea la sección
+       mientras el usuario hace scroll por los 4 pasos.                  */
+    {
       let entered = false;
 
       ScrollTrigger.create({
@@ -713,7 +686,8 @@ const steps = [
         },
       });
 
-      /* Click en indicador → scroll suave al paso correspondiente */
+      /* Click en indicador → scroll al paso correspondiente.
+         Desktop usa Lenis si está disponible; mobile usa scroll nativo.  */
       indicators.forEach((ind, i) => {
         ind.addEventListener('click', () => {
           const trigger = ScrollTrigger.getById('processTrigger');
