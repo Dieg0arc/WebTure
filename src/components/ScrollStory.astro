@@ -447,7 +447,12 @@
     }
   }
 
-  /* ── Mobile: vertical stack (replaces horizontal GSAP scroll) ────────────── */
+  /* ── Mobile: ocultar sección completa ───────────────────────────────────── */
+  @media (max-width: 767px) {
+    .scrollstory { display: none; }
+  }
+
+  /* ── Mobile: vertical stack (replaces horizontal GSAP scroll) ──────────── */
   @media (max-width: 767px) {
     .scrollstory {
       overflow: visible;

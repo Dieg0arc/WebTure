@@ -52,6 +52,33 @@ const steps = [
           </p>
         </header>
 
+        <!-- ── Vista mobile: tipografía editorial ──────────────────────── -->
+        <div class="proc-mobile-view" id="procMobileView">
+          <p class="proc-mobile-num" id="procMobileNum" aria-hidden="true">{steps[0].num}</p>
+          <div class="proc-mobile-step" aria-live="polite">
+            <h3 class="proc-mobile-title" id="procMobileTitle">{steps[0].title}</h3>
+            <p class="proc-mobile-desc" id="procMobileDesc">{steps[0].desc}</p>
+          </div>
+          <div class="proc-dots" role="list" aria-label="Pasos del proceso">
+            {steps.map((step, i) => (
+              <button
+                class={`proc-dot${i === 0 ? ' proc-dot--active' : ''}`}
+                data-dot={String(i)}
+                aria-label={`Ir al paso ${i + 1}: ${step.title}`}
+                type="button"
+              />
+            ))}
+          </div>
+          <div class="proc-scroll-hint" aria-hidden="true" id="procScrollHint">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+            scroll
+          </div>
+        </div>
+
         <div class="process-steps">
           {steps.map((step, i) => (
             <button
@@ -95,6 +122,7 @@ const steps = [
       <!-- ── Columna derecha: card stack ────────────────────────────────── -->
       <div class="process-stack-outer" id="processStackOuter">
         <div class="process-stack" id="processStack">
+
           {steps.map((step, i) => (
             <article
               class={`stack-card${step.featured ? ' stack-card--hl' : ''}`}
@@ -102,6 +130,9 @@ const steps = [
               aria-label={`Paso ${i + 1}: ${step.title}`}
               aria-hidden={i !== 0 ? 'true' : 'false'}
             >
+              <div class="sc-progress" aria-hidden="true">
+                <div class="sc-progress-fill"></div>
+              </div>
               <span class="sc-bgnum" aria-hidden="true">{step.num}</span>
 
               <div class="sc-top">
@@ -137,6 +168,7 @@ const steps = [
                     </svg>
                   )}
                 </div>
+                <span class="sc-counter" aria-hidden="true">Paso {i + 1} de {steps.length}</span>
                 <span class={`sc-badge${step.featured ? ' sc-badge--hl' : ''}`}>
                   {step.badge}
                 </span>
@@ -148,6 +180,15 @@ const steps = [
               </div>
             </article>
           ))}
+        </div>
+        <!-- Hint de scroll — solo visible en mobile, desaparece al primer avance -->
+        <div class="proc-scroll-hint" aria-hidden="true" id="procScrollHint">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+          </svg>
+          scroll
         </div>
       </div>
 
@@ -485,6 +526,119 @@ const steps = [
   margin: 0;
 }
 
+/* ── Scroll hint mobile ──────────────────────────────────────────────────── */
+.proc-scroll-hint {
+  display: none;
+}
+
+@keyframes hintBounce {
+  0%, 100% { opacity: 0.4; transform: translateY(0); }
+  50%       { opacity: 0.85; transform: translateY(5px); }
+}
+
+/* ── Barra de progreso mobile ────────────────────────────────────────────── */
+.sc-progress {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.sc-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #d4b8ff);
+  width: 25%;
+  border-radius: 0 2px 2px 0;
+  transition: width 0.48s ease;
+}
+
+.sc-counter {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+/* ── Vista tipográfica mobile ─────────────────────────────────────────────── */
+.proc-mobile-view {
+  display: none;
+  flex-direction: column;
+}
+
+.proc-mobile-num {
+  font-family: var(--font-display);
+  font-size: clamp(88px, 28vw, 120px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.82;
+  background: linear-gradient(120deg, var(--accent) 0%, #d4b8ff 60%, #f0e6ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  margin: 0 0 20px;
+  user-select: none;
+}
+
+.proc-mobile-step {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.proc-mobile-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  line-height: 1.15;
+  margin: 0;
+}
+
+.proc-mobile-desc {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.proc-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 28px;
+}
+
+.proc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition: background 0.3s ease, width 0.3s ease, border-radius 0.3s ease;
+}
+
+.proc-dot::before {
+  content: '';
+  position: absolute;
+  inset: -19px;
+}
+
+.proc-dot--active {
+  background: var(--accent);
+  width: 22px;
+  border-radius: 3px;
+}
+
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 1100px) {
   .process-wrap {
@@ -533,46 +687,47 @@ const steps = [
     padding: 60px 0;
   }
 
-  /* Stack arriba del texto en mobile */
-  .process-stack-outer { order: 1; }
-  .process-content      { order: 2; }
+  /* Ocultar stack de cards y elementos solo de desktop */
+  .process-stack-outer { display: none; }
+  .process-steps       { display: none; }
+  .process-title       { display: none; }
+  .process-sub         { display: none; }
 
-  .process-stack-outer {
-    width: 100%;
-    max-width: 100%;
-    height: 260px;
-    overflow: clip; /* cards de fondo se clipean al borde del contenedor */
+  /* Mostrar vista tipográfica */
+  .proc-mobile-view { display: flex; }
+
+  /* Ajustar espaciado del contenido */
+  .process-content { gap: 0; }
+  .process-header  { margin-bottom: 24px; }
+  .process-cta     { margin-top: 32px; }
+
+  /* Scroll hint */
+  .proc-scroll-hint {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 20px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    pointer-events: none;
+    animation: hintBounce 1.8s ease-in-out infinite;
+    transition: opacity 0.4s ease;
   }
 
-  .process-stack {
-    width: 280px;
-    height: 212px;
+  .proc-scroll-hint.hidden {
+    opacity: 0;
+    animation: none;
   }
-
-  .sc-title  { font-size: 18px; }
-  .sc-bgnum  { font-size: 72px; }
-}
-
-@media (max-width: 479px) {
-  .process-stack-outer {
-    width: 100%;
-    max-width: 100%;
-    height: 232px;
-    overflow: clip;
-  }
-
-  .process-stack {
-    width: 248px;
-    height: 194px;
-  }
-
-  .sc-icon { width: 36px; height: 36px; }
 }
 
 /* ── Reduced motion ──────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .proc-step,
-  .proc-step-arrow { transition: none; }
+  .proc-step-arrow,
+  .proc-dot { transition: none; }
 
   /* Sin animación: mostrar solo la primera card estática */
   .stack-card {
@@ -605,12 +760,37 @@ const steps = [
     const STEPS     = cards.length;
     let currentStep = -1;
 
+    /* Datos de cada paso leídos desde las cards del DOM */
+    const stepData = cards.map(card => ({
+      num:   card.querySelector('.sc-bgnum').textContent.trim(),
+      title: card.querySelector('.sc-title').textContent.trim(),
+      desc:  card.querySelector('.sc-desc').textContent.trim(),
+    }));
+
+    /* Elementos de la vista tipográfica mobile */
+    const mobileView  = document.getElementById('procMobileView');
+    const mobileNum   = document.getElementById('procMobileNum');
+    const mobileTitle = document.getElementById('procMobileTitle');
+    const mobileDesc  = document.getElementById('procMobileDesc');
+    const mobileDots  = Array.from(document.querySelectorAll('.proc-dot'));
+
     /* ── Posición GSAP de una card según el paso activo ── */
     function cardPos(activeStep, cardIndex) {
       const w     = window.innerWidth;
-      const CX    = w <= 767 ? 22 : w <= 1100 ? 34 : 46;
-      const CY    = w <= 767 ? 14 : w <= 1100 ? 20 : 27;
       const depth = (cardIndex - activeStep + STEPS) % STEPS;
+
+      if (w <= 767) {
+        /* Mobile: cross-fade — solo la card activa es visible */
+        return {
+          x: 0, y: 0, scale: 1,
+          opacity: depth === 0 ? 1 : 0,
+          zIndex:  STEPS - depth,
+          skewX:   0,
+        };
+      }
+
+      const CX = w <= 1100 ? 34 : 46;
+      const CY = w <= 1100 ? 20 : 27;
       return {
         x:       depth * CX,
         y:      -(depth * CY),
@@ -625,17 +805,45 @@ const steps = [
     function applyStep(index, animate = true) {
       if (index === currentStep) return;
       currentStep = index;
-      const dur = (animate && !prefersReduced) ? 0.48 : 0;
+      const dur      = (animate && !prefersReduced) ? 0.48 : 0;
+      const isMobile = window.innerWidth <= 767;
 
-      cards.forEach((card, i) => {
-        const p = cardPos(index, i);
-        gsap.to(card, {
-          x: p.x, y: p.y, scale: p.scale,
-          opacity: p.opacity, zIndex: p.zIndex, skewX: p.skewX,
-          duration: dur,
-          ease: i === index ? 'back.out(1.5)' : 'power2.out',
+      if (isMobile) {
+        /* Mobile: actualizar tipografía con fade + leve desplazamiento */
+        if (animate && !prefersReduced && mobileNum) {
+          gsap.to([mobileNum, mobileTitle, mobileDesc], {
+            opacity: 0, y: -6, duration: 0.18, ease: 'power2.in',
+            onComplete() {
+              mobileNum.textContent   = stepData[index].num;
+              mobileTitle.textContent = stepData[index].title;
+              mobileDesc.textContent  = stepData[index].desc;
+              gsap.fromTo(
+                [mobileNum, mobileTitle, mobileDesc],
+                { opacity: 0, y: 10 },
+                { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out', stagger: 0.05 }
+              );
+            },
+          });
+        } else if (mobileNum) {
+          mobileNum.textContent   = stepData[index].num;
+          mobileTitle.textContent = stepData[index].title;
+          mobileDesc.textContent  = stepData[index].desc;
+        }
+        mobileDots.forEach((dot, i) => dot.classList.toggle('proc-dot--active', i === index));
+        const hint = document.getElementById('procScrollHint');
+        if (hint && !hint.classList.contains('hidden')) hint.classList.add('hidden');
+      } else {
+        /* Desktop: animación original del stack */
+        cards.forEach((card, i) => {
+          const p = cardPos(index, i);
+          gsap.to(card, {
+            x: p.x, y: p.y, scale: p.scale,
+            opacity: p.opacity, zIndex: p.zIndex, skewX: p.skewX,
+            duration: dur,
+            ease: i === index ? 'back.out(1.5)' : 'power2.out',
+          });
         });
-      });
+      }
 
       indicators.forEach((ind, i) => {
         ind.classList.toggle('proc-step--active', i === index);
@@ -646,30 +854,45 @@ const steps = [
       );
     }
 
-    /* ── Animación de entrada: cards suben a su posición en el stack ── */
+    /* ── Animación de entrada ──────────────────────────────────────────────── */
     function runEntrance() {
-      cards.forEach((card, i) => {
-        const p = cardPos(0, i);
-        gsap.set(card, { x: p.x, y: p.y + 64, scale: p.scale, opacity: 0, zIndex: p.zIndex, skewX: p.skewX });
-      });
-      if (!prefersReduced) {
+      const isMobile = window.innerWidth <= 767;
+
+      if (isMobile) {
+        /* Mobile: animar la vista tipográfica */
+        if (!prefersReduced && mobileView) {
+          gsap.fromTo(
+            mobileView,
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' }
+          );
+        }
+      } else {
+        /* Desktop: cards suben a su posición en el stack */
         cards.forEach((card, i) => {
           const p = cardPos(0, i);
-          gsap.to(card, { y: p.y, opacity: p.opacity, duration: 0.65, ease: 'back.out(1.4)', delay: 0.06 + i * 0.08 });
+          gsap.set(card, { x: p.x, y: p.y + 64, scale: p.scale, opacity: 0, zIndex: p.zIndex, skewX: p.skewX });
         });
-      } else {
-        cards.forEach((card, i) => gsap.set(card, cardPos(0, i)));
+        if (!prefersReduced) {
+          cards.forEach((card, i) => {
+            const p = cardPos(0, i);
+            gsap.to(card, { y: p.y, opacity: p.opacity, duration: 0.65, ease: 'back.out(1.4)', delay: 0.06 + i * 0.08 });
+          });
+        } else {
+          cards.forEach((card, i) => gsap.set(card, cardPos(0, i)));
+        }
       }
+
       currentStep = 0;
       indicators.forEach((ind, i) => {
         ind.classList.toggle('proc-step--active', i === 0);
         ind.setAttribute('aria-current', String(i === 0));
       });
+      mobileDots.forEach((dot, i) => dot.classList.toggle('proc-dot--active', i === 0));
     }
 
     gsap.set(cards, { opacity: 0 });
 
-    /* ── Pin en mobile y desktop: scroll avanza pasos, botones también ── */
     let entered = false;
 
     ScrollTrigger.create({
@@ -693,9 +916,22 @@ const steps = [
       },
     });
 
-    /* Click en indicador → scroll al paso correspondiente */
+    /* Click en indicador de desktop → scroll al paso */
     indicators.forEach((ind, i) => {
       ind.addEventListener('click', () => {
+        const trigger = ScrollTrigger.getById('processTrigger');
+        if (!trigger) { applyStep(i); return; }
+        const progress = i / (STEPS - 1);
+        const target   = trigger.start + (trigger.end - trigger.start) * progress;
+        const lenis    = window.__lenis;
+        if (lenis) lenis.scrollTo(target, { duration: 0.6 });
+        else window.scrollTo({ top: target, behavior: 'smooth' });
+      });
+    });
+
+    /* Tap en dot mobile → scroll al paso */
+    mobileDots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
         const trigger = ScrollTrigger.getById('processTrigger');
         if (!trigger) { applyStep(i); return; }
         const progress = i / (STEPS - 1);
