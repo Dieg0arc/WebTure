@@ -311,7 +311,10 @@ button {
 
 /* ─── Accent italic — shared across all section headlines ──────────────── */
 .accent-italic {
-  color: var(--accent);
+  background: linear-gradient(120deg, #b388ff 0%, #d4b8ff 55%, #f0e6ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-style: italic;
   font-weight: 800;
 }

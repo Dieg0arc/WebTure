@@ -538,8 +538,10 @@ const steps = [
   .process-content      { order: 2; }
 
   .process-stack-outer {
-    max-width: 340px;
+    width: 100%;
+    max-width: 100%;
     height: 260px;
+    overflow: clip; /* cards de fondo se clipean al borde del contenedor */
   }
 
   .process-stack {
@@ -553,8 +555,10 @@ const steps = [
 
 @media (max-width: 479px) {
   .process-stack-outer {
-    max-width: 300px;
+    width: 100%;
+    max-width: 100%;
     height: 232px;
+    overflow: clip;
   }
 
   .process-stack {
