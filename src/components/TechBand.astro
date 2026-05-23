@@ -123,6 +123,13 @@ const techs = [
     background: linear-gradient(-90deg, var(--bg), transparent);
   }
 
+  /* ─── Mobile: fades más estrechos para mostrar más contenido ────────────── */
+  @media (max-width: 767px) {
+    .techband-fade {
+      width: 56px;
+    }
+  }
+
   /* ─── Reduced motion ─────────────────────────────────────────────────────── */
   @media (prefers-reduced-motion: reduce) {
     .techband-track {

@@ -79,6 +79,24 @@ const WA_URL =
           </svg>
         </a>
       </div>
+
+      <!-- Trust strip — solo visible en mobile, da peso visual bajo los CTAs -->
+      <div class="hero-trust" aria-label="Estadísticas clave">
+        <div class="ht-stat">
+          <span class="ht-num">47+</span>
+          <span class="ht-label">Proyectos</span>
+        </div>
+        <div class="ht-sep" aria-hidden="true"></div>
+        <div class="ht-stat">
+          <span class="ht-num">4 días</span>
+          <span class="ht-label">Entrega</span>
+        </div>
+        <div class="ht-sep" aria-hidden="true"></div>
+        <div class="ht-stat">
+          <span class="ht-num">98%</span>
+          <span class="ht-label">Satisfacción</span>
+        </div>
+      </div>
     </div>
 
     <!-- Tarjeta decorativa desktop -->
@@ -490,6 +508,45 @@ const WA_URL =
     color: var(--color-success);
   }
 
+  /* ─── Trust strip (mobile only) ─────────────────────────────────────────── */
+  .hero-trust {
+    display: none;
+  }
+
+  .ht-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .ht-num {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    background: linear-gradient(120deg, #b388ff 0%, #d4b8ff 55%, #f0e6ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .ht-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+
+  .ht-sep {
+    width: 1px;
+    height: 36px;
+    background: rgba(179, 136, 255, 0.18);
+    flex-shrink: 0;
+  }
+
   /* ─── Responsive ─────────────────────────────────────────────────────────── */
   @media (max-width: 959px) {
     .hero-inner {
@@ -560,7 +617,23 @@ const WA_URL =
       height: 300px;
       filter: blur(60px);
       animation: none;
-      opacity: 0.1;
+      opacity: 0.14;
+    }
+
+    /* Trust strip visible en mobile */
+    .hero-trust {
+      display: flex;
+      align-items: center;
+      margin-top: 40px;
+      background: rgba(179, 136, 255, 0.05);
+      border: 1px solid rgba(179, 136, 255, 0.14);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .ht-stat {
+      flex: 1;
+      padding: 18px 10px;
     }
   }
 
