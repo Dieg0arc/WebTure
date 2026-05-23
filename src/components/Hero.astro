@@ -130,36 +130,6 @@ const WA_URL =
     </div>
   </div>
 
-  <!-- Marquee -->
-  <div class="hero-marquee" aria-hidden="true">
-    <div class="marquee-track">
-      <span>WEBTURE</span><span class="sep">·</span>
-      <span>DISEÑO WEB</span><span class="sep">·</span>
-      <span>CONVERSIÓN</span><span class="sep">·</span>
-      <span>COLOMBIA</span><span class="sep">·</span>
-      <span>SEO</span><span class="sep">·</span>
-      <span>VELOCIDAD</span><span class="sep">·</span>
-      <span>RESULTADOS</span><span class="sep">·</span>
-      <span>VENTAS</span><span class="sep">·</span>
-      <span>BRANDING</span><span class="sep">·</span>
-      <span>POSICIONAMIENTO</span><span class="sep">·</span>
-      <span>CLIENTES</span><span class="sep">·</span>
-      <span>CRECIMIENTO</span><span class="sep">·</span>
-      <!-- Duplicado exacto para loop sin salto -->
-      <span>WEBTURE</span><span class="sep">·</span>
-      <span>DISEÑO WEB</span><span class="sep">·</span>
-      <span>CONVERSIÓN</span><span class="sep">·</span>
-      <span>COLOMBIA</span><span class="sep">·</span>
-      <span>SEO</span><span class="sep">·</span>
-      <span>VELOCIDAD</span><span class="sep">·</span>
-      <span>RESULTADOS</span><span class="sep">·</span>
-      <span>VENTAS</span><span class="sep">·</span>
-      <span>BRANDING</span><span class="sep">·</span>
-      <span>POSICIONAMIENTO</span><span class="sep">·</span>
-      <span>CLIENTES</span><span class="sep">·</span>
-      <span>CRECIMIENTO</span><span class="sep">·</span>
-    </div>
-  </div>
 </section>
 
 <style>
@@ -520,61 +490,6 @@ const WA_URL =
     color: var(--color-success);
   }
 
-  /* ─── Marquee ────────────────────────────────────────────────────────────── */
-  .hero-marquee {
-    position: relative;
-    z-index: 1;
-    border-top: 1px solid var(--border);
-    padding: 16px 0;
-    overflow: hidden;
-    mask-image: linear-gradient(
-      90deg,
-      transparent,
-      black 10%,
-      black 90%,
-      transparent
-    );
-    -webkit-mask-image: linear-gradient(
-      90deg,
-      transparent,
-      black 10%,
-      black 90%,
-      transparent
-    );
-  }
-
-  .marquee-track {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    width: max-content;
-    animation: marquee 38s linear infinite;
-  }
-
-  .marquee-track span {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    color: var(--text-dim);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .marquee-track .sep {
-    color: var(--accent);
-    opacity: 0.4;
-  }
-
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
   /* ─── Responsive ─────────────────────────────────────────────────────────── */
   @media (max-width: 959px) {
     .hero-inner {
@@ -673,22 +588,8 @@ const WA_URL =
     .mesh-orb,
     .hcard-line,
     .eyebrow-dot,
-    .marquee-track,
     .hero-particles {
       animation: none !important;
-    }
-
-    .marquee-track {
-      overflow: hidden;
-      width: 100%;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    /* Hide the duplicate set used for the loop — only show first 13 children */
-    .marquee-track span:nth-child(n + 14) {
-      display: none;
     }
   }
 </style>
@@ -711,8 +612,7 @@ const WA_URL =
         .from(".hero-h1", { y: 40, opacity: 0, duration: 0.8 }, "-=0.4")
         .from(".hero-sub", { y: 30, opacity: 0, duration: 0.7 }, "-=0.5")
         .from(".cta-row", { y: 20, opacity: 0, duration: 0.6 }, "-=0.4")
-        .from(".hero-visual", { x: 40, opacity: 0, duration: 0.9 }, "-=0.6")
-        .from(".hero-marquee", { opacity: 0, duration: 0.5 }, "-=0.3");
+        .from(".hero-visual", { x: 40, opacity: 0, duration: 0.9 }, "-=0.6");
 
       /* ── Parallax multicapa al scroll — solo en dispositivos no-touch ── */
       if (!window.matchMedia('(pointer: coarse)').matches) {
