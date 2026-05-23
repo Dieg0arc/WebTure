@@ -138,54 +138,35 @@
         <div class="ss-text">
           <span class="ss-label">El resultado</span>
           <h2 class="ss-title split-title">
-            De la idea al sitio<br />
-            en <em class="accent-italic">4 días.</em>
+            Más clientes, desde<br />
+            la <em class="accent-italic">primera semana.</em>
           </h2>
           <p class="ss-body">
-            Proceso claro, entregas puntuales, sin sorpresas. Tu negocio en
-            línea esta semana.
+            Un sitio bien hecho no solo se ve bien — genera reservas,
+            llamadas y ventas desde el día que sale al aire.
           </p>
         </div>
         <div class="ss-visual ss-visual--2">
-          <div class="timeline-mini">
-            <div class="tm-item">
-              <div class="tm-dot"></div>
-              <div class="tm-content">
-                <span class="tm-day">Día 01</span>
-                <span class="tm-name">Briefing</span>
+          <div class="result-cards">
+            <div class="result-card">
+              <span class="result-num">+340%</span>
+              <div class="result-info">
+                <span class="result-label">reservas en línea</span>
+                <span class="result-client">El Fogón Armenio · Restaurante</span>
               </div>
             </div>
-            <div class="tm-connector"></div>
-            <div class="tm-item">
-              <div class="tm-dot"></div>
-              <div class="tm-content">
-                <span class="tm-day">Día 02</span>
-                <span class="tm-name">Diseño</span>
+            <div class="result-card">
+              <span class="result-num">+180%</span>
+              <div class="result-info">
+                <span class="result-label">nuevos pacientes</span>
+                <span class="result-client">Clínica Sonría · Dental</span>
               </div>
             </div>
-            <div class="tm-connector"></div>
-            <div class="tm-item">
-              <div class="tm-dot"></div>
-              <div class="tm-content">
-                <span class="tm-day">Día 03</span>
-                <span class="tm-name">Desarrollo</span>
-              </div>
-            </div>
-            <div class="tm-connector"></div>
-            <div class="tm-item tm-item--accent">
-              <div class="tm-dot"></div>
-              <div class="tm-content">
-                <span class="tm-day">Día 04</span>
-                <span class="tm-name">
-                  Lanzamiento
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                       stroke="currentColor" stroke-width="2"
-                       stroke-linecap="round" stroke-linejoin="round"
-                       aria-hidden="true"
-                       style="display:inline-block;vertical-align:-2px;margin-left:4px">
-                    <path d="M7 17L17 7M17 7H7M17 7v10"/>
-                  </svg>
-                </span>
+            <div class="result-card result-card--hl">
+              <span class="result-num">$12M</span>
+              <div class="result-info">
+                <span class="result-label">ventas el primer mes</span>
+                <span class="result-client">MiModa Store · E-commerce</span>
               </div>
             </div>
           </div>
@@ -378,64 +359,59 @@
     margin: 0;
   }
 
-  /* ── Timeline mini (capítulo 2) ──────────────────────────────────────────── */
-  .timeline-mini {
+  /* ── Result cards (capítulo 2) ───────────────────────────────────────────── */
+  .result-cards {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 12px;
+    width: 100%;
   }
 
-  .tm-item {
+  .result-card {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    transition: border-color 0.3s ease;
   }
 
-  .tm-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--border-bright);
-    border: 2px solid var(--border-bright);
+  .result-card--hl {
+    border-color: rgba(179, 136, 255, 0.3);
+    background: var(--surface-2);
+  }
+
+  .result-num {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--accent);
     flex-shrink: 0;
-    z-index: 1;
-    transition:
-      background 0.3s ease,
-      border-color 0.3s ease,
-      box-shadow 0.3s ease;
+    min-width: 88px;
+    line-height: 1;
   }
 
-  .tm-item--accent .tm-dot {
-    background: var(--accent);
-    border-color: var(--accent);
-    box-shadow: 0 0 16px var(--accent);
-  }
-
-  .tm-connector {
-    width: 2px;
-    height: 32px;
-    background: var(--border);
-    margin-left: 5px;
-  }
-
-  .tm-content {
+  .result-info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
   }
 
-  .tm-day {
+  .result-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .result-client {
     font-family: var(--font-mono);
     font-size: 11px;
-    color: var(--accent);
-    display: block;
-    letter-spacing: 0.08em;
-  }
-
-  .tm-name {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
   }
 
   /* ── Responsive ──────────────────────────────────────────────────────────── */
@@ -516,8 +492,7 @@
       transition: none;
     }
 
-    .pillar-card,
-    .tm-dot {
+    .pillar-card {
       transition: none;
     }
   }

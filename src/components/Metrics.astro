@@ -133,7 +133,7 @@ const testimonios = [
     position: sticky;
     top: 0;
     z-index: 7;
-    overflow: hidden;
+    overflow: clip; /* clip no crea scroll container — evita clipear sticky en Safari */
     border-radius: 24px 24px 0 0;   /* esquinas superiores redondeadas — efecto tarjeta */
     box-shadow: 0 -28px 72px rgba(0, 0, 0, 0.55); /* sombra hacia arriba para dar profundidad */
   }
@@ -175,6 +175,7 @@ const testimonios = [
     text-align: center;
     padding: 32px 24px;
     position: relative;
+    min-width: 0; /* evita que el contenido rompa el grid */
   }
 
   /* Separador vertical entre items */
@@ -457,7 +458,12 @@ const testimonios = [
     }
 
     .metric-item {
-      padding: 24px 16px;
+      padding: 24px 12px;
+      min-width: 0;
+    }
+
+    .counter {
+      font-size: clamp(32px, 8vw, 56px);
     }
 
     .metrics-divider {

@@ -14,7 +14,10 @@ const WA_URL =
   <!-- Capa 2: Grid tecnológico de fondo -->
   <div class="hero-grid" aria-hidden="true"></div>
 
-  <!-- Capa 3: Contenido -->
+  <!-- Capa 3: Partículas — canvas sobre el grid, detrás del contenido -->
+  <canvas class="hero-particles" aria-hidden="true"></canvas>
+
+  <!-- Capa 4: Contenido -->
   <div class="wrap hero-inner">
     <div class="hero-content">
       <!-- Eyebrow badge -->
@@ -127,37 +130,6 @@ const WA_URL =
     </div>
   </div>
 
-  <!-- Marquee inferior -->
-  <!-- Marquee superior -->
-  <div class="hero-marquee" aria-hidden="true">
-    <div class="marquee-track">
-      <span>WEBTURE</span><span class="sep">·</span>
-      <span>DISEÑO WEB</span><span class="sep">·</span>
-      <span>CONVERSIÓN</span><span class="sep">·</span>
-      <span>COLOMBIA</span><span class="sep">·</span>
-      <span>SEO</span><span class="sep">·</span>
-      <span>VELOCIDAD</span><span class="sep">·</span>
-      <span>RESULTADOS</span><span class="sep">·</span>
-      <span>VENTAS</span><span class="sep">·</span>
-      <span>BRANDING</span><span class="sep">·</span>
-      <span>POSICIONAMIENTO</span><span class="sep">·</span>
-      <span>CLIENTES</span><span class="sep">·</span>
-      <span>CRECIMIENTO</span><span class="sep">·</span>
-      <!-- Duplicado exacto para loop sin salto -->
-      <span>WEBTURE</span><span class="sep">·</span>
-      <span>DISEÑO WEB</span><span class="sep">·</span>
-      <span>CONVERSIÓN</span><span class="sep">·</span>
-      <span>COLOMBIA</span><span class="sep">·</span>
-      <span>SEO</span><span class="sep">·</span>
-      <span>VELOCIDAD</span><span class="sep">·</span>
-      <span>RESULTADOS</span><span class="sep">·</span>
-      <span>VENTAS</span><span class="sep">·</span>
-      <span>BRANDING</span><span class="sep">·</span>
-      <span>POSICIONAMIENTO</span><span class="sep">·</span>
-      <span>CLIENTES</span><span class="sep">·</span>
-      <span>CRECIMIENTO</span><span class="sep">·</span>
-    </div>
-  </div>
 </section>
 
 <style>
@@ -192,6 +164,7 @@ const WA_URL =
     background: var(--accent);
     top: -200px;
     left: -100px;
+    opacity: 0.2;
     animation: orbFloat1 12s ease-in-out infinite;
   }
 
@@ -210,7 +183,7 @@ const WA_URL =
     background: var(--accent);
     top: 40%;
     left: 50%;
-    opacity: 0.08;
+    opacity: 0.06;
     animation: orbFloat1 18s ease-in-out infinite 3s;
   }
 
@@ -244,8 +217,8 @@ const WA_URL =
     z-index: 0;
     pointer-events: none;
     background-image:
-      linear-gradient(rgba(179, 136, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(179, 136, 255, 0.03) 1px, transparent 1px);
+      linear-gradient(rgba(179, 136, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(179, 136, 255, 0.05) 1px, transparent 1px);
     background-size: 60px 60px;
     mask-image: radial-gradient(
       ellipse 80% 80% at 50% 50%,
@@ -257,6 +230,22 @@ const WA_URL =
       black 30%,
       transparent 100%
     );
+  }
+
+  /* ─── Canvas de partículas ──────────────────────────────────────────────── */
+  .hero-particles {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    animation: particlesFadeIn 2s ease-out 0.6s forwards;
+  }
+
+  @keyframes particlesFadeIn {
+    to {
+      opacity: 1;
+    }
   }
 
   /* ─── Hero inner layout ──────────────────────────────────────────────────── */
@@ -319,10 +308,10 @@ const WA_URL =
   /* ─── H1 ─────────────────────────────────────────────────────────────────── */
   .hero-h1 {
     font-family: var(--font-display);
-    font-size: clamp(42px, 6.5vw, 96px);
+    font-size: clamp(44px, 7vw, 104px);
     font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.045em;
+    line-height: 0.95;
+    letter-spacing: -0.05em;
     color: var(--text);
     margin-bottom: 24px;
   }
@@ -501,61 +490,6 @@ const WA_URL =
     color: var(--color-success);
   }
 
-  /* ─── Marquee ────────────────────────────────────────────────────────────── */
-  .hero-marquee {
-    position: relative;
-    z-index: 1;
-    border-top: 1px solid var(--border);
-    padding: 16px 0;
-    overflow: hidden;
-    mask-image: linear-gradient(
-      90deg,
-      transparent,
-      black 10%,
-      black 90%,
-      transparent
-    );
-    -webkit-mask-image: linear-gradient(
-      90deg,
-      transparent,
-      black 10%,
-      black 90%,
-      transparent
-    );
-  }
-
-  .marquee-track {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    width: max-content;
-    animation: marquee 38s linear infinite;
-  }
-
-  .marquee-track span {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    color: var(--text-dim);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .marquee-track .sep {
-    color: var(--accent);
-    opacity: 0.4;
-  }
-
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
   /* ─── Responsive ─────────────────────────────────────────────────────────── */
   @media (max-width: 959px) {
     .hero-inner {
@@ -611,6 +545,10 @@ const WA_URL =
       display: none;
     }
 
+    .hero-particles {
+      display: none;
+    }
+
     /* Performance: un solo orbe estático, blur reducido — sin capas GPU activas */
     .mesh-orb--2,
     .mesh-orb--3 {
@@ -650,21 +588,8 @@ const WA_URL =
     .mesh-orb,
     .hcard-line,
     .eyebrow-dot,
-    .marquee-track {
+    .hero-particles {
       animation: none !important;
-    }
-
-    .marquee-track {
-      overflow: hidden;
-      width: 100%;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    /* Hide the duplicate set used for the loop — only show first 13 children */
-    .marquee-track span:nth-child(n + 14) {
-      display: none;
     }
   }
 </style>
@@ -687,8 +612,7 @@ const WA_URL =
         .from(".hero-h1", { y: 40, opacity: 0, duration: 0.8 }, "-=0.4")
         .from(".hero-sub", { y: 30, opacity: 0, duration: 0.7 }, "-=0.5")
         .from(".cta-row", { y: 20, opacity: 0, duration: 0.6 }, "-=0.4")
-        .from(".hero-visual", { x: 40, opacity: 0, duration: 0.9 }, "-=0.6")
-        .from(".hero-marquee", { opacity: 0, duration: 0.5 }, "-=0.3");
+        .from(".hero-visual", { x: 40, opacity: 0, duration: 0.9 }, "-=0.6");
 
       /* ── Parallax multicapa al scroll — solo en dispositivos no-touch ── */
       if (!window.matchMedia('(pointer: coarse)').matches) {
@@ -718,4 +642,90 @@ const WA_URL =
   } else {
     window.addEventListener("load", initHero, { once: true });
   }
+</script>
+
+<script type="module">
+  /* ── Constelación de partículas ─────────────────────────────────────────── */
+  (function initParticles() {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(max-width: 767px)").matches) return;
+
+    const canvas = document.querySelector(".hero-particles");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    const hero = document.querySelector(".hero");
+
+    let W = 0, H = 0;
+
+    function resize() {
+      W = canvas.width = hero.offsetWidth;
+      H = canvas.height = hero.offsetHeight;
+    }
+    resize();
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(hero);
+
+    /* Partículas */
+    const COUNT = 70;
+    const MAX_DIST = 135;
+    const MAX_DIST_SQ = MAX_DIST * MAX_DIST;
+    const R = 179, G = 136, B = 255; /* --accent RGB */
+
+    const pts = Array.from({ length: COUNT }, () => ({
+      x:  Math.random() * W,
+      y:  Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.38,
+      vy: (Math.random() - 0.5) * 0.38,
+      r:  Math.random() * 1.3 + 0.4,
+    }));
+
+    let raf;
+
+    function tick() {
+      ctx.clearRect(0, 0, W, H);
+
+      /* Mover */
+      for (const p of pts) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < -2)    p.x = W + 2;
+        else if (p.x > W + 2) p.x = -2;
+        if (p.y < -2)    p.y = H + 2;
+        else if (p.y > H + 2) p.y = -2;
+      }
+
+      /* Conexiones */
+      for (let i = 0; i < COUNT; i++) {
+        for (let j = i + 1; j < COUNT; j++) {
+          const dx = pts[i].x - pts[j].x;
+          const dy = pts[i].y - pts[j].y;
+          const dSq = dx * dx + dy * dy;
+          if (dSq < MAX_DIST_SQ) {
+            const alpha = (1 - dSq / MAX_DIST_SQ) * 0.13;
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(${R},${G},${B},${alpha.toFixed(3)})`;
+            ctx.lineWidth = 0.65;
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      /* Puntos */
+      for (const p of pts) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${R},${G},${B},0.4)`;
+        ctx.fill();
+      }
+
+      raf = requestAnimationFrame(tick);
+    }
+
+    tick();
+  })();
 </script>
