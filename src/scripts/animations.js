@@ -414,7 +414,7 @@ export function initSectionSnap() {
 
   function loadSections() {
     snapEls = Array.from(
-      document.querySelectorAll('section:not(#proceso):not(.scrollstory)')
+      document.querySelectorAll('section:not(#precios):not(.scrollstory)')
     );
   }
 
@@ -423,12 +423,6 @@ export function initSectionSnap() {
 
     const scrollY = window.scrollY;
     const vh      = window.innerHeight;
-
-    const processEl = document.querySelector('section#proceso');
-    if (processEl) {
-      const r = processEl.getBoundingClientRect();
-      if (r.top < vh && r.bottom > 0) return;
-    }
 
     let bestEl   = null;
     let bestArea = -1;
