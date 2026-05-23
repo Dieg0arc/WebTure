@@ -1,0 +1,913 @@
+---
+// WAWidget.astro — Floating WhatsApp chat widget con tracking de leads
+// Stats accesibles en consola: window.__wawStats()
+// Shortcut visual:  Ctrl + Shift + S
+const WA_NUMBER = '573046565684';
+---
+
+<div class="waw" id="waw">
+
+  <!-- ── Panel del chat ───────────────────────────────────────────────────── -->
+  <div
+    class="waw-panel"
+    id="wawPanel"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Chat con WebTure"
+    aria-hidden="true"
+    inert
+  >
+
+    <!-- Header estilo WhatsApp -->
+    <div class="waw-header">
+      <div class="waw-profile">
+        <div class="waw-avatar" aria-hidden="true">
+          W<span class="waw-avatar-accent">.</span>
+        </div>
+        <div class="waw-meta">
+          <strong class="waw-agent-name">WebTure</strong>
+          <span class="waw-status">
+            <span class="waw-dot-online" aria-hidden="true"></span>
+            Normalmente responde en minutos
+          </span>
+        </div>
+      </div>
+      <button
+        class="waw-close"
+        id="wawClose"
+        type="button"
+        aria-label="Cerrar chat"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Cuerpo del chat -->
+    <div class="waw-body">
+
+      <!-- Burbuja de mensaje -->
+      <div class="waw-bubble-wrap">
+        <div class="waw-bubble">
+          <p>Hola, soy Diego de <strong>WebTure</strong>.</p>
+          <p>¿Cuéntame de tu negocio y te cotizo en minutos?</p>
+          <span class="waw-time" aria-hidden="true">ahora</span>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <form class="waw-form" id="wawForm" novalidate>
+        <input
+          id="wawName"
+          name="name"
+          type="text"
+          placeholder="¿Cómo te llamas?"
+          class="waw-input"
+          autocomplete="given-name"
+          required
+          minlength="2"
+          maxlength="60"
+          aria-label="Tu nombre"
+          aria-describedby="wawNameHint"
+        />
+        <p class="waw-input-hint" id="wawNameHint" aria-live="polite"></p>
+
+        <button type="submit" class="waw-submit" id="wawSubmit">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"
+               aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          Continuar en WhatsApp
+        </button>
+      </form>
+
+    </div>
+
+    <!-- Footer de confianza -->
+    <div class="waw-trust" aria-hidden="true">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <rect x="3" y="11" width="18" height="11" rx="2"/>
+        <path d="M7 11V7a5 5 0 0110 0v4"/>
+      </svg>
+      Sin spam · Solo tu nombre va en el mensaje
+    </div>
+
+  </div>
+
+  <!-- ── Botón flotante ──────────────────────────────────────────────────── -->
+  <button
+    class="waw-btn"
+    id="wawBtn"
+    type="button"
+    aria-label="Abrir chat de WhatsApp"
+    aria-expanded="false"
+    aria-controls="wawPanel"
+  >
+    <!-- Icono WA -->
+    <svg class="waw-icon waw-icon--wa" width="27" height="27"
+         viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    <!-- Icono X (cuando abierto) -->
+    <svg class="waw-icon waw-icon--close" width="22" height="22"
+         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M18 6L6 18M6 6l12 12"/>
+    </svg>
+  </button>
+
+</div>
+
+<!-- ── Panel de stats (Ctrl+Shift+S) ──────────────────────────────────────── -->
+<div class="waw-stats-panel" id="wawStatsPanel" aria-hidden="true" inert
+     role="dialog" aria-label="Estadísticas WhatsApp Widget">
+  <div class="wsp-inner">
+    <div class="wsp-header">
+      <span class="wsp-title">WhatsApp Widget — Stats</span>
+      <button class="wsp-close" id="wawStatsClose" type="button" aria-label="Cerrar stats">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="wsp-grid" id="wspGrid"></div>
+    <div class="wsp-leads" id="wspLeads"></div>
+    <p class="wsp-note">Stats guardados en este navegador · Ctrl+Shift+S para cerrar</p>
+  </div>
+</div>
+
+<style>
+  /* ── Contenedor ──────────────────────────────────────────────────────────── */
+  .waw {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    pointer-events: none; /* el padre es pasante — los hijos tienen pointer-events */
+  }
+
+  @media (max-width: 479px) {
+    .waw { bottom: 16px; right: 16px; }
+  }
+
+  /* ── Panel ───────────────────────────────────────────────────────────────── */
+  .waw-panel {
+    width: 340px;
+    background: #1a1a2e; /* tono WA dark, diferente del --surface del sitio */
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.06),
+      0 24px 80px rgba(0,0,0,0.7),
+      0 8px 32px rgba(0,0,0,0.5);
+    pointer-events: auto;
+
+    /* Estado inicial: oculto, desplazado hacia abajo */
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+    transform-origin: bottom right;
+    visibility: hidden;
+    transition:
+      opacity    0.28s cubic-bezier(0.4, 0, 0.2, 1),
+      transform  0.28s cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0s   linear 0.28s;
+  }
+
+  .waw-panel.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    visibility: visible;
+    transition:
+      opacity    0.28s cubic-bezier(0.4, 0, 0.2, 1),
+      transform  0.28s cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0s   linear 0s;
+  }
+
+  @media (max-width: 479px) {
+    .waw-panel {
+      width: calc(100vw - 32px);
+    }
+  }
+
+  /* ── Header ──────────────────────────────────────────────────────────────── */
+  .waw-header {
+    background: #075E54; /* WA dark green — reconocimiento inmediato */
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .waw-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .waw-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 15px;
+    color: #fff;
+    flex-shrink: 0;
+    letter-spacing: -0.03em;
+  }
+
+  .waw-avatar-accent { color: #b388ff; }
+
+  .waw-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .waw-agent-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .waw-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.2;
+  }
+
+  .waw-dot-online {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ade80;
+    flex-shrink: 0;
+    box-shadow: 0 0 6px rgba(74,222,128,0.7);
+    animation: waw-pulse-dot 2.4s ease-in-out infinite;
+  }
+
+  @keyframes waw-pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  .waw-close {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.08);
+    flex-shrink: 0;
+    transition: background 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+  }
+
+  .waw-close:hover {
+    background: rgba(255,255,255,0.16);
+    color: #fff;
+  }
+
+  /* ── Cuerpo ──────────────────────────────────────────────────────────────── */
+  .waw-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: #111827; /* fondo ligeramente más claro que el header */
+  }
+
+  /* Burbuja */
+  .waw-bubble-wrap {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .waw-bubble {
+    background: #1e293b;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 0 14px 14px 14px;
+    padding: 12px 14px 8px;
+    max-width: 90%;
+    position: relative;
+  }
+
+  .waw-bubble p {
+    font-size: 14px;
+    color: #e2e8f0;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .waw-bubble p + p { margin-top: 4px; }
+
+  .waw-bubble strong { color: #fff; font-weight: 600; }
+
+  .waw-time {
+    display: block;
+    text-align: right;
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+    margin-top: 6px;
+    font-family: var(--font-mono);
+  }
+
+  /* Formulario */
+  .waw-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .waw-input {
+    width: 100%;
+    padding: 11px 14px;
+    min-height: 44px;
+    background: #0f172a;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: #f2f2f2;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    caret-color: #25D366;
+  }
+
+  .waw-input::placeholder { color: rgba(255,255,255,0.25); }
+
+  .waw-input:focus {
+    border-color: #25D366;
+    box-shadow: 0 0 0 3px rgba(37,211,102,0.12);
+  }
+
+  .waw-input.error {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.12);
+  }
+
+  .waw-input-hint {
+    font-size: 11px;
+    color: #ef4444;
+    margin: -4px 0 0 2px;
+    min-height: 0;
+    transition: min-height 0.2s ease;
+  }
+
+  .waw-input-hint:not(:empty) { min-height: 16px; }
+
+  /* Botón submit */
+  .waw-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 13px 20px;
+    min-height: 48px;
+    background: #25D366;
+    color: #000;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+  }
+
+  @media (hover: hover) {
+    .waw-submit:hover {
+      background: #20b857;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(37,211,102,0.3);
+    }
+  }
+
+  .waw-submit:active { transform: translateY(0); }
+
+  .waw-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Footer de confianza */
+  .waw-trust {
+    padding: 10px 16px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.25);
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+    background: #111827;
+  }
+
+  /* ── Botón flotante ──────────────────────────────────────────────────────── */
+  .waw-btn {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #25D366;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: auto;
+    position: relative;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.45), 0 2px 8px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+  }
+
+  @media (hover: hover) {
+    .waw-btn:hover {
+      background: #20b857;
+      transform: scale(1.07);
+      box-shadow: 0 6px 28px rgba(37,211,102,0.55), 0 2px 8px rgba(0,0,0,0.3);
+    }
+  }
+
+  .waw-btn:active { transform: scale(0.95); }
+
+  /* Anillos de pulse cuando está cerrado */
+  .waw-btn::before,
+  .waw-btn::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1.5px solid #25D366;
+    animation: waw-ring 2.6s ease-out infinite;
+    pointer-events: none;
+  }
+  .waw-btn::after { animation-delay: 1.3s; }
+
+  .waw-btn.open::before,
+  .waw-btn.open::after { animation: none; opacity: 0; }
+
+  @keyframes waw-ring {
+    0%   { opacity: 0.55; transform: scale(1); }
+    100% { opacity: 0;    transform: scale(1.55); }
+  }
+
+  /* Icono WA ↔ X */
+  .waw-icon {
+    position: absolute;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .waw-icon--wa    { opacity: 1; transform: scale(1) rotate(0deg); }
+  .waw-icon--close { opacity: 0; transform: scale(0.6) rotate(-90deg); }
+
+  .waw-btn.open .waw-icon--wa    { opacity: 0; transform: scale(0.6) rotate(90deg); }
+  .waw-btn.open .waw-icon--close { opacity: 1; transform: scale(1) rotate(0deg); }
+
+  /* ── Panel de Stats (overlay) ────────────────────────────────────────────── */
+  .waw-stats-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 24px;
+
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.22s ease, visibility 0s linear 0.22s;
+  }
+
+  .waw-stats-panel.open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.22s ease, visibility 0s linear 0s;
+  }
+
+  .wsp-inner {
+    background: var(--surface);
+    border: 1px solid var(--border-bright);
+    border-radius: var(--radius-lg);
+    padding: 28px 28px 20px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+  }
+
+  .wsp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .wsp-title {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .wsp-close {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .wsp-close:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+
+  .wsp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .wsp-stat {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 12px;
+    text-align: center;
+  }
+
+  .wsp-stat-val {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .wsp-stat-lbl {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .wsp-leads {
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  .wsp-lead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 6px 0;
+  }
+
+  .wsp-lead-name { color: var(--text); font-weight: 500; }
+
+  .wsp-lead-ts {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  .wsp-empty {
+    font-size: 13px;
+    color: var(--text-dim);
+    text-align: center;
+    padding: 16px 0;
+  }
+
+  .wsp-note {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Reduced motion ──────────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .waw-panel { transition: opacity 0.01ms, visibility 0s; }
+    .waw-btn::before, .waw-btn::after { animation: none; opacity: 0; }
+    .waw-dot-online { animation: none; }
+    .waw-icon { transition: none; }
+    .waw-btn { transition: none; }
+    .waw-stats-panel { transition: none; }
+  }
+</style>
+
+<script is:inline define:vars={{ WA_NUMBER }}>
+(function () {
+  /* ── Constantes ── */
+  const STORAGE_KEY = 'waw_stats_v1';
+  const WA_BASE = 'https://wa.me/' + WA_NUMBER + '?text=';
+
+  /* ── Elementos ── */
+  var widget    = document.getElementById('waw');
+  var panel     = document.getElementById('wawPanel');
+  var btn       = document.getElementById('wawBtn');
+  var closeBtn  = document.getElementById('wawClose');
+  var form      = document.getElementById('wawForm');
+  var nameInput = document.getElementById('wawName');
+  var nameHint  = document.getElementById('wawNameHint');
+  var submitBtn = document.getElementById('wawSubmit');
+  var statsPanel = document.getElementById('wawStatsPanel');
+  var statsClose = document.getElementById('wawStatsClose');
+
+  if (!panel || !btn) return;
+
+  var isOpen = false;
+
+  /* ────────────────────────────────────────────────────────────────────────
+     TRACKING — localStorage + gtag opcional
+  ──────────────────────────────────────────────────────────────────────── */
+  function getStats() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch { return {}; }
+  }
+
+  function saveStats(data) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+    catch {}
+  }
+
+  function track(event, meta) {
+    var data = getStats();
+    data.counts = data.counts || { opens: 0, conversions: 0 };
+    data.leads  = data.leads  || [];
+
+    if (event === 'open')       data.counts.opens++;
+    if (event === 'conversion') data.counts.conversions++;
+
+    data.leads.push(Object.assign({ event: event, ts: new Date().toISOString() }, meta || {}));
+    if (data.leads.length > 200) data.leads = data.leads.slice(-200);
+
+    saveStats(data);
+
+    /* GA4 / gtag si está disponible */
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'waw_' + event, Object.assign({ widget: 'whatsapp' }, meta || {}));
+    }
+  }
+
+  /* API pública para ver stats desde consola: window.__wawStats() */
+  window.__wawStats = function () {
+    var data   = getStats();
+    var counts = data.counts || { opens: 0, conversions: 0 };
+    var rate   = counts.opens > 0
+      ? ((counts.conversions / counts.opens) * 100).toFixed(1)
+      : '0.0';
+    var leads  = (data.leads || [])
+      .filter(function (l) { return l.event === 'conversion'; })
+      .slice(-20)
+      .reverse();
+
+    console.log(
+      '%c WebTure — WhatsApp Widget Stats ',
+      'background:#075E54;color:#fff;font-weight:700;padding:4px 8px;border-radius:4px'
+    );
+    console.table({
+      'Aperturas del widget':  counts.opens,
+      'Clicks a WhatsApp':     counts.conversions,
+      'Tasa de conversión':    rate + '%',
+    });
+    if (leads.length) {
+      console.log('%c Últimos leads:', 'font-weight:600;color:#25D366');
+      leads.forEach(function (l) {
+        console.log('  •', l.name || '—', '·', new Date(l.ts).toLocaleString('es-CO'));
+      });
+    }
+    return { counts: counts, rate: rate + '%', leads: leads };
+  };
+
+  /* ────────────────────────────────────────────────────────────────────────
+     ABRIR / CERRAR PANEL
+  ──────────────────────────────────────────────────────────────────────── */
+  function openPanel() {
+    isOpen = true;
+    panel.classList.add('open');
+    panel.removeAttribute('inert');
+    panel.setAttribute('aria-hidden', 'false');
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    track('open');
+    setTimeout(function () {
+      if (nameInput) nameInput.focus();
+    }, 300);
+  }
+
+  function closePanel() {
+    isOpen = false;
+    panel.classList.remove('open');
+    panel.setAttribute('inert', '');
+    panel.setAttribute('aria-hidden', 'true');
+    btn.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.focus();
+  }
+
+  btn.addEventListener('click', function () {
+    if (isOpen) closePanel(); else openPanel();
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closePanel);
+  }
+
+  /* Cerrar con ESC */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && isOpen) closePanel();
+  });
+
+  /* ────────────────────────────────────────────────────────────────────────
+     FORMULARIO
+  ──────────────────────────────────────────────────────────────────────── */
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var name = nameInput ? nameInput.value.trim() : '';
+
+      /* Validación */
+      if (name.length < 2) {
+        if (nameInput) nameInput.classList.add('error');
+        if (nameHint)  nameHint.textContent = 'Escribe tu nombre para continuar.';
+        if (nameInput) nameInput.focus();
+        return;
+      }
+
+      /* Limpiar error */
+      if (nameInput) nameInput.classList.remove('error');
+      if (nameHint)  nameHint.textContent = '';
+
+      /* Deshabilitar mientras abre WA */
+      if (submitBtn) submitBtn.disabled = true;
+
+      /* Construir mensaje personalizado */
+      var msg = encodeURIComponent(
+        'Hola Diego, soy ' + name + '. Me interesa conocer los planes de WebTure para mi negocio.'
+      );
+      var url = WA_BASE + msg;
+
+      /* Tracking */
+      track('conversion', { name: name });
+
+      /* Abrir WhatsApp */
+      window.open(url, '_blank', 'noopener,noreferrer');
+
+      /* Mostrar confirmación en el botón */
+      if (submitBtn) {
+        submitBtn.textContent = 'Abriendo WhatsApp...';
+        setTimeout(function () {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Continuar en WhatsApp';
+          }
+          closePanel();
+          if (nameInput) nameInput.value = '';
+        }, 1800);
+      }
+    });
+
+    /* Limpiar error al escribir */
+    if (nameInput) {
+      nameInput.addEventListener('input', function () {
+        if (nameInput.value.trim().length >= 2) {
+          nameInput.classList.remove('error');
+          if (nameHint) nameHint.textContent = '';
+        }
+      });
+    }
+  }
+
+  /* ────────────────────────────────────────────────────────────────────────
+     PANEL DE STATS — Ctrl+Shift+S
+  ──────────────────────────────────────────────────────────────────────── */
+  function renderStats() {
+    var grid  = document.getElementById('wspGrid');
+    var leads = document.getElementById('wspLeads');
+    if (!grid || !leads) return;
+
+    var data   = getStats();
+    var counts = data.counts || { opens: 0, conversions: 0 };
+    var rate   = counts.opens > 0
+      ? ((counts.conversions / counts.opens) * 100).toFixed(1) + '%'
+      : '—';
+
+    grid.innerHTML = [
+      { val: counts.opens,         lbl: 'Aperturas' },
+      { val: counts.conversions,   lbl: 'Clicks WA' },
+      { val: rate,                 lbl: 'Conversión' },
+    ].map(function (s) {
+      return '<div class="wsp-stat"><span class="wsp-stat-val">' + s.val + '</span><span class="wsp-stat-lbl">' + s.lbl + '</span></div>';
+    }).join('');
+
+    var convLeads = (data.leads || [])
+      .filter(function (l) { return l.event === 'conversion'; })
+      .slice(-30)
+      .reverse();
+
+    if (convLeads.length === 0) {
+      leads.innerHTML = '<p class="wsp-empty">Aún no hay leads registrados.</p>';
+    } else {
+      leads.innerHTML = convLeads.map(function (l) {
+        var d = new Date(l.ts);
+        var ts = d.toLocaleDateString('es-CO', { day:'2-digit', month:'short' })
+               + ' ' + d.toLocaleTimeString('es-CO', { hour:'2-digit', minute:'2-digit' });
+        return '<div class="wsp-lead"><span class="wsp-lead-name">' + (l.name || '—') + '</span><span class="wsp-lead-ts">' + ts + '</span></div>';
+      }).join('');
+    }
+  }
+
+  function openStats() {
+    if (!statsPanel) return;
+    var pin = prompt('PIN de acceso:');
+    if (pin !== '1606') return;
+    renderStats();
+    statsPanel.classList.add('open');
+    statsPanel.removeAttribute('inert');
+    statsPanel.setAttribute('aria-hidden', 'false');
+    if (statsClose) statsClose.focus();
+  }
+
+  function closeStats() {
+    if (!statsPanel) return;
+    statsPanel.classList.remove('open');
+    statsPanel.setAttribute('inert', '');
+    statsPanel.setAttribute('aria-hidden', 'true');
+  }
+
+  if (statsClose) statsClose.addEventListener('click', closeStats);
+
+  statsPanel && statsPanel.addEventListener('click', function (e) {
+    if (e.target === statsPanel) closeStats();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey && e.shiftKey && e.key === 'S') {
+      e.preventDefault();
+      if (statsPanel && statsPanel.classList.contains('open')) {
+        closeStats();
+      } else {
+        openStats();
+      }
+    }
+    if (e.key === 'Escape' && statsPanel && statsPanel.classList.contains('open')) {
+      closeStats();
+    }
+  });
+
+  /* Informar en consola al cargar */
+  console.log(
+    '%c WAWidget cargado %c window.__wawStats() para ver datos · Ctrl+Shift+S para panel visual',
+    'background:#25D366;color:#000;font-weight:700;padding:2px 6px;border-radius:3px',
+    'color:#777;font-size:11px'
+  );
+})();
+</script>

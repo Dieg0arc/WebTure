@@ -4,174 +4,7 @@ const gsap          = typeof window !== 'undefined' ? window.gsap          : nul
 const ScrollTrigger = typeof window !== 'undefined' ? window.ScrollTrigger : null;
 const SplitText     = typeof window !== 'undefined' ? window.SplitText     : null;
 
-/* ─── 1. Navbar scroll state ─────────────────────────────────────────────── */
-export function initNavbar() {
-  if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
-
-  const nav = document.getElementById('nav');
-  if (!nav) return;
-
-  let scrolled = false;
-
-  ScrollTrigger.create({
-    start: 'top -50px',
-    onEnter: () => {
-      if (scrolled) return;
-      scrolled = true;
-      nav.classList.add('scrolled');
-    },
-    onLeaveBack: () => {
-      scrolled = false;
-      nav.classList.remove('scrolled');
-    },
-  });
-}
-
-/* ─── 2. Hero parallax multicapa ─────────────────────────────────────────── */
-// Reserved - currently called directly from Hero.astro
-export function initHeroParallax() {
-  if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  const eyebrow = document.querySelector('.hero-eyebrow');
-  const h1      = document.querySelector('.hero-h1');
-  const sub     = document.querySelector('.hero-sub');
-  const cta     = document.querySelector('.cta-row');
-
-  if (eyebrow) {
-    gsap.to(eyebrow, {
-      y: -60, opacity: 0, ease: 'none',
-      scrollTrigger: {
-        trigger: '.hero', start: 'top top', end: '30% top', scrub: 1,
-      },
-    });
-  }
-
-  if (h1) {
-    gsap.to(h1, {
-      y: -120, scale: 0.95, ease: 'none',
-      scrollTrigger: {
-        trigger: '.hero', start: 'top top', end: '50% top', scrub: 1.5,
-      },
-    });
-  }
-
-  if (sub) {
-    gsap.to(sub, {
-      y: -80, opacity: 0, ease: 'none',
-      scrollTrigger: {
-        trigger: '.hero', start: 'top top', end: '40% top', scrub: 1.2,
-      },
-    });
-  }
-
-  if (cta) {
-    gsap.to(cta, {
-      y: -40, opacity: 0, ease: 'none',
-      scrollTrigger: {
-        trigger: '.hero', start: 'top top', end: '35% top', scrub: 1,
-      },
-    });
-  }
-}
-
-/* ─── 3. Hero entrance (carga de página) ─────────────────────────────────── */
-// Reserved - currently called directly from Hero.astro
-export function initHeroEntrance() {
-  if (typeof window === 'undefined' || !gsap) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  const eyebrow = document.querySelector('.hero-eyebrow');
-  const h1      = document.querySelector('.hero-h1');
-  const sub     = document.querySelector('.hero-sub');
-  const cta     = document.querySelector('.cta-row');
-
-  if (!h1) return;
-
-  const tl = gsap.timeline({ delay: 0.2 });
-
-  if (eyebrow) {
-    tl.from(eyebrow, { opacity: 0, y: 24, duration: 0.7, ease: 'power3.out' });
-  }
-
-  // H1 carácter por carácter con SplitText
-  let split = null;
-  if (SplitText) {
-    try {
-      split = new SplitText(h1, { type: 'chars,words' });
-      gsap.set(h1, { perspective: 600 });
-      tl.from(
-        split.chars,
-        { opacity: 0, y: 40, rotateX: -30, stagger: 0.022, duration: 0.65, ease: 'back.out(1.7)' },
-        '-=0.3',
-      );
-    } catch {
-      split = null;
-    }
-  }
-
-  if (!split) {
-    tl.from(h1, { opacity: 0, y: 40, duration: 0.8, ease: 'power3.out' }, '-=0.3');
-  }
-
-  if (sub) {
-    tl.from(sub, { opacity: 0, y: 20, duration: 0.65, ease: 'power3.out' }, '-=0.4');
-  }
-
-  if (cta) {
-    tl.from(cta, { opacity: 0, y: 20, duration: 0.6, ease: 'power3.out' }, '-=0.35');
-  }
-}
-
-/* ─── 4. Scroll Story — capítulos ────────────────────────────────────────── */
-// Reserved - currently called directly from ScrollStory.astro
-export function initScrollStory() {
-  if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
-
-  const section  = document.querySelector('.scrollstory');
-  const chapters = document.querySelectorAll('.ss-chapter');
-  const dots     = document.querySelectorAll('.ss-dot');
-
-  if (!section || !chapters.length) return;
-
-  chapters.forEach((ch, i) => {
-    gsap.set(ch, { opacity: i === 0 ? 1 : 0, y: i === 0 ? 0 : 30 });
-  });
-  dots[0]?.classList.add('active');
-
-  let activeIndex = 0;
-
-  function goTo(index) {
-    if (index === activeIndex) return;
-
-    gsap.to(chapters[activeIndex], { opacity: 0, y: -24, duration: 0.45, ease: 'power2.in' });
-    dots[activeIndex]?.classList.remove('active');
-
-    activeIndex = index;
-
-    gsap.fromTo(
-      chapters[activeIndex],
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' },
-    );
-    dots[activeIndex]?.classList.add('active');
-  }
-
-  ScrollTrigger.create({
-    trigger: section,
-    start: 'top top',
-    end: 'bottom bottom',
-    onUpdate(self) {
-      const p = self.progress;
-      let next = 0;
-      if (p >= 0.34 && p < 0.67) next = 1;
-      else if (p >= 0.67) next = 2;
-      goTo(next);
-    },
-  });
-}
-
-/* ─── 5. Split titles ────────────────────────────────────────────────────── */
+/* ─── 1. Split titles ────────────────────────────────────────────────────── */
 export function initSplitTitles() {
   if (typeof window === 'undefined' || !gsap || !ScrollTrigger || !SplitText) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -193,7 +26,7 @@ export function initSplitTitles() {
   });
 }
 
-/* ─── 6. Contadores animados ─────────────────────────────────────────────── */
+/* ─── 2. Contadores animados ─────────────────────────────────────────────── */
 export function initCounters() {
   if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
 
@@ -220,26 +53,7 @@ export function initCounters() {
   });
 }
 
-/* ─── 7. Línea SVG del proceso ───────────────────────────────────────────── */
-export function initProcessLine() {
-  if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
-
-  const path = document.querySelector('.process-line path');
-  if (!path) return;
-
-  let length;
-  try { length = path.getTotalLength(); } catch { return; }
-
-  gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
-  gsap.to(path, {
-    strokeDashoffset: 0, ease: 'none',
-    scrollTrigger: {
-      trigger: '.process', start: 'top 70%', end: 'bottom 55%', scrub: 1.2,
-    },
-  });
-}
-
-/* ─── 8. Fade-ups ────────────────────────────────────────────────────────── */
+/* ─── 3. Fade-ups ────────────────────────────────────────────────────────── */
 export function initFadeUps() {
   if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -261,7 +75,7 @@ export function initFadeUps() {
   });
 }
 
-/* ─── 9. Carrusel de proyectos ───────────────────────────────────────────── */
+/* ─── 4. Carrusel de proyectos ───────────────────────────────────────────── */
 export function initProjectsCarousel() {
   if (typeof window === 'undefined') return;
 
@@ -305,7 +119,6 @@ export function initProjectsCarousel() {
     autoTimer = setTimeout(() => goToCard((currentIndex + 1) % TOTAL), 5000);
   }
 
-  // Update indicator when scroll settles (CSS snap handles the physics)
   let scrollSettleTimer;
   track.addEventListener('scroll', () => {
     clearTimeout(scrollSettleTimer);
@@ -346,7 +159,6 @@ export function initProjectsCarousel() {
     track.scrollLeft = scrollLeftPos - walk;
   });
 
-  // Prev / next buttons
   document.getElementById('projPrev')?.addEventListener('click', () => {
     clearTimeout(autoTimer);
     track.scrollBy({ left: -getCardWidth(), behavior: 'smooth' });
@@ -359,7 +171,6 @@ export function initProjectsCarousel() {
     setTimeout(scheduleAuto, 8000);
   });
 
-  // Indicator dots
   indicators.forEach((ind, i) => {
     ind.addEventListener('click', () => {
       clearTimeout(autoTimer);
@@ -368,54 +179,17 @@ export function initProjectsCarousel() {
     });
   });
 
-  // Initialize first indicator and start auto-advance
   activateIndicator(0);
   scheduleAuto();
 }
 
-/* ─── 10. Carrusel de testimonios ────────────────────────────────────────── */
-export function initTestimonials() {
-  if (typeof window === 'undefined') return;
-
-  const slides = document.querySelectorAll('.testi-slide');
-  const dots   = document.querySelectorAll('.testi-dot');
-
-  if (!slides.length) return;
-
-  let current  = 0;
-  let interval = null;
-
-  function goTo(index) {
-    slides[current].classList.remove('active');
-    dots[current]?.classList.remove('active');
-    current = ((index % slides.length) + slides.length) % slides.length;
-    slides[current].classList.add('active');
-    dots[current]?.classList.add('active');
-  }
-
-  function startAuto() {
-    clearInterval(interval);
-    interval = setInterval(() => goTo(current + 1), 4000);
-  }
-
-  dots.forEach((dot, i) => dot.addEventListener('click', () => { goTo(i); startAuto(); }));
-
-  const wrapper = document.querySelector('.testi-wrapper');
-  wrapper?.addEventListener('mouseenter', () => clearInterval(interval));
-  wrapper?.addEventListener('mouseleave', startAuto);
-
-  goTo(0);
-  startAuto();
-}
-
-/* ─── 11. Cursor personalizado ───────────────────────────────────────────── */
+/* ─── 5. Cursor personalizado ───────────────────────────────────────────── */
 export function initCustomCursor() {
   if (typeof window === 'undefined') return;
   if (window.matchMedia('(pointer:coarse)').matches) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (document.querySelector('.cur-dot')) return; // ya inicializado
+  if (document.querySelector('.cur-dot')) return;
 
-  // Inyecta estilos
   const style = document.createElement('style');
   style.textContent = `
     .cur-dot,.cur-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;mix-blend-mode:difference;will-change:transform}
@@ -467,12 +241,11 @@ export function initCustomCursor() {
   }
   bindHover();
 
-  // Re-bind cada cierto tiempo para elementos creados dinámicamente
   setTimeout(bindHover, 1500);
   setTimeout(bindHover, 4000);
 }
 
-/* ─── 12. Botones magnéticos ─────────────────────────────────────────────── */
+/* ─── 6. Botones magnéticos ─────────────────────────────────────────────── */
 export function initMagneticButtons() {
   if (typeof window === 'undefined' || !gsap) return;
   if (window.matchMedia('(pointer:coarse)').matches) return;
@@ -496,13 +269,12 @@ export function initMagneticButtons() {
   });
 }
 
-/* ─── 13. 3D Tilt en service cards ───────────────────────────────────────── */
+/* ─── 7. 3D Tilt en service cards ───────────────────────────────────────── */
 export function initTiltCards() {
   if (typeof window === 'undefined' || !gsap) return;
   if (window.matchMedia('(pointer:coarse)').matches) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  // Inyecta estilo para el glow follow
   if (!document.getElementById('tilt-style')) {
     const style = document.createElement('style');
     style.id = 'tilt-style';
@@ -539,12 +311,11 @@ export function initTiltCards() {
   });
 }
 
-/* ─── 14. Word reveal en section titles ──────────────────────────────────── */
+/* ─── 8. Word reveal en section titles ──────────────────────────────────── */
 export function initWordReveal() {
   if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  // Inyecta estilo
   if (!document.getElementById('word-reveal-style')) {
     const style = document.createElement('style');
     style.id = 'word-reveal-style';
@@ -555,11 +326,10 @@ export function initWordReveal() {
     document.head.appendChild(style);
   }
 
-  // Aplica a títulos de sección comunes en el proyecto
-  const selectors = '.section-title, .scrollstory-title, .projects-title, .services-title, .metrics-title, .process-title, .pricing-title, .contact-title, .build-title';
+  const selectors = '.section-title, .scrollstory-title, .projects-title, .services-title, .metrics-title, .process-title, .pricing-title, .build-title';
   document.querySelectorAll(selectors).forEach((el) => {
     if (el.__wordRevealBound) return;
-    if (el.matches('.split-title')) return; // Split titles are handled by SplitText and should not be rewrapped
+    if (el.matches('.split-title')) return;
     el.__wordRevealBound = true;
 
     const parts = el.innerHTML.split(/(<br\s*\/?\s*>)/i);
@@ -588,60 +358,7 @@ export function initWordReveal() {
   });
 }
 
-/* ─── 15. Image mask reveal en thumbnails ────────────────────────────────── */
-export function initMaskReveal() {
-  if (typeof window === 'undefined' || !ScrollTrigger) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  if (!document.getElementById('mask-reveal-style')) {
-    const style = document.createElement('style');
-    style.id = 'mask-reveal-style';
-    style.textContent = `
-      .proj-thumb{position:relative}
-      .proj-thumb::after{content:'';position:absolute;inset:0;background:var(--bg, #080808);transform-origin:left center;transform:scaleX(1);z-index:2}
-      .proj-thumb.reveal::after{transform:scaleX(0);transition:transform 1.1s cubic-bezier(.76,0,.24,1)}
-    `;
-    document.head.appendChild(style);
-  }
-
-  document.querySelectorAll('.proj-thumb').forEach((t) => {
-    if (t.__maskRevealBound) return;
-    t.__maskRevealBound = true;
-    ScrollTrigger.create({
-      trigger: t, start: 'top 90%', once: true,
-      onEnter: () => t.classList.add('reveal'),
-    });
-  });
-}
-
-/* ─── 16. Marquee dinámico (acelera con scroll) ──────────────────────────── */
-export function initMarqueeSpeed() {
-  if (typeof window === 'undefined') return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (window.matchMedia('(pointer: coarse)').matches) return; // CSS animation is smoother on touch
-
-  const track = document.querySelector('.marquee-track');
-  if (!track) return;
-
-  let baseDur = parseFloat(getComputedStyle(track).animationDuration) || 38;
-  let currentDur = baseDur;
-  let lastY = window.scrollY;
-
-  function tick() {
-    const vel = window.scrollY - lastY;
-    lastY = window.scrollY;
-    const target = baseDur / (1 + Math.min(2.5, Math.abs(vel) * 0.08));
-    currentDur += (target - currentDur) * 0.1;
-    track.style.animationDuration = currentDur.toFixed(2) + 's';
-    requestAnimationFrame(tick);
-  }
-  tick();
-}
-
-/* ─── 18. Clip-path block reveal — estilo editorial (Vettvangur) ─────────── */
-// Uso: agrega data-clip="bottom|top|left|right" a cualquier elemento.
-// El elemento se "destapa" con una máscara al entrar en viewport.
-// Hermanos con el mismo data-clip dentro de un mismo padre se revelan en stagger.
+/* ─── 9. Clip-path block reveal ─────────────────────────────────────────── */
 export function initClipReveal() {
   if (typeof window === 'undefined' || !gsap || !ScrollTrigger) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -656,13 +373,11 @@ export function initClipReveal() {
   const els = document.querySelectorAll('[data-clip]');
   if (!els.length) return;
 
-  // Pone todos en estado inicial de inmediato (evita flash antes del load)
   els.forEach((el) => {
     const dir = el.getAttribute('data-clip') || 'bottom';
     gsap.set(el, { clipPath: CLIP_START[dir] || CLIP_START.bottom });
   });
 
-  // Agrupa hermanos del mismo padre para stagger automático
   const groups = new Map();
   els.forEach((el) => {
     const key = el.parentElement;
@@ -671,8 +386,7 @@ export function initClipReveal() {
   });
 
   groups.forEach((children, parent) => {
-    const dir   = children[0].getAttribute('data-clip') || 'bottom';
-    const start = CLIP_START[dir] || CLIP_START.bottom;
+    const dir      = children[0].getAttribute('data-clip') || 'bottom';
     const hasStagger = children.length > 1;
 
     gsap.to(children, {
@@ -680,33 +394,25 @@ export function initClipReveal() {
       duration: 1.1,
       ease: 'expo.out',
       stagger: hasStagger ? 0.1 : 0,
-      scrollTrigger: {
-        trigger: parent,
-        start: 'top 88%',
-        once: true,
-      },
+      scrollTrigger: { trigger: parent, start: 'top 88%', once: true },
     });
   });
 }
 
-/* ─── 19. Snap on idle — ajusta la sección más visible al tope del viewport
-   cuando el usuario hace pausa en el scroll. No interrumpe el scroll activo;
-   solo actúa cuando el scroll lleva ≥ IDLE_DELAY ms sin moverse.             */
+/* ─── 10. Snap on idle ───────────────────────────────────────────────────── */
 export function initSectionSnap() {
   if (typeof window === 'undefined') return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const IDLE_DELAY  = 750;  // ms sin scroll antes de activar el snap
-  const MIN_OFFSET  = 60;   // px — no snap si ya estamos dentro de este rango
-  const MIN_VISIBLE = 0.4;  // fracción mínima del vh que debe ocupar la sección
+  const IDLE_DELAY  = 750;
+  const MIN_OFFSET  = 60;
+  const MIN_VISIBLE = 0.4;
 
   let snapEls    = [];
   let idleTimer  = null;
   let isSnapping = false;
 
   function loadSections() {
-    // Excluye #proceso (lo gestiona el pin de GSAP) y .scrollstory
-    // (contenido progresivo — hacer snap hacia atrás rompería la narrativa).
     snapEls = Array.from(
       document.querySelectorAll('section:not(#proceso):not(.scrollstory)')
     );
@@ -718,16 +424,12 @@ export function initSectionSnap() {
     const scrollY = window.scrollY;
     const vh      = window.innerHeight;
 
-    // Suprimir snap mientras #proceso sea visible en el viewport:
-    // entrando, durante el pin o saliendo. GSAP pin gestiona esa zona.
-    // Cuando process.bottom <= 0 (totalmente fuera) el snap se reactiva.
     const processEl = document.querySelector('section#proceso');
     if (processEl) {
       const r = processEl.getBoundingClientRect();
       if (r.top < vh && r.bottom > 0) return;
     }
 
-    // Sección con mayor área visible; ignora las que apenas asoman
     let bestEl   = null;
     let bestArea = -1;
 
@@ -736,7 +438,7 @@ export function initSectionSnap() {
       if (rect.bottom <= 0 || rect.top >= vh) continue;
 
       const overlap = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
-      if (overlap < vh * MIN_VISIBLE) continue; // demasiado poco visible
+      if (overlap < vh * MIN_VISIBLE) continue;
 
       if (overlap > bestArea) {
         bestArea = overlap;
@@ -746,14 +448,11 @@ export function initSectionSnap() {
 
     if (!bestEl) return;
 
-    // Alinear el borde superior de la sección con el tope del viewport (scrollY=0).
-    // El nav es position:fixed y queda superpuesto; el padding de la sección
-    // crea la separación visual suficiente por debajo del nav.
     const rect    = bestEl.getBoundingClientRect();
     const targetY = Math.max(0, scrollY + rect.top);
     const dist    = Math.abs(scrollY - targetY);
 
-    if (dist < MIN_OFFSET) return; // ya está alineada, no hacer nada
+    if (dist < MIN_OFFSET) return;
 
     isSnapping = true;
     const lenis  = window.__lenis;
@@ -780,29 +479,18 @@ export function initSectionSnap() {
   }
 }
 
-/* ─── 17. initAll — punto de entrada ─────────────────────────────────────── */
+/* ─── initAll — punto de entrada ─────────────────────────────────────────── */
 export function initAll() {
   if (typeof window === 'undefined') return;
 
-  // initNavbar() removed — Navbar.astro inline script owns the scroll state
-  // and is already resilient to CDN failure
-  // Hero animations are self-contained in Hero.astro
-  // ScrollStory animations are self-contained in ScrollStory.astro
-  // to avoid conflicts with ScrollTrigger context
   initSplitTitles();
   initCounters();
-  initProcessLine();
   initFadeUps();
   initProjectsCarousel();
-  initTestimonials();
-
-  // ── Nuevas animaciones profesionales ──
   initCustomCursor();
   initMagneticButtons();
   initTiltCards();
   initWordReveal();
-  initMaskReveal();
-  initMarqueeSpeed();
   initClipReveal();
   initSectionSnap();
 }
